@@ -1,0 +1,465 @@
+/* assets/css/admininternship_view.css */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Main Container */
+.container {
+    max-width: 800px;
+    width: 100%;
+    border: 3px solid #000000;
+    background-color: #ffffff;
+    box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+/* Header Section */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid #000000;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+h2 {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-block;
+    padding: 8px 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+}
+
+.status-badge.open {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.status-badge.closed {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px dashed #000000;
+}
+
+.status-badge.filled {
+    background-color: #000000;
+    color: #ffffff;
+    position: relative;
+}
+
+.status-badge.filled::after {
+    content: '✓';
+    margin-left: 5px;
+}
+
+.status-badge.pending {
+    background-color: #ffffff;
+    color: #000000;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-badge.pending::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0,0,0,0.1),
+        rgba(0,0,0,0.1) 5px,
+        transparent 5px,
+        transparent 10px
+    );
+    pointer-events: none;
+}
+
+.status-badge.approved {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.status-badge.rejected {
+    background-color: #ffffff;
+    color: #000000;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-badge.rejected::after {
+    content: '✕';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    color: rgba(0,0,0,0.1);
+    pointer-events: none;
+}
+
+/* Company Info Card */
+.company-card {
+    border: 2px solid #000000;
+    padding: 20px;
+    margin-bottom: 25px;
+    background-color: #f9f9f9;
+}
+
+.company-name {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 8px;
+}
+
+.company-detail {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.company-label {
+    width: 100px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: #333333;
+}
+
+.company-value {
+    flex: 1;
+    font-size: 14px;
+}
+
+/* Details Grid */
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.detail-card {
+    border: 2px solid #000000;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.detail-card h3 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 8px;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #cccccc;
+    padding-bottom: 8px;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.detail-label {
+    width: 100px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #333333;
+}
+
+.detail-value {
+    flex: 1;
+    font-size: 14px;
+}
+
+/* Description Section */
+.description-section {
+    border: 2px solid #000000;
+    padding: 20px;
+    margin-bottom: 25px;
+    background-color: #ffffff;
+}
+
+.description-section h3 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 8px;
+}
+
+.description-content {
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border: 2px solid #000000;
+    min-height: 120px;
+}
+
+/* Meta Information */
+.meta-section {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    flex: 1;
+    min-width: 150px;
+    border: 2px solid #000000;
+    padding: 15px;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+.meta-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 5px;
+}
+
+.meta-value {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 3px solid #000000;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    border: 2px solid #000000;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background-color: transparent;
+    color: #000000;
+}
+
+.btn-back {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn-back:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.btn-back::before {
+    content: '←';
+    margin-right: 8px;
+}
+
+.btn-edit {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.btn-edit:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn-delete {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn-delete:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+/* Deadline indicator */
+.deadline-expired {
+    color: #000000;
+    font-weight: bold;
+    position: relative;
+    padding-left: 25px;
+}
+
+.deadline-expired::before {
+    content: '⚠️';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    
+    .container {
+        padding: 20px;
+    }
+    
+    .header-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    h2 {
+        font-size: 24px;
+    }
+    
+    .details-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .meta-section {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .meta-item {
+        min-width: 100%;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .company-detail {
+        flex-direction: column;
+    }
+    
+    .company-label {
+        width: 100%;
+        margin-bottom: 3px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 15px;
+        border-width: 2px;
+        box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.1);
+    }
+    
+    h2 {
+        font-size: 20px;
+    }
+    
+    .status-badge {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+    
+    .company-card {
+        padding: 15px;
+    }
+    
+    .company-name {
+        font-size: 18px;
+    }
+    
+    .detail-card {
+        padding: 15px;
+    }
+    
+    .detail-card h3 {
+        font-size: 16px;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+    }
+    
+    .detail-label {
+        width: 100%;
+        margin-bottom: 3px;
+    }
+    
+    .description-content {
+        font-size: 14px;
+        padding: 8px;
+    }
+    
+    .meta-value {
+        font-size: 16px;
+    }
+}
+
+/* Print styles */
+@media print {
+    body {
+        padding: 0;
+        display: block;
+    }
+    
+    .container {
+        box-shadow: none;
+        border: 2px solid #000;
+    }
+    
+    .action-buttons {
+        display: none;
+    }
+}

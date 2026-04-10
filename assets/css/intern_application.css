@@ -1,0 +1,341 @@
+/* assets/css/style.css */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 30px 0;
+    min-height: 100vh;
+    border-right: 2px solid #000000;
+    flex-shrink: 0;
+}
+
+.sidebar h4 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 0 20px 20px 20px;
+    border-bottom: 2px solid #ffffff;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.sidebar a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-bottom: 1px solid #333333;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    background-color: #ffffff;
+    overflow-x: auto;
+}
+
+/* Headings */
+.main-content h2 {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #000000;
+    padding-bottom: 15px;
+}
+
+/* Table Container */
+.table-container {
+    border: 2px solid #000000;
+    overflow-x: auto;
+    margin-bottom: 30px;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    min-width: 500px;
+}
+
+th {
+    background-color: #000000;
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    padding: 15px;
+    text-align: left;
+    border: 2px solid #000000;
+}
+
+td {
+    padding: 12px 15px;
+    border: 2px solid #000000;
+    font-size: 14px;
+}
+
+/* Table Row Striping - for better readability */
+tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+tr:hover {
+    background-color: #e0e0e0;
+}
+
+/* Status Badge Styles */
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Different status styles - using only black and white with patterns */
+.status-badge.pending {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+    position: relative;
+}
+
+.status-badge.pending::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        #000000,
+        #000000 2px,
+        transparent 2px,
+        transparent 8px
+    );
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.status-badge.approved {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.status-badge.rejected {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+    position: relative;
+}
+
+.status-badge.rejected::before {
+    content: '✕';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    color: #000000;
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.status-badge.withdrawn {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px dashed #000000;
+}
+
+/* Empty state message */
+.no-results {
+    text-align: center;
+    padding: 60px 40px;
+    border: 2px solid #000000;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: #ffffff;
+}
+
+.no-results::before {
+    content: '📋';
+    display: block;
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .sidebar {
+        width: 220px;
+    }
+    
+    .main-content {
+        padding: 30px;
+    }
+    
+    .main-content h2 {
+        font-size: 24px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+        padding: 15px 0;
+        border-right: none;
+        border-bottom: 2px solid #000000;
+    }
+    
+    .sidebar h4 {
+        padding: 0 15px 15px 15px;
+        margin-bottom: 10px;
+    }
+    
+    .sidebar a {
+        padding: 10px 15px;
+        display: inline-block;
+        border-bottom: none;
+        border-right: 1px solid #333333;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+    
+    .main-content h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+    
+    th {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    td {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+    
+    .status-badge {
+        padding: 4px 10px;
+        font-size: 11px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .main-content {
+        padding: 15px;
+    }
+    
+    .main-content h2 {
+        font-size: 20px;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .table-container {
+        border-width: 1px;
+    }
+    
+    th {
+        padding: 10px;
+        font-size: 12px;
+        border-width: 1px;
+    }
+    
+    td {
+        padding: 8px 10px;
+        font-size: 12px;
+        border-width: 1px;
+    }
+    
+    .status-badge {
+        padding: 3px 8px;
+        font-size: 10px;
+        border-width: 1px;
+    }
+    
+    .no-results {
+        padding: 40px 20px;
+        font-size: 16px;
+    }
+    
+    .no-results::before {
+        font-size: 36px;
+    }
+}
+
+/* For very small screens */
+@media screen and (max-width: 360px) {
+    .sidebar a {
+        display: block;
+        border-right: none;
+        border-bottom: 1px solid #333333;
+    }
+}
+
+/* Print styles */
+@media print {
+    .sidebar {
+        display: none;
+    }
+    
+    body {
+        display: block;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+    
+    table {
+        border: 2px solid #000;
+    }
+    
+    .status-badge {
+        border: 1px solid #000;
+        background: none;
+    }
+}

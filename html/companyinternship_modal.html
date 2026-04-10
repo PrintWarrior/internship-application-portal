@@ -1,0 +1,35 @@
+<!-- Post Internship Confirmation Modal -->
+<div id="internshipModal" class="modal">
+    <div class="modal-content">
+        <h3>Post Internship</h3>
+        <p>Are you sure you want to post this internship?</p>
+        
+        <!-- Internship Summary -->
+        <div class="internship-summary">
+            <div class="summary-item">
+                <span class="summary-label">Title:</span>
+                <span class="summary-value" id="summaryTitle">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Duration:</span>
+                <span class="summary-value" id="summaryDuration">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Allowance:</span>
+                <span class="summary-value" id="summaryAllowance">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Deadline:</span>
+                <span class="summary-value" id="summaryDeadline">-</span>
+            </div>
+        </div>
+        
+        <div class="modal-buttons">
+            <button class="modal-btn confirm-btn" id="confirmInternship">Yes, Post Internship</button>
+            <button class="modal-btn cancel-btn" onclick="closeInternshipModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Toast -->
+<div id="notification" class="notification"></div>

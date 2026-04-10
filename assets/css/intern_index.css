@@ -1,0 +1,286 @@
+/* assets/css/style.css */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 30px 0;
+    min-height: 100vh;
+    border-right: 2px solid #000000;
+}
+
+.sidebar h4 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 0 20px 20px 20px;
+    border-bottom: 2px solid #ffffff;
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-bottom: 1px solid #333333;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Main content */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    background-color: #ffffff;
+    overflow-y: auto;
+}
+
+.main-content h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.text-muted {
+    color: #666666;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+/* Card layout */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.col-md-6 {
+    width: 50%;
+    padding: 0 15px;
+}
+
+.card-box {
+    border: 2px solid #000000;
+    padding: 25px;
+    margin-bottom: 30px;
+    background-color: #ffffff;
+}
+
+.card-box h5 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.card-box hr {
+    border: none;
+    border-top: 2px solid #000000;
+    margin: 15px 0;
+}
+
+.card-box p {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.card-box strong {
+    display: inline-block;
+    width: 120px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+/* Custom Modal - Black and White, No Rounded Corners */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-container {
+    width: 100%;
+    max-width: 400px;
+    background-color: #ffffff;
+    border: 3px solid #000000;
+    box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 2px solid #000000;
+    background-color: #ffffff;
+}
+
+.modal-header h5 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    padding: 20px;
+    border-top: 2px solid #000000;
+    background-color: #ffffff;
+}
+
+/* Form styles for modal */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    font-size: 14px;
+    color: #000000;
+    border-radius: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.form-control:focus {
+    outline: none;
+    background-color: #f0f0f0;
+}
+
+.text-danger {
+    color: #000000;
+    font-weight: bold;
+    font-size: 13px;
+    margin-top: 5px;
+    border-left: 3px solid #000000;
+    padding-left: 10px;
+}
+
+/* Modal buttons */
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #000000;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 0;
+    transition: all 0.3s ease;
+    width: auto;
+    min-width: 150px;
+}
+
+.btn:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+        padding: 15px 0;
+    }
+    
+    .sidebar h4 {
+        padding: 0 15px 15px 15px;
+    }
+    
+    .sidebar a {
+        padding: 10px 15px;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+    
+    .col-md-6 {
+        width: 100%;
+    }
+    
+    .card-box strong {
+        width: 100px;
+    }
+    
+    .modal-container {
+        max-width: 90%;
+        margin: 20px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .main-content h2 {
+        font-size: 22px;
+    }
+    
+    .card-box {
+        padding: 15px;
+    }
+    
+    .card-box strong {
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}

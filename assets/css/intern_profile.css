@@ -1,0 +1,345 @@
+/* assets/css/style.css */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 30px 0;
+    min-height: 100vh;
+    border-right: 2px solid #000000;
+    flex-shrink: 0;
+}
+
+.sidebar h4 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 0 20px 20px 20px;
+    border-bottom: 2px solid #ffffff;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.sidebar a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-bottom: 1px solid #333333;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    background-color: #ffffff;
+    overflow-y: auto;
+    max-width: calc(100% - 250px);
+}
+
+/* Headings */
+.main-content h2 {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #000000;
+    padding-bottom: 15px;
+}
+
+/* Row and Columns Layout */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.col-md-6 {
+    width: 50%;
+    padding: 0 15px;
+}
+
+/* Form Containers */
+.form-container {
+    border: 2px solid #000000;
+    padding: 25px;
+    background-color: #ffffff;
+    height: 62%;
+}
+
+.form-container h3 {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 10px;
+}
+
+/* Profile Image Container */
+.profile-image-container {
+    border: 2px solid #000000;
+    padding: 25px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.profile-image-container img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 2px solid #000000;
+    border-radius: 0px;
+    margin-bottom: 20px;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+label {
+    width: 140px;
+    font-weight: bold;
+    font-size: 13px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="file"] {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    font-size: 14px;
+    color: #000000;
+    border-radius: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    background-color: #f0f0f0;
+}
+
+/* File input styling */
+input[type="file"] {
+    padding: 8px;
+    background-color: #ffffff;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 8px 15px;
+    border: 2px solid #000000;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 0;
+}
+
+input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Buttons */
+button {
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #000000;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 0;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Hidden input */
+input[type="hidden"] {
+    display: none;
+}
+
+/* Password change specific */
+.password-form .form-group {
+    margin-bottom: 25px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .main-content {
+        padding: 30px;
+    }
+    
+    label {
+        width: 120px;
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+        padding: 15px 0;
+        border-right: none;
+        border-bottom: 2px solid #000000;
+    }
+    
+    .sidebar h4 {
+        padding: 0 15px 15px 15px;
+    }
+    
+    .sidebar a {
+        padding: 10px 15px;
+    }
+    
+    .main-content {
+        max-width: 100%;
+        padding: 20px;
+    }
+    
+    .col-md-6 {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+    
+    .col-md-6:last-child {
+        margin-bottom: 0;
+    }
+    
+    .form-container {
+        padding: 20px;
+    }
+    
+    h2 {
+        font-size: 24px;
+        margin-bottom: 25px;
+    }
+    
+    .profile-image-container img {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .main-content {
+        padding: 15px;
+    }
+    
+    .main-content h2 {
+        font-size: 20px;
+        padding-bottom: 10px;
+    }
+    
+    .form-container {
+        padding: 15px;
+        border-width: 1px;
+    }
+    
+    .form-container h3 {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+    
+    .profile-image-container {
+        padding: 15px;
+    }
+    
+    .profile-image-container img {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    label {
+        width: 100%;
+        margin-bottom: 5px;
+        font-size: 12px;
+    }
+    
+    input[type="text"],
+    input[type="password"],
+    input[type="file"] {
+        width: 100%;
+        min-width: 100%;
+        padding: 8px;
+        font-size: 13px;
+    }
+    
+    button {
+        padding: 10px;
+        font-size: 13px;
+    }
+    
+    input[type="file"]::-webkit-file-upload-button {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+}
+
+/* Landscape orientation */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+    .main-content {
+        padding: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+}

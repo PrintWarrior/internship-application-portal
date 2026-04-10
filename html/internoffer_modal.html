@@ -1,0 +1,36 @@
+<!-- Offer Confirmation Modal -->
+<div id="offerModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle">Accept Offer</h3>
+        <p id="modalMessage">Are you sure you want to accept this internship offer?</p>
+        
+        <!-- Offer Details Summary -->
+        <div class="offer-summary">
+            <div class="summary-header">Offer Details:</div>
+            <div class="summary-item">
+                <span class="summary-label">Position:</span>
+                <span class="summary-value" id="summaryTitle">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Company:</span>
+                <span class="summary-value" id="summaryCompany">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Offer Date:</span>
+                <span class="summary-value" id="summaryDate">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Allowance:</span>
+                <span class="summary-value" id="summaryAllowance">-</span>
+            </div>
+        </div>
+        
+        <div class="modal-buttons">
+            <button class="modal-btn confirm-btn" id="confirmOffer">Yes, Proceed</button>
+            <button class="modal-btn cancel-btn" onclick="closeOfferModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Success Notification Toast -->
+<div id="notification" class="notification"></div>

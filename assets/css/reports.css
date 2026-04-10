@@ -1,0 +1,519 @@
+/* assets/css/style.css */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+/* Top Navigation */
+.topnav {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ffffff;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-section img {
+    max-width: 40px;
+    height: auto;
+    border: 2px solid #ffffff;
+}
+
+.logo-section h4 {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+
+.topnav-right {
+    display: flex;
+    gap: 20px;
+}
+
+.topnav-right a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.topnav-right a:hover {
+    border: 2px solid #ffffff;
+}
+
+.badge {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+/* Wrapper for sidebar and content */
+.wrapper {
+    display: flex;
+    min-height: calc(100vh - 60px);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 30px 0;
+    border-right: 2px solid #ffffff;
+    flex-shrink: 0;
+}
+
+.sidebar a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-bottom: 1px solid #333333;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Main Content Container */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    background-color: #ffffff;
+    overflow-y: auto;
+    max-height: calc(100vh - 60px);
+}
+
+/* Headings */
+.main-content h2 {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #000000;
+    padding-bottom: 15px;
+}
+
+/* Reports Container */
+.reports-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Summary Cards */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    margin-bottom: 20px;
+}
+
+.summary-card {
+    border: 2px solid #000000;
+    padding: 25px;
+    background-color: #ffffff;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.summary-card:hover {
+    background-color: #f5f5f5;
+}
+
+.summary-card h3 {
+    font-size: 42px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #000000;
+}
+
+.summary-card p {
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #333333;
+    letter-spacing: 1px;
+}
+
+/* Analytics Grid */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.analytics-card {
+    border: 2px solid #000000;
+    padding: 25px;
+    background-color: #ffffff;
+}
+
+.analytics-card h3 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 10px;
+}
+
+/* Stats List */
+.stats-list {
+    list-style: none;
+}
+
+.stats-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #cccccc;
+    font-size: 14px;
+}
+
+.stats-list li:last-child {
+    border-bottom: none;
+}
+
+.stats-list .stat-label {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #333333;
+}
+
+.stats-list .stat-value {
+    font-weight: bold;
+    font-size: 18px;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 3px 10px;
+    min-width: 60px;
+    text-align: center;
+}
+
+/* Percentage Bar */
+.percentage-bar {
+    margin-top: 15px;
+    height: 20px;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    position: relative;
+}
+
+.percentage-fill {
+    height: 100%;
+    background-color: #000000;
+    width: 0%;
+}
+
+.percentage-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 11px;
+    font-weight: bold;
+    color: #000000;
+    z-index: 1;
+}
+
+.percentage-fill + .percentage-label {
+    color: #ffffff;
+}
+
+/* Trend Indicators */
+.trend-up::after {
+    content: '↑';
+    margin-left: 5px;
+    font-weight: bold;
+}
+
+.trend-down::after {
+    content: '↓';
+    margin-left: 5px;
+    font-weight: bold;
+}
+
+/* Data Table */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.data-table th {
+    background-color: #000000;
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+    padding: 10px;
+    text-align: left;
+    border: 2px solid #000000;
+}
+
+.data-table td {
+    padding: 8px 10px;
+    border: 2px solid #000000;
+    font-size: 13px;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+/* Export Buttons */
+.export-section {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.btn-export {
+    padding: 10px 20px;
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-export:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+/* Date Range Selector */
+.date-range {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.date-input {
+    padding: 8px 12px;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    font-size: 13px;
+    border-radius: 0;
+}
+
+.date-input:focus {
+    outline: none;
+    background-color: #f0f0f0;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .sidebar {
+        width: 220px;
+    }
+    
+    .main-content {
+        padding: 30px;
+    }
+    
+    .main-content h2 {
+        font-size: 24px;
+    }
+    
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .topnav {
+        padding: 10px 15px;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .logo-section {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .topnav-right {
+        gap: 10px;
+    }
+    
+    .wrapper {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        padding: 15px 0;
+        border-right: none;
+        border-bottom: 2px solid #ffffff;
+    }
+    
+    .sidebar a {
+        display: inline-block;
+        border-bottom: none;
+        border-right: 1px solid #333333;
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+    
+    .main-content {
+        max-height: none;
+        padding: 20px;
+    }
+    
+    .main-content h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+    
+    .summary-card h3 {
+        font-size: 32px;
+    }
+    
+    .summary-card p {
+        font-size: 12px;
+    }
+    
+    .analytics-card {
+        padding: 20px;
+    }
+    
+    .date-range {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .export-section {
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .sidebar a {
+        display: block;
+        border-right: none;
+        border-bottom: 1px solid #333333;
+    }
+    
+    .main-content {
+        padding: 15px;
+    }
+    
+    .main-content h2 {
+        font-size: 20px;
+        padding-bottom: 10px;
+    }
+    
+    .summary-cards {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .summary-card {
+        padding: 15px;
+    }
+    
+    .summary-card h3 {
+        font-size: 28px;
+    }
+    
+    .analytics-card {
+        padding: 15px;
+    }
+    
+    .analytics-card h3 {
+        font-size: 16px;
+    }
+    
+    .stats-list li {
+        font-size: 12px;
+        padding: 8px 0;
+    }
+    
+    .stats-list .stat-value {
+        font-size: 14px;
+        padding: 2px 6px;
+        min-width: 45px;
+    }
+    
+    .btn-export {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* For very small screens */
+@media screen and (max-width: 360px) {
+    .topnav-right {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .topnav,
+    .sidebar,
+    .export-section,
+    .date-range {
+        display: none;
+    }
+    
+    .wrapper {
+        display: block;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+    
+    .summary-card,
+    .analytics-card {
+        break-inside: avoid;
+        border: 1px solid #000;
+    }
+}

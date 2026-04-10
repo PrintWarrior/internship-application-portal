@@ -1,0 +1,40 @@
+<!-- Contract Creation Confirmation Modal -->
+<div id="contractModal" class="modal">
+    <div class="modal-content">
+        <h3>Create Contract PDF</h3>
+        <p>Are you sure you want to create this contract?</p>
+        
+        <!-- Contract Summary -->
+        <div class="contract-summary">
+            <div class="summary-header">Contract Details:</div>
+            <div class="summary-item">
+                <span class="summary-label">Intern:</span>
+                <span class="summary-value" id="summaryIntern">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Internship:</span>
+                <span class="summary-value" id="summaryInternship">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Allowance:</span>
+                <span class="summary-value" id="summaryAllowance">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Contract Length:</span>
+                <span class="summary-value" id="summaryLength">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Character Count:</span>
+                <span class="summary-value" id="summaryCharCount">-</span>
+            </div>
+        </div>
+        
+        <div class="modal-buttons">
+            <button class="modal-btn confirm-btn" id="confirmContract">Yes, Create PDF</button>
+            <button class="modal-btn cancel-btn" onclick="closeContractModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Success Notification Toast -->
+<div id="notification" class="notification"></div>

@@ -1,0 +1,210 @@
+/* Offer Modal Styles - Black and White Theme */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    background-color: #ffffff;
+    margin: 10% auto;
+    padding: 30px;
+    border: 2px solid #000000;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.modal-content h3 {
+    color: #000000;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 10px;
+}
+
+.modal-content p {
+    color: #333333;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+}
+
+/* Offer Summary */
+.offer-summary {
+    margin: 20px 0;
+    border: 1px solid #000000;
+    padding: 15px;
+    background-color: #f9f9f9;
+    text-align: left;
+}
+
+.summary-header {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #000000;
+    color: #000000;
+    font-size: 0.95em;
+}
+
+.summary-item {
+    display: flex;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #000000;
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.summary-label {
+    font-weight: bold;
+    width: 100px;
+    color: #000000;
+    text-transform: uppercase;
+    font-size: 0.85em;
+}
+
+.summary-value {
+    flex: 1;
+    color: #333333;
+    word-break: break-word;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.modal-btn {
+    padding: 12px 25px;
+    font-size: 1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: 2px solid #000000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #ffffff;
+    color: #000000;
+    min-width: 150px;
+}
+
+.modal-btn:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.confirm-btn {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.confirm-btn:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.confirm-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.confirm-btn:disabled:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+/* Notification Toast */
+.notification {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 15px 25px;
+    border: 2px solid #ffffff;
+    box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+    font-weight: bold;
+    text-transform: uppercase;
+    animation: slideIn 0.3s ease;
+    font-size: 1em;
+    letter-spacing: 0.5px;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Offer Action Buttons */
+.offer-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-offer {
+    padding: 8px 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: 2px solid #000000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn-offer:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.btn-accept {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn-accept:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.btn-decline {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn-decline:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+/* Remove any rounded corners */
+.modal-content,
+.modal-btn,
+.notification,
+.btn-offer {
+    border-radius: 0 !important;
+}

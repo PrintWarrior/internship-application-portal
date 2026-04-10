@@ -1,0 +1,36 @@
+<!-- Update Profile Information Confirmation Modal -->
+<div id="updateProfileModal" class="modal">
+    <div class="modal-content">
+        <h3>Update Profile Information</h3>
+        <p>Are you sure you want to update your profile information?</p>
+        
+        <!-- Profile Changes Summary -->
+        <div class="profile-summary">
+            <div class="summary-header">Changes to be saved:</div>
+            <div class="summary-item">
+                <span class="summary-label">Name:</span>
+                <span class="summary-value" id="summaryName">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Contact:</span>
+                <span class="summary-value" id="summaryContact">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">University:</span>
+                <span class="summary-value" id="summaryUniversity">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Course:</span>
+                <span class="summary-value" id="summaryCourse">-</span>
+            </div>
+        </div>
+        
+        <div class="modal-buttons">
+            <button class="modal-btn confirm-btn" id="confirmUpdate">Yes, Update Profile</button>
+            <button class="modal-btn cancel-btn" onclick="closeUpdateModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Success Notification Toast -->
+<div id="notification" class="notification"></div>

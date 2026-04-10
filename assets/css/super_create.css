@@ -1,0 +1,388 @@
+/* assets/css/super_admin_create.css */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+/* Top Navigation */
+.topnav {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ffffff;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-section img {
+    max-width: 40px;
+    height: auto;
+    border: 2px solid #ffffff;
+}
+
+.logo-section h2 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin: 0;
+}
+
+.topnav-right {
+    display: flex;
+    gap: 20px;
+}
+
+.topnav-right a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.topnav-right a:hover {
+    border: 2px solid #ffffff;
+}
+
+.badge {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+/* Wrapper for sidebar and content */
+.wrapper {
+    display: flex;
+    min-height: calc(100vh - 60px);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 30px 0;
+    border-right: 2px solid #ffffff;
+    flex-shrink: 0;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    border-bottom: 1px solid #333333;
+}
+
+.sidebar a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 20px;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.sidebar a.active {
+    background-color: #ffffff;
+    color: #000000;
+    border-left: 4px solid #ffffff;
+}
+
+/* Main Content */
+.content {
+    flex: 1;
+    padding: 40px;
+    background-color: #ffffff;
+    overflow-y: auto;
+    max-height: calc(100vh - 60px);
+}
+
+/* Headings */
+.content h1 {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #000000;
+    padding-bottom: 15px;
+}
+
+/* Form Section */
+.form-section {
+    max-width: 500px;
+    border: 2px solid #000000;
+    padding: 30px;
+    background-color: #ffffff;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: #333333;
+}
+
+input[type="email"],
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    font-size: 14px;
+    color: #000000;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+input[type="email"]:focus,
+select:focus {
+    outline: none;
+    background-color: #f0f0f0;
+}
+
+/* Select dropdown styling */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, black 50%),
+                      linear-gradient(135deg, black 50%, transparent 50%);
+    background-position: calc(100% - 20px) calc(1em + 2px),
+                         calc(100% - 15px) calc(1em + 2px);
+    background-size: 5px 5px,
+                     5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 40px;
+}
+
+/* Placeholder styling */
+::placeholder {
+    color: #999999;
+    font-style: italic;
+    font-size: 13px;
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #000000;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Required field indicator */
+input[required] + label::after,
+input[required] ~ label::after {
+    content: " *";
+    font-weight: bold;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .sidebar {
+        width: 220px;
+    }
+    
+    .content {
+        padding: 30px;
+    }
+    
+    .content h1 {
+        font-size: 24px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .topnav {
+        padding: 10px 15px;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .logo-section {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .logo-section h2 {
+        font-size: 16px;
+    }
+    
+    .topnav-right {
+        gap: 10px;
+    }
+    
+    .wrapper {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        padding: 15px 0;
+        border-right: none;
+        border-bottom: 2px solid #ffffff;
+    }
+    
+    .sidebar li {
+        display: inline-block;
+        border-bottom: none;
+        border-right: 1px solid #333333;
+    }
+    
+    .sidebar a {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+    
+    .content {
+        max-height: none;
+        padding: 20px;
+    }
+    
+    .content h1 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+    
+    .form-section {
+        max-width: 100%;
+        padding: 20px;
+    }
+    
+    input[type="email"],
+    select {
+        padding: 10px;
+        font-size: 13px;
+    }
+    
+    button {
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .sidebar li {
+        display: block;
+        border-right: none;
+        border-bottom: 1px solid #333333;
+    }
+    
+    .content {
+        padding: 15px;
+    }
+    
+    .content h1 {
+        font-size: 20px;
+        padding-bottom: 10px;
+    }
+    
+    .form-section {
+        padding: 15px;
+        border-width: 2px;
+    }
+    
+    label {
+        font-size: 12px;
+    }
+    
+    input[type="email"],
+    select {
+        padding: 8px;
+        font-size: 13px;
+    }
+    
+    button {
+        padding: 8px;
+        font-size: 12px;
+    }
+    
+    ::placeholder {
+        font-size: 12px;
+    }
+}
+
+/* For very small screens */
+@media screen and (max-width: 360px) {
+    .topnav-right {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .topnav,
+    .sidebar,
+    button {
+        display: none;
+    }
+    
+    .wrapper {
+        display: block;
+    }
+    
+    .content {
+        padding: 20px;
+    }
+    
+    .form-section {
+        border: 2px solid #000;
+    }
+    
+    input[type="email"],
+    select {
+        border: 1px solid #000;
+    }
+}

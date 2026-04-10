@@ -1,0 +1,23 @@
+<!-- Approve Internship Modal -->
+<div class="modal-overlay" id="approveInternshipModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3>Approve Internship</h3>
+            <span class="modal-close" onclick="closeApproveInternshipModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="modal-icon">✓</div>
+            <div class="modal-message">Are you sure you want to approve this internship?</div>
+            <div class="modal-warning">
+                <strong>Internship:</strong> <span id="approveInternshipTitle" class="modal-item"></span>
+            </div>
+            <div class="modal-warning">
+                Approved internships will be visible to all interns.
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-btn modal-btn-cancel" onclick="closeApproveInternshipModal()">Cancel</button>
+            <a href="#" id="confirmApproveInternshipBtn" class="modal-btn modal-btn-confirm">Approve</a>
+        </div>
+    </div>
+</div>

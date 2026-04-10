@@ -1,0 +1,431 @@
+/* assets/css/style.css */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+/* Top Navigation */
+.topnav {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ffffff;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-section img {
+    max-width: 40px;
+    height: auto;
+    border: 2px solid #ffffff;
+}
+
+.logo-section h4 {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+
+.topnav-right {
+    display: flex;
+    gap: 20px;
+}
+
+.topnav-right a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.topnav-right a:hover {
+    border: 2px solid #ffffff;
+}
+
+.badge {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+/* Wrapper for sidebar and content */
+.wrapper {
+    display: flex;
+    min-height: calc(100vh - 60px);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 30px 0;
+    border-right: 2px solid #ffffff;
+    flex-shrink: 0;
+}
+
+.sidebar a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-bottom: 1px solid #333333;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Main Container */
+.container {
+    flex: 1;
+    padding: 40px;
+    background-color: #ffffff;
+    overflow-y: auto;
+    max-height: calc(100vh - 60px);
+}
+
+/* Headings */
+.container h2 {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #000000;
+    padding-bottom: 15px;
+}
+
+.container h3 {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 25px 0 15px 0;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 8px;
+}
+
+/* Message */
+.container p {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 2px solid #000000;
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+/* Profile Image Section */
+.profile-image-section {
+    border: 2px solid #000000;
+    padding: 25px;
+    margin-bottom: 30px;
+    background-color: #ffffff;
+}
+
+.profile-image-section img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 2px solid #000000;
+    border-radius: none; /* Keep circular for profile image */
+    display: block;
+    margin-bottom: 20px;
+}
+
+.image-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Forms */
+form {
+    margin-bottom: 30px;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+label {
+    width: 150px;
+    font-weight: bold;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+textarea,
+input[type="file"] {
+    flex: 1;
+    min-width: 250px;
+    padding: 10px 12px;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    font-size: 14px;
+    color: #000000;
+    border-radius: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+    width: 100%;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    background-color: #f0f0f0;
+}
+
+/* File input styling */
+input[type="file"] {
+    padding: 8px;
+    background-color: #ffffff;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 8px 15px;
+    border: 2px solid #000000;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 0;
+}
+
+input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Buttons */
+button {
+    display: inline-block;
+    padding: 10px 25px;
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #000000;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 0;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+}
+
+button:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Delete button specific */
+button[name="delete_image"] {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+button[name="delete_image"]:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+/* Update Profile button */
+button[name="update_profile"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Horizontal Rule */
+hr {
+    border: none;
+    border-top: 2px solid #000000;
+    margin: 30px 0;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .sidebar {
+        width: 220px;
+    }
+    
+    .container {
+        padding: 30px;
+    }
+    
+    label {
+        width: 140px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .topnav {
+        padding: 10px 15px;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .logo-section {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .topnav-right {
+        gap: 10px;
+    }
+    
+    .wrapper {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        padding: 15px 0;
+        border-right: none;
+        border-bottom: 2px solid #ffffff;
+    }
+    
+    .sidebar a {
+        display: inline-block;
+        border-bottom: none;
+        border-right: 1px solid #333333;
+        padding: 10px 15px;
+    }
+    
+    .container {
+        max-height: none;
+        padding: 20px;
+    }
+    
+    .container h2 {
+        font-size: 24px;
+    }
+    
+    .container h3 {
+        font-size: 18px;
+    }
+    
+    .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="url"],
+    textarea {
+        width: 100%;
+        min-width: 100%;
+    }
+    
+    .image-actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    button {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .sidebar a {
+        display: block;
+        border-right: none;
+        border-bottom: 1px solid #333333;
+    }
+    
+    .container {
+        padding: 15px;
+    }
+    
+    .container h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .container h3 {
+        font-size: 16px;
+    }
+    
+    .profile-image-section img {
+        width: 100px;
+        height: 100px;
+    }
+    
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="url"],
+    textarea {
+        padding: 8px;
+        font-size: 13px;
+    }
+    
+    button {
+        padding: 8px 15px;
+        font-size: 12px;
+    }
+}
+
+/* For very small screens */
+@media screen and (max-width: 360px) {
+    .topnav-right {
+        flex-direction: column;
+        gap: 5px;
+    }
+}

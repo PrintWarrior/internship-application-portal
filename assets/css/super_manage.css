@@ -1,0 +1,563 @@
+/* assets/css/super_admin_manage.css */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+/* Top Navigation */
+.topnav {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ffffff;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-section img {
+    max-width: 40px;
+    height: auto;
+    border: 2px solid #ffffff;
+}
+
+.logo-section h2 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin: 0;
+}
+
+.topnav-right {
+    display: flex;
+    gap: 20px;
+}
+
+.topnav-right a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.topnav-right a:hover {
+    border: 2px solid #ffffff;
+}
+
+.badge {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+/* Wrapper for sidebar and content */
+.wrapper {
+    display: flex;
+    min-height: calc(100vh - 60px);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 30px 0;
+    border-right: 2px solid #ffffff;
+    flex-shrink: 0;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    border-bottom: 1px solid #333333;
+}
+
+.sidebar a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 20px;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.sidebar a.active {
+    background-color: #ffffff;
+    color: #000000;
+    border-left: 4px solid #ffffff;
+}
+
+/* Main Content */
+.content {
+    flex: 1;
+    padding: 40px;
+    background-color: #ffffff;
+    overflow-y: auto;
+    max-height: calc(100vh - 60px);
+}
+
+/* Headings */
+.content h1 {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #000000;
+    padding-bottom: 15px;
+}
+
+/* Create User Link */
+.content > p {
+    margin-bottom: 25px;
+}
+
+.content > p a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #000000;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 13px;
+    border: 2px solid #000000;
+    transition: all 0.3s ease;
+}
+
+.content > p a:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.content > p a::before {
+    content: '+';
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.user-group {
+    margin-top: 28px;
+}
+
+.user-group:first-of-type {
+    margin-top: 0;
+}
+
+.section-heading {
+    margin-bottom: 14px;
+}
+
+.section-heading h2 {
+    font-size: 22px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.section-heading p {
+    font-size: 13px;
+    color: #333333;
+}
+
+.section-kicker {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 4px 10px;
+    border: 2px solid #000000;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.user-group-superadmin {
+    padding: 20px;
+    border: 3px solid #000000;
+    background: linear-gradient(135deg, #f3f3f3 0%, #ffffff 45%, #ececec 100%);
+    box-shadow: 8px 8px 0 #000000;
+}
+
+.user-group-superadmin .section-heading h2 {
+    font-size: 30px;
+    letter-spacing: 2px;
+}
+
+.user-group-superadmin .section-heading p {
+    max-width: 700px;
+}
+
+.table-section-superadmin {
+    border-width: 3px;
+}
+
+/* Table Section */
+.table-section {
+    overflow-x: auto;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+th {
+    background-color: #000000;
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 13px;
+    padding: 15px;
+    text-align: left;
+    border: 2px solid #000000;
+}
+
+td {
+    padding: 12px 15px;
+    border: 2px solid #000000;
+    font-size: 14px;
+}
+
+/* Table Row Striping */
+tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+tr:hover {
+    background-color: #e0e0e0;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 11px;
+    border: 2px solid #000000;
+}
+
+.status-active {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.status-inactive {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* User Type Badge */
+.user-type {
+    display: inline-block;
+    padding: 4px 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 11px;
+    border: 2px solid #000000;
+}
+
+.user-type-superadmin {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.user-type-admin {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.user-type-company {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px dashed #000000;
+}
+
+.user-type-intern {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Action Links */
+td:last-child a {
+    display: inline-block;
+    padding: 5px 12px;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 11px;
+    border: 2px solid #000000;
+    transition: all 0.3s ease;
+    margin-right: 8px;
+}
+
+td:last-child a:first-child {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+td:last-child a:first-child:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+td:last-child a:nth-child(2) {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+td:last-child a:nth-child(2):hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+td:last-child a:last-child {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+td:last-child a:last-child:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.protected-label {
+    display: inline-block;
+    padding: 5px 12px;
+    background-color: #000000;
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 11px;
+    border: 2px solid #000000;
+    letter-spacing: 1px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .sidebar {
+        width: 220px;
+    }
+    
+    .content {
+        padding: 30px;
+    }
+    
+    .content h1 {
+        font-size: 24px;
+    }
+
+    .user-group-superadmin .section-heading h2 {
+        font-size: 26px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .topnav {
+        padding: 10px 15px;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .logo-section {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .logo-section h2 {
+        font-size: 16px;
+    }
+    
+    .topnav-right {
+        gap: 10px;
+    }
+    
+    .wrapper {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        padding: 15px 0;
+        border-right: none;
+        border-bottom: 2px solid #ffffff;
+    }
+    
+    .sidebar li {
+        display: inline-block;
+        border-bottom: none;
+        border-right: 1px solid #333333;
+    }
+    
+    .sidebar a {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+    
+    .content {
+        max-height: none;
+        padding: 20px;
+    }
+    
+    .content h1 {
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+
+    .user-group-superadmin {
+        padding: 16px;
+        box-shadow: 5px 5px 0 #000000;
+    }
+
+    .section-heading h2,
+    .user-group-superadmin .section-heading h2 {
+        font-size: 20px;
+    }
+    
+    th {
+        padding: 12px;
+        font-size: 12px;
+    }
+    
+    td {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+    
+    td:last-child a {
+        display: block;
+        margin-bottom: 5px;
+        text-align: center;
+    }
+    
+    td:last-child a:last-child {
+        margin-bottom: 0;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .sidebar li {
+        display: block;
+        border-right: none;
+        border-bottom: 1px solid #333333;
+    }
+    
+    .content {
+        padding: 15px;
+    }
+    
+    .content h1 {
+        font-size: 20px;
+        padding-bottom: 10px;
+    }
+
+    .user-group {
+        margin-top: 22px;
+    }
+
+    .user-group-superadmin {
+        padding: 12px;
+        border-width: 2px;
+        box-shadow: none;
+    }
+    
+    .content > p a {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .table-section {
+        border-width: 1px;
+    }
+    
+    th {
+        padding: 10px;
+        font-size: 11px;
+        border-width: 1px;
+    }
+    
+    td {
+        padding: 8px 10px;
+        font-size: 12px;
+        border-width: 1px;
+    }
+    
+    td:last-child a {
+        padding: 4px 8px;
+        font-size: 10px;
+        margin-right: 4px;
+    }
+}
+
+/* For very small screens */
+@media screen and (max-width: 360px) {
+    .topnav-right {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    td:last-child a {
+        margin-bottom: 5px;
+        width: 100%;
+    }
+}
+
+/* Print styles */
+@media print {
+    .topnav,
+    .sidebar,
+    .content > p a {
+        display: none;
+    }
+    
+    .wrapper {
+        display: block;
+    }
+    
+    .content {
+        padding: 20px;
+    }
+    
+    table {
+        border: 2px solid #000;
+    }
+}

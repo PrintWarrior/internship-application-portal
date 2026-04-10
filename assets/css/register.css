@@ -1,0 +1,153 @@
+/* assets/css/style.css */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Container */
+.container {
+    max-width: 450px;
+    width: 100%;
+    border: 2px solid #000000;
+    padding: 40px 30px;
+    background-color: #ffffff;
+}
+
+/* Logo container and image */
+.logo-container {
+    text-align: center;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 20px;
+}
+
+.logo {
+    max-width: 150px;
+    height: auto;
+    display: inline-block;
+    border: none;
+}
+
+/* Headings */
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 15px;
+}
+
+/* Buttons/Links styled as buttons */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #000000;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 0;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn:last-of-type {
+    margin-bottom: 25px;
+}
+
+/* Links and text */
+p {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+    border-top: 2px solid #000000;
+    padding-top: 20px;
+}
+
+a {
+    color: #000000;
+    text-decoration: none;
+    font-weight: bold;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 2px;
+}
+
+a:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 25px 20px;
+        border-width: 1px;
+    }
+    
+    .logo {
+        max-width: 120px;
+    }
+    
+    .logo-container {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+    }
+    
+    h2 {
+        font-size: 20px;
+        margin-bottom: 25px;
+        padding-bottom: 12px;
+    }
+    
+    .btn {
+        padding: 12px;
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .container {
+        padding: 20px 15px;
+    }
+    
+    .logo {
+        max-width: 100px;
+    }
+    
+    h2 {
+        font-size: 18px;
+    }
+    
+    .btn {
+        padding: 10px;
+        font-size: 13px;
+    }
+}

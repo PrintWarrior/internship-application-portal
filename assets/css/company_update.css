@@ -1,0 +1,685 @@
+/* assets/css/company_update_status.css */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+/* Top Navigation */
+.topnav {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ffffff;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-section img {
+    max-width: 40px;
+    height: auto;
+    border: 2px solid #ffffff;
+}
+
+.logo-section h4 {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+
+.topnav-right {
+    display: flex;
+    gap: 20px;
+}
+
+.topnav-right a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.topnav-right a:hover {
+    border: 2px solid #ffffff;
+}
+
+.badge {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+/* Wrapper for sidebar and content */
+.wrapper {
+    display: flex;
+    min-height: calc(100vh - 60px);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 30px 0;
+    border-right: 2px solid #ffffff;
+    flex-shrink: 0;
+}
+
+.sidebar a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-bottom: 1px solid #333333;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Main Content Container */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    background-color: #ffffff;
+    overflow-y: auto;
+    max-height: calc(100vh - 60px);
+}
+
+/* Page Header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.page-header h2 {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0;
+    border-bottom: 3px solid #000000;
+    padding-bottom: 10px;
+}
+
+/* Back Button */
+.btn-back {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    color: #000000;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 13px;
+    border: 2px solid #000000;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.btn-back::before {
+    content: '←';
+    margin-right: 8px;
+}
+
+/* Update Card */
+.update-card {
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    padding: 30px;
+}
+
+/* Applicant Summary */
+.applicant-summary {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #000000;
+}
+
+.applicant-summary h3 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.internship-title {
+    font-size: 16px;
+    color: #333333;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.current-status {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.status-label {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: #333333;
+}
+
+/* Status Badge Styles */
+.status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+    border: 2px solid #000000;
+    min-width: 80px;
+    text-align: center;
+}
+
+.status-pending {
+    background-color: #ffffff;
+    color: #000000;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-pending::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0,0,0,0.1),
+        rgba(0,0,0,0.1) 5px,
+        transparent 5px,
+        transparent 10px
+    );
+    pointer-events: none;
+}
+
+.status-reviewed {
+    background-color: #000000;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-reviewed::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 10px 10px, rgba(255,255,255,0.2) 2px, transparent 2px);
+    background-size: 20px 20px;
+    pointer-events: none;
+}
+
+.status-accepted {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.status-rejected {
+    background-color: #ffffff;
+    color: #000000;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-rejected::after {
+    content: '✕';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    color: rgba(0,0,0,0.1);
+    pointer-events: none;
+}
+
+.status-offered {
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+.status-hired {
+    background-color: #000000;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-hired::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    color: rgba(255,255,255,0.3);
+    pointer-events: none;
+}
+
+.status-completed {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.status-terminated {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px dashed #000000;
+}
+
+/* Update Form Container */
+.update-form-container {
+    margin-bottom: 30px;
+}
+
+/* Form Styles */
+.update-form {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: #333333;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    font-size: 14px;
+    color: #000000;
+    font-family: Arial, Helvetica, sans-serif;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, black 50%),
+                      linear-gradient(135deg, black 50%, transparent 50%);
+    background-position: calc(100% - 20px) calc(1em + 2px),
+                         calc(100% - 15px) calc(1em + 2px);
+    background-size: 5px 5px,
+                     5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 40px;
+}
+
+.form-group select:focus {
+    outline: none;
+    background-color: #f0f0f0;
+}
+
+/* Info Messages */
+.status-info {
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 2px solid #000000;
+    background-color: #f5f5f5;
+    font-size: 13px;
+}
+
+.status-info.warning {
+    background-color: #ffffff;
+    border: 2px dashed #000000;
+}
+
+.status-info strong {
+    text-transform: uppercase;
+}
+
+/* Info Message (for no updates) */
+.info-message {
+    padding: 25px;
+    border: 2px solid #000000;
+    background-color: #f5f5f5;
+    text-align: center;
+    font-size: 14px;
+}
+
+.info-message.warning {
+    background-color: #ffffff;
+    border: 2px dashed #000000;
+}
+
+.info-message p {
+    margin-bottom: 15px;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.btn-update-status, .btn-cancel {
+    display: inline-block;
+    padding: 12px 30px;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    border: 2px solid #000000;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-update-status {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.btn-update-status:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn-cancel {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn-cancel:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+/* Quick Actions */
+.quick-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #000000;
+}
+
+.quick-actions h4 {
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+    border: 2px solid #000000;
+    transition: all 0.3s ease;
+}
+
+.btn-view {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.btn-view:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn-create-contract {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn-create-contract:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.btn-view-contract {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px dashed #000000;
+}
+
+.btn-view-contract:hover {
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px dashed #ffffff;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .sidebar {
+        width: 220px;
+    }
+    
+    .main-content {
+        padding: 30px;
+    }
+    
+    .page-header h2 {
+        font-size: 24px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .topnav {
+        padding: 10px 15px;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .logo-section {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .topnav-right {
+        gap: 10px;
+    }
+    
+    .wrapper {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        padding: 15px 0;
+        border-right: none;
+        border-bottom: 2px solid #ffffff;
+    }
+    
+    .sidebar a {
+        display: inline-block;
+        border-bottom: none;
+        border-right: 1px solid #333333;
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+    
+    .main-content {
+        max-height: none;
+        padding: 20px;
+    }
+    
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .page-header h2 {
+        font-size: 22px;
+    }
+    
+    .update-card {
+        padding: 20px;
+    }
+    
+    .applicant-summary h3 {
+        font-size: 20px;
+    }
+    
+    .current-status {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-update-status, .btn-cancel {
+        width: 100%;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-action {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .sidebar a {
+        display: block;
+        border-right: none;
+        border-bottom: 1px solid #333333;
+    }
+    
+    .main-content {
+        padding: 15px;
+    }
+    
+    .page-header h2 {
+        font-size: 20px;
+    }
+    
+    .update-card {
+        padding: 15px;
+    }
+    
+    .applicant-summary h3 {
+        font-size: 18px;
+    }
+    
+    .internship-title {
+        font-size: 14px;
+    }
+    
+    .status-badge {
+        font-size: 11px;
+        padding: 4px 8px;
+        min-width: 70px;
+    }
+    
+    .form-group select {
+        padding: 10px;
+        font-size: 13px;
+    }
+    
+    .status-info {
+        padding: 10px;
+        font-size: 12px;
+    }
+    
+    .info-message {
+        padding: 15px;
+        font-size: 13px;
+    }
+    
+    .btn-update-status, .btn-cancel, .btn-action {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+}
+
+/* For very small screens */
+@media screen and (max-width: 360px) {
+    .topnav-right {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .topnav,
+    .sidebar,
+    .form-actions,
+    .quick-actions,
+    .btn-back {
+        display: none;
+    }
+    
+    .wrapper {
+        display: block;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+    
+    .update-card {
+        border: 2px solid #000;
+    }
+}

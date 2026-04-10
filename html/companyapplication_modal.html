@@ -1,0 +1,35 @@
+<!-- Application Status Confirmation Modal -->
+<div id="applicationModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle">Update Application Status</h3>
+        <p id="modalMessage">Are you sure you want to mark this application as "<span id="statusText"></span>"?</p>
+        
+        <!-- Application Summary -->
+        <div class="application-summary">
+            <div class="summary-item">
+                <span class="summary-label">Applicant:</span>
+                <span class="summary-value" id="summaryApplicant">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Internship:</span>
+                <span class="summary-value" id="summaryInternship">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Current Status:</span>
+                <span class="summary-value" id="summaryCurrentStatus">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">New Status:</span>
+                <span class="summary-value" id="summaryNewStatus">-</span>
+            </div>
+        </div>
+        
+        <div class="modal-buttons">
+            <button class="modal-btn confirm-btn" id="confirmAction">Yes, Proceed</button>
+            <button class="modal-btn cancel-btn" onclick="closeApplicationModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Success Notification Toast -->
+<div id="notification" class="notification"></div>

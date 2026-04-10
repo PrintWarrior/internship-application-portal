@@ -1,0 +1,36 @@
+<!-- Edit Internship Confirmation Modal -->
+<div id="editInternshipModal" class="modal">
+    <div class="modal-content">
+        <h3>Edit Internship</h3>
+        <p>Are you sure you want to save these changes?</p>
+        
+        <!-- Changes Summary -->
+        <div class="changes-summary">
+            <div class="summary-header">Changes to be saved:</div>
+            <div class="summary-item">
+                <span class="summary-label">Title:</span>
+                <span class="summary-value" id="summaryTitle">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Duration:</span>
+                <span class="summary-value" id="summaryDuration">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Allowance:</span>
+                <span class="summary-value" id="summaryAllowance">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Deadline:</span>
+                <span class="summary-value" id="summaryDeadline">-</span>
+            </div>
+        </div>
+        
+        <div class="modal-buttons">
+            <button class="modal-btn confirm-btn" id="confirmEdit">Yes, Save Changes</button>
+            <button class="modal-btn cancel-btn" onclick="closeEditModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Success Notification Toast -->
+<div id="notification" class="notification"></div>

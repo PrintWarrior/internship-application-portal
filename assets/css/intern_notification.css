@@ -1,0 +1,354 @@
+/* assets/css/intern_notification.css */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+/* Wrapper for sidebar and content */
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 30px 0;
+    border-right: 2px solid #ffffff;
+    flex-shrink: 0;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar h4 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 0 20px 20px 20px;
+    border-bottom: 2px solid #ffffff;
+    margin-bottom: 20px;
+    text-align: left;
+    color: #ffffff;
+}
+
+.sidebar a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-bottom: 1px solid #333333;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.sidebar a:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.sidebar a.active {
+    background-color: #ffffff;
+    color: #000000;
+    border-left: 4px solid #ffffff;
+}
+
+/* Notification badge in sidebar */
+.sidebar .badge {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-left: 8px;
+    border: 1px solid #ffffff;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    background-color: #ffffff;
+    margin-left: 250px; /* Same as sidebar width */
+    min-height: 100vh;
+}
+
+/* Headings */
+.main-content h2 {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #000000;
+    padding-bottom: 15px;
+}
+
+/* Empty State */
+.main-content p {
+    text-align: center;
+    padding: 60px 20px;
+    border: 2px solid #000000;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: #f5f5f5;
+    margin-bottom: 30px;
+}
+
+.main-content p::before {
+    content: '🔔';
+    display: block;
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+/* Table Container */
+.table-container {
+    border: 2px solid #000000;
+    overflow-x: auto;
+    background-color: #ffffff;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+th {
+    background-color: #000000;
+    color: #ffffff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 13px;
+    padding: 15px;
+    text-align: left;
+    border: 2px solid #000000;
+}
+
+td {
+    padding: 12px 15px;
+    border: 2px solid #000000;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+/* Table Row Striping */
+tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+tr:hover {
+    background-color: #e0e0e0;
+}
+
+/* Notification Message */
+td:first-child {
+    font-weight: 500;
+    max-width: 400px;
+    word-wrap: break-word;
+}
+
+/* Date Column */
+td:last-child {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    white-space: nowrap;
+    text-align: right;
+}
+
+/* Unread notification indicator */
+tr.unread {
+    position: relative;
+    font-weight: bold;
+}
+
+tr.unread td:first-child {
+    font-weight: bold;
+}
+
+tr.unread::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #000000;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .sidebar {
+        width: 220px;
+    }
+    
+    .main-content {
+        padding: 30px;
+        margin-left: 220px;
+    }
+    
+    .main-content h2 {
+        font-size: 24px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .wrapper {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 15px 0;
+        border-right: none;
+        border-bottom: 2px solid #ffffff;
+    }
+    
+    .sidebar h4 {
+        padding: 0 15px 15px 15px;
+        margin-bottom: 10px;
+    }
+    
+    .sidebar a {
+        display: inline-block;
+        border-bottom: none;
+        border-right: 1px solid #333333;
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+    
+    .sidebar a.active {
+        border-left: none;
+        border-bottom: 2px solid #ffffff;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+    
+    .main-content h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+    
+    table {
+        min-width: 500px;
+    }
+    
+    th {
+        padding: 12px;
+        font-size: 12px;
+    }
+    
+    td {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+    
+    td:first-child {
+        max-width: 250px;
+    }
+    
+    td:last-child {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .sidebar a {
+        display: block;
+        border-right: none;
+        border-bottom: 1px solid #333333;
+    }
+    
+    .main-content {
+        padding: 15px;
+    }
+    
+    .main-content h2 {
+        font-size: 20px;
+        padding-bottom: 10px;
+    }
+    
+    table {
+        min-width: 400px;
+    }
+    
+    th {
+        padding: 10px;
+        font-size: 11px;
+        border-width: 1px;
+    }
+    
+    td {
+        padding: 8px 10px;
+        font-size: 12px;
+        border-width: 1px;
+    }
+    
+    td:last-child {
+        font-size: 11px;
+    }
+    
+    .main-content p {
+        padding: 40px 15px;
+        font-size: 14px;
+    }
+    
+    .main-content p::before {
+        font-size: 36px;
+    }
+}
+
+/* For very small screens */
+@media screen and (max-width: 360px) {
+    table {
+        min-width: 350px;
+    }
+    
+    th, td {
+        padding: 6px 8px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .sidebar,
+    .topnav {
+        display: none;
+    }
+    
+    .wrapper {
+        display: block;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+    
+    table {
+        border: 2px solid #000;
+    }
+}

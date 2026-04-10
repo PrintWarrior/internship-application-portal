@@ -1,0 +1,36 @@
+<!-- Application Confirmation Modal -->
+<div id="applyModal" class="modal">
+    <div class="modal-content">
+        <h3>Apply for Internship</h3>
+        <p>Are you sure you want to apply for this internship?</p>
+        
+        <!-- Internship Details Summary -->
+        <div class="internship-summary">
+            <div class="summary-header">Internship Details:</div>
+            <div class="summary-item">
+                <span class="summary-label">Position:</span>
+                <span class="summary-value" id="summaryTitle">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Company:</span>
+                <span class="summary-value" id="summaryCompany">-</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Deadline:</span>
+                <span class="summary-value" id="summaryDeadline">-</span>
+            </div>
+            <!--<div class="summary-item">
+                <span class="summary-label">Allowance:</span>
+                <span class="summary-value" id="summaryAllowance">-</span>
+            </div>-->
+        </div>
+        
+        <div class="modal-buttons">
+            <button class="modal-btn confirm-btn" id="confirmApply">Yes, Apply Now</button>
+            <button class="modal-btn cancel-btn" onclick="closeApplyModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Success Notification Toast -->
+<div id="notification" class="notification"></div>
