@@ -26,7 +26,7 @@ if ($user && !$user['verified']) {
         ->execute([$user_id, $token, $expiry]);
 
     // Send email
-    $link = "http://localhost/intern%20app%20portal%20v2/includes/verify_email.php?token=$token";
+    $link = "http://localhost/intern%20app%20portal%20v3/includes/verify_email.php?token=$token";
 
 $body = "
 <div style='background:#f2f4f6;padding:40px;font-family:Arial,sans-serif'>

@@ -53,24 +53,29 @@ try {
     // Insert company
     $stmt = $pdo->prepare("
         INSERT INTO companies 
-        (company_name, contact_phone, address, industry, contact_person, website, description, country, contact_email) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (company_name, contact_phone, industry, contact_person, website, description, contact_email) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     ");
 
     $stmt->execute([
         $_POST['company_name'], 
         $_POST['contact_phone'] ?? null, 
-        $_POST['address'] ?? null,
         $_POST['industry'] ?? null,
         $_POST['contact_person'] ?? null,
         $_POST['website'] ?? null,
         $_POST['description'] ?? null,
-        $_POST['country'] ?? '',
         $_POST['contact_email'] ?? null
     ]);
 
     // ✅ GET company_id (VERY IMPORTANT)
     $company_id = $pdo->lastInsertId();
+    upsertEntityAddress((int) $company_id, 'company', [
+        'address_line' => $_POST['address'] ?? null,
+        'city' => $_POST['city'] ?? null,
+        'province' => $_POST['province'] ?? null,
+        'postal_code' => $_POST['postal_code'] ?? null,
+        'country' => $_POST['country'] ?? 'Philippines'
+    ]);
 
     // ✅ INSERT INTO staffs TABLE
     if (!empty($_POST['contact_person'])) {
@@ -114,14 +119,10 @@ try {
                 birthdate,
                 age,
                 contact_no,
-                address,
-                city,
-                province,
-                postal_code,
                 university,
                 course,
                 year_level
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
         $stmt->execute([
@@ -133,13 +134,17 @@ try {
             $_POST['birthdate'] ?? null,
             $_POST['age'] ?? null,
             $_POST['contact_no'],
-            $_POST['address'] ?? null,
-            $_POST['city'] ?? null,
-            $_POST['province'] ?? null,
-            $_POST['postal_code'] ?? null,
             $_POST['university'],
             $_POST['course'],
             $_POST['year_level'] ?? null
+        ]);
+        $intern_id = $pdo->lastInsertId();
+        upsertEntityAddress((int) $intern_id, 'intern', [
+            'address_line' => $_POST['address'] ?? null,
+            'city' => $_POST['city'] ?? null,
+            'province' => $_POST['province'] ?? null,
+            'postal_code' => $_POST['postal_code'] ?? null,
+            'country' => $_POST['country'] ?? 'Philippines'
         ]);
     } else {
         throw new Exception('Invalid user type.');

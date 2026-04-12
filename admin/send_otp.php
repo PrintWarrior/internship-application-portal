@@ -49,7 +49,7 @@ $body = "
         </div>
 
         <!-- LOGIN BUTTON -->
-        <a href='http://localhost/intern%20app%20portal%20v2/index.php'
+        <a href='http://localhost/intern%20app%20portal%20v3/index.php'
            style='display:inline-block;
                   margin-top:20px;
                   padding:12px 25px;

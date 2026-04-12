@@ -18,13 +18,17 @@ $stmt = $pdo->prepare("
            ir.first_name, ir.last_name, ir.contact_no, ir.university, ir.course, ir.year_level,
            u.email,
            i.title AS internship_title, i.duration, i.allowance, i.start_date, i.end_date,
-           c.company_name, c.contact_person, c.address
+           c.company_name, c.contact_person, addr.address_line AS company_address
     FROM contracts ct
     JOIN applications a ON ct.application_id = a.application_id
     JOIN internships i ON a.internship_id = i.internship_id
     JOIN companies c ON i.company_id = c.company_id
     JOIN interns ir ON a.intern_id = ir.intern_id
     JOIN users u ON ir.user_id = u.user_id
+    LEFT JOIN addresses addr
+        ON addr.entity_id = c.company_id
+        AND addr.entity_type = 'company'
+        AND addr.is_primary = 1
     WHERE ct.contract_id = ? AND ir.user_id = ?
 ");
 $stmt->execute([$contract_id, $user_id]);
@@ -84,7 +88,7 @@ $pdf->Cell(0,8,'COMPANY INFORMATION',0,1);
 $pdf->SetFont('Arial','',11);
 $pdf->Cell(0,7,'Company Name: '.$contract['company_name'],0,1);
 $pdf->Cell(0,7,'HR Representative: '.$contract['contact_person'],0,1);
-$pdf->Cell(0,7,'Company Address: '.$contract['address'],0,1);
+$pdf->Cell(0,7,'Company Address: '.$contract['company_address'],0,1);
 
 $pdf->Ln(5);
 

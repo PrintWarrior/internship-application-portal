@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 02, 2026 at 03:41 PM
+-- Generation Time: Apr 12, 2026 at 04:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,8 +18,37 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `application_portal`
+-- Database: `internapp_portal`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `addresses`
+--
+
+CREATE TABLE `addresses` (
+  `address_id` int(11) NOT NULL,
+  `entity_id` int(11) NOT NULL,
+  `entity_type` enum('intern','company') NOT NULL,
+  `address_type` enum('primary','mailing','billing') NOT NULL DEFAULT 'primary',
+  `address_line` text DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `province` varchar(100) DEFAULT NULL,
+  `postal_code` varchar(20) DEFAULT NULL,
+  `country` varchar(50) NOT NULL DEFAULT 'Philippines',
+  `is_primary` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `addresses`
+--
+
+INSERT INTO `addresses` (`address_id`, `entity_id`, `entity_type`, `address_type`, `address_line`, `city`, `province`, `postal_code`, `country`, `is_primary`, `created_at`, `updated_at`) VALUES
+(1, 29, 'intern', 'primary', 'Port 80 Ave Street', 'Tangub City', 'Region X/Misamis Occidental', '7214', 'Philippines', 1, '2026-04-10 16:41:53', '2026-04-10 16:41:53'),
+(2, 16, 'company', 'primary', 'Gravebattery residence street 14', 'Tangub City', 'Region X/Misamis Occidental', '7214', 'Philippines', 1, '2026-04-10 16:47:16', '2026-04-10 16:50:37');
 
 -- --------------------------------------------------------
 
@@ -30,6 +59,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `admin_profiles` (
   `admin_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
+  `admin_fname` varchar(100) NOT NULL,
+  `admin_lname` varchar(100) NOT NULL,
   `profile_image` varchar(255) DEFAULT 'default.png',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -39,8 +70,8 @@ CREATE TABLE `admin_profiles` (
 -- Dumping data for table `admin_profiles`
 --
 
-INSERT INTO `admin_profiles` (`admin_id`, `user_id`, `profile_image`, `created_at`, `updated_at`) VALUES
-(1, 2, 'admin_profile_2_1775054837.png', '2026-04-01 14:44:32', '2026-04-01 14:47:17');
+INSERT INTO `admin_profiles` (`admin_id`, `user_id`, `admin_fname`, `admin_lname`, `profile_image`, `created_at`, `updated_at`) VALUES
+(1, 2, 'System', 'Administrator', 'admin_69dba6253389f4.96125812.png', '2026-04-12 14:02:51', '2026-04-12 14:04:12');
 
 -- --------------------------------------------------------
 
@@ -56,6 +87,13 @@ CREATE TABLE `applications` (
   `status` enum('Pending','Reviewed','Shortlisted','Rejected','Offered','Accepted','Declined','Contract Signed') DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `applications`
+--
+
+INSERT INTO `applications` (`application_id`, `internship_id`, `intern_id`, `date_applied`, `status`) VALUES
+(14, 21, 29, '2026-04-12 14:09:00', 'Accepted');
+
 -- --------------------------------------------------------
 
 --
@@ -66,16 +104,11 @@ CREATE TABLE `companies` (
   `company_id` int(11) NOT NULL,
   `company_name` varchar(255) NOT NULL,
   `contact_phone` varchar(50) DEFAULT NULL,
-  `address` text DEFAULT NULL,
   `industry` varchar(100) DEFAULT NULL,
   `contact_person` varchar(100) DEFAULT NULL,
   `website` varchar(150) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `profile_image` varchar(255) DEFAULT 'default.png',
-  `city` varchar(100) DEFAULT NULL,
-  `province` varchar(100) DEFAULT NULL,
-  `postal_code` varchar(20) DEFAULT NULL,
-  `country` varchar(50) NOT NULL,
   `contact_email` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -85,8 +118,8 @@ CREATE TABLE `companies` (
 -- Dumping data for table `companies`
 --
 
-INSERT INTO `companies` (`company_id`, `company_name`, `contact_phone`, `address`, `industry`, `contact_person`, `website`, `description`, `profile_image`, `city`, `province`, `postal_code`, `country`, `contact_email`, `created_at`, `updated_at`) VALUES
-(10, 'Company', '0123456789', 'Company', 'Company', 'Person', 'https://@example.com', 'Company', 'default.png', NULL, NULL, NULL, '', NULL, '2026-04-02 05:47:42', '2026-04-02 05:47:42');
+INSERT INTO `companies` (`company_id`, `company_name`, `contact_phone`, `industry`, `contact_person`, `website`, `description`, `profile_image`, `contact_email`, `created_at`, `updated_at`) VALUES
+(16, 'None', '09263636477', 'Software Development & Cloud Solutions', 'Xavier Ace Clark Jucel Azcona', 'https://www.nexasofttech.com', 'lol', 'default.png', NULL, '2026-04-10 16:47:16', '2026-04-10 16:47:16');
 
 -- --------------------------------------------------------
 
@@ -105,6 +138,13 @@ CREATE TABLE `contracts` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `contracts`
+--
+
+INSERT INTO `contracts` (`contract_id`, `application_id`, `contract_pdf`, `contract_file`, `signed_file`, `signed_date`, `hr_confirmed`, `created_at`) VALUES
+(16, 14, 'contract_14_1776003120.pdf', 'contract_14_1776003120.pdf', 'signed_contract_16_1776004185.pdf', '2026-04-12 22:29:45', 1, '2026-04-12 14:12:00');
+
 -- --------------------------------------------------------
 
 --
@@ -122,10 +162,6 @@ CREATE TABLE `interns` (
   `birthdate` date DEFAULT NULL,
   `age` int(11) DEFAULT NULL,
   `contact_no` varchar(20) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `city` varchar(100) DEFAULT NULL,
-  `province` varchar(100) DEFAULT NULL,
-  `postal_code` varchar(20) DEFAULT NULL,
   `university` varchar(150) DEFAULT NULL,
   `course` varchar(150) DEFAULT NULL,
   `year_level` varchar(50) DEFAULT NULL,
@@ -137,8 +173,8 @@ CREATE TABLE `interns` (
 -- Dumping data for table `interns`
 --
 
-INSERT INTO `interns` (`intern_id`, `user_id`, `first_name`, `middle_name`, `last_name`, `suffix`, `gender`, `birthdate`, `age`, `contact_no`, `address`, `city`, `province`, `postal_code`, `university`, `course`, `year_level`, `created_at`, `profile_image`) VALUES
-(23, 45, 'Intern', 'Intern', 'Intern', NULL, 'Male', '2022-01-01', 25, '0123456789', 'Intern', 'Intern', 'Intern', 'Intern', 'Intern', 'Intern', 'Intern', '2026-04-02 05:48:57', 'default.png');
+INSERT INTO `interns` (`intern_id`, `user_id`, `first_name`, `middle_name`, `last_name`, `suffix`, `gender`, `birthdate`, `age`, `contact_no`, `university`, `course`, `year_level`, `created_at`, `profile_image`) VALUES
+(29, 59, 'Xavier Ace Clark Jucel', '', 'Azcona', NULL, '', '2012-02-07', 14, '09067470860', ' Northwestern Mindanao State College of Science and Technology', 'Bachelor of Science in Information Technology', '3rd Year', '2026-04-10 16:41:53', 'default.png');
 
 -- --------------------------------------------------------
 
@@ -160,6 +196,13 @@ CREATE TABLE `internships` (
   `end_date` date DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `internships`
+--
+
+INSERT INTO `internships` (`internship_id`, `company_id`, `title`, `description`, `requirements`, `duration`, `allowance`, `deadline`, `status`, `start_date`, `end_date`, `created_at`) VALUES
+(21, 16, 'Test', 'Test', 'Test', '4 Test', 500.00, '2026-04-15', 'approved', NULL, NULL, '2026-04-12 14:07:17');
 
 -- --------------------------------------------------------
 
@@ -184,8 +227,18 @@ CREATE TABLE `notifications` (
 --
 
 INSERT INTO `notifications` (`notification_id`, `user_id`, `message`, `action_url`, `action_label`, `related_user_id`, `is_read`, `created_at`, `link`) VALUES
-(131, 1, 'New staff member registered: company@gmail.com', 'send_verification.php?user_id=44', 'Send Verification Link', 44, 0, '2026-04-02 05:47:42', ''),
-(132, 1, 'New intern registered: intern@gmail.com', 'send_verification.php?user_id=45', 'Send Verification Link', 45, 0, '2026-04-02 05:48:57', '');
+(1, 2, 'New intern registered: xavierazcona0422@gmail.com', 'send_verification.php?user_id=59', 'Send Verification Link', 59, 1, '2026-04-10 16:41:53', ''),
+(2, 2, 'User xavierazcona0422@gmail.com has verified their email.', 'send_otp.php?user_id=59', 'Send Temopory Password', 59, 1, '2026-04-10 16:44:41', ''),
+(3, 2, 'New staff registered: gamingxac@gmail.com', 'send_verification.php?user_id=60', 'Send Verification Link', 60, 1, '2026-04-10 16:47:16', ''),
+(4, 2, 'User gamingxac@gmail.com has verified their email.', 'send_otp.php?user_id=60', 'Send Temopory Password', 60, 1, '2026-04-10 16:49:19', ''),
+(5, 2, 'Company \'None\' has posted a new internship: Test', NULL, NULL, NULL, 1, '2026-04-12 14:07:17', '../admin/view_internship.php?id=21'),
+(6, 60, 'Your internship has been approved by the admin.', NULL, NULL, NULL, 1, '2026-04-12 14:08:12', ''),
+(7, 60, 'A new intern applied for your internship: Test', 'applications.php', 'View Application', NULL, 1, '2026-04-12 14:09:00', ''),
+(8, 59, 'Your application for \'Test\' has been offered', NULL, NULL, NULL, 1, '2026-04-12 14:09:36', ''),
+(9, 60, 'Xavier Ace Clark Jucel Azcona accepted your internship offer for Test.', 'applications.php', 'View Applications', NULL, 1, '2026-04-12 14:10:46', ''),
+(10, 59, 'A new contract for \'Test\' is ready for your signature.', NULL, NULL, NULL, 1, '2026-04-12 14:12:00', 'intern/contracts.php'),
+(11, 60, 'An intern has signed a contract for \'Test\'. Please review and confirm.', NULL, NULL, NULL, 0, '2026-04-12 14:29:45', 'company/contracts.php'),
+(12, 59, 'Your contract has been confirmed by None', NULL, NULL, NULL, 0, '2026-04-12 14:30:23', '');
 
 -- --------------------------------------------------------
 
@@ -211,7 +264,7 @@ CREATE TABLE `staffs` (
 --
 
 INSERT INTO `staffs` (`staff_id`, `user_id`, `company_id`, `first_name`, `last_name`, `email`, `contact_no`, `position`, `profile_image`, `created_at`) VALUES
-(3, 44, 10, 'Person', '', 'company@gmail.com', '0123456789', 'Contact Person', 'default.png', '2026-04-02 05:47:42');
+(9, 60, 16, 'Xavier', 'Ace Clark Jucel Azcona', 'chicj@gmail.com', '09263636477', 'Contact Person', 'default.png', '2026-04-10 16:47:16');
 
 -- --------------------------------------------------------
 
@@ -226,6 +279,15 @@ CREATE TABLE `system_logs` (
   `description` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `system_logs`
+--
+
+INSERT INTO `system_logs` (`log_id`, `user_id`, `action`, `description`, `created_at`) VALUES
+(1, 60, 'Create internship', 'Created new internship: Test (ID: 21)', '2026-04-12 14:07:17'),
+(2, 2, 'Approve Internship', 'Approved internship \'Test\' (ID 21)', '2026-04-12 14:08:12'),
+(3, 60, 'Update application status', 'Changed application #14 for Xavier Ace Clark Jucel Azcona from Pending to Offered', '2026-04-12 14:09:36');
 
 -- --------------------------------------------------------
 
@@ -252,10 +314,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `password_hash`, `user_type`, `verified`, `created_at`, `updated_at`, `first_login`, `reset_token`, `token_expiry`, `status`) VALUES
-(1, 'superadmin@gmail.com', '$2y$10$oIGKeUK8PO0.sxiKA/ZcKOp28LFZV8y20mCvdnQLH2NcDrJblKkCi', 'superadmin', 1, '2026-04-01 14:42:54', '2026-04-01 14:42:54', 0, NULL, NULL, 'active'),
+(1, 'superadmin@gmail.com', '$2y$10$oIGKeUK8PO0.sxiKA/ZcKOp28LFZV8y20mCvdnQLH2NcDrJblKkCi', 'superadmin', 1, '2026-04-01 14:42:54', '2026-04-03 11:31:29', 0, NULL, NULL, 'active'),
 (2, 'admin@gmail.com', '$2y$10$tR3NJ0CkGP903/yCN1SwBePZW/jSLK4Se4LCu6crziPPEdkp3/fXi', 'admin', 1, '2026-04-01 14:43:48', '2026-04-01 14:43:48', 0, NULL, NULL, 'active'),
-(44, 'company@gmail.com', '$2y$10$nRtAZE9B1KBHycS58zv7auBXyT468RaIjXhAX7xDAC9kVO1x9xLai', 'staff', 1, '2026-04-02 05:47:42', '2026-04-02 05:49:57', 0, NULL, NULL, 'active'),
-(45, 'intern@gmail.com', '$2y$10$0GqXyTmQRLQse1aOrlcElOG3U97jXUbIZsOMISxLNY2opg5kyC3mm', 'intern', 1, '2026-04-02 05:48:57', '2026-04-02 10:46:11', 0, NULL, NULL, 'active');
+(59, 'xavierazcona0422@gmail.com', '$2y$10$J8R8WcbV0/n6xOcFmbBPxu7ipGqmZThWAZljqXFdIbtn2/YK1ZSsq', 'intern', 1, '2026-04-10 16:41:53', '2026-04-10 16:46:12', 0, NULL, NULL, 'active'),
+(60, 'gamingxac@gmail.com', '$2y$10$b1LYJLk2TGIUq8mmm74GaugQwFhcWvTXkeq5H.COCEn3yOanaWMx6', 'staff', 1, '2026-04-10 16:47:16', '2026-04-10 16:50:23', 0, NULL, NULL, 'active');
 
 -- --------------------------------------------------------
 
@@ -273,8 +335,27 @@ CREATE TABLE `verification_tokens` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `verification_tokens`
+--
+
+INSERT INTO `verification_tokens` (`token_id`, `user_id`, `token`, `expiry`, `used`, `type`) VALUES
+(90, 59, '585be1b39f15cced1828d750497a2b271e3f980aecd11a5bf462ced003a80b8e', '2026-04-11 18:42:38', 0, 'email_verify'),
+(91, 59, '94d484b6a1cc402a924b6bdb4ac2ffa84ab79cc2fce46511947cd1aa1afff4e9', '2026-04-11 18:44:26', 1, 'email_verify'),
+(92, 59, '801771', '2026-04-11 01:45:06', 1, 'otp'),
+(93, 60, '07a388f8024de1c02d7ffc38a10faaf985ef1e4907c3398e6c9e330f869d00ed', '2026-04-11 18:47:45', 1, 'email_verify'),
+(94, 60, '427583', '2026-04-11 01:49:26', 1, 'otp');
+
+--
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `addresses`
+--
+ALTER TABLE `addresses`
+  ADD PRIMARY KEY (`address_id`),
+  ADD KEY `idx_entity` (`entity_id`,`entity_type`),
+  ADD KEY `idx_primary` (`entity_id`,`entity_type`,`is_primary`);
 
 --
 -- Indexes for table `admin_profiles`
@@ -368,6 +449,12 @@ ALTER TABLE `verification_tokens`
 --
 
 --
+-- AUTO_INCREMENT for table `addresses`
+--
+ALTER TABLE `addresses`
+  MODIFY `address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `admin_profiles`
 --
 ALTER TABLE `admin_profiles`
@@ -377,61 +464,61 @@ ALTER TABLE `admin_profiles`
 -- AUTO_INCREMENT for table `applications`
 --
 ALTER TABLE `applications`
-  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `companies`
 --
 ALTER TABLE `companies`
-  MODIFY `company_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `company_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `contracts`
 --
 ALTER TABLE `contracts`
-  MODIFY `contract_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `contract_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `interns`
 --
 ALTER TABLE `interns`
-  MODIFY `intern_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `intern_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `internships`
 --
 ALTER TABLE `internships`
-  MODIFY `internship_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `internship_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
+  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `staffs`
 --
 ALTER TABLE `staffs`
-  MODIFY `staff_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `staff_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `system_logs`
 --
 ALTER TABLE `system_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `verification_tokens`
 --
 ALTER TABLE `verification_tokens`
-  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- Constraints for dumped tables

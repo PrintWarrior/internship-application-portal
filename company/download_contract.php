@@ -14,12 +14,14 @@ $type = isset($_GET['type']) ? $_GET['type'] : 'signed'; // 'signed' or 'unsigne
 // Get contract details and verify it belongs to this company
 $stmt = $pdo->prepare("
     SELECT ct.*, 
-           ir.first_name, ir.last_name, ir.middle_name, ir.contact_no, ir.address,
-           ir.city, ir.province, ir.postal_code, ir.university, ir.course, ir.year_level,
+           ir.first_name, ir.last_name, ir.middle_name, ir.contact_no,
+           intern_addr.address_line AS intern_address,
+           intern_addr.city, intern_addr.province, intern_addr.postal_code,
+           ir.university, ir.course, ir.year_level,
            u.email,
            i.title as internship_title, i.description, i.duration, i.allowance,
            i.start_date, i.end_date, i.internship_id,
-           c.company_name, c.industry, c.contact_person, c.address,
+           c.company_name, c.industry, c.contact_person, company_addr.address_line AS company_address,
            a.application_id, a.status as application_status,
            CONCAT(ir.first_name, ' ', ir.last_name) as intern_name
     FROM contracts ct
@@ -28,6 +30,14 @@ $stmt = $pdo->prepare("
     JOIN companies c ON i.company_id = c.company_id
     JOIN interns ir ON a.intern_id = ir.intern_id
     JOIN users u ON ir.user_id = u.user_id
+    LEFT JOIN addresses company_addr
+        ON company_addr.entity_id = c.company_id
+        AND company_addr.entity_type = 'company'
+        AND company_addr.is_primary = 1
+    LEFT JOIN addresses intern_addr
+        ON intern_addr.entity_id = ir.intern_id
+        AND intern_addr.entity_type = 'intern'
+        AND intern_addr.is_primary = 1
     WHERE ct.contract_id = ? AND i.company_id = ?
 ");
 $stmt->execute([$contract_id, $company['company_id']]);
@@ -138,7 +148,7 @@ $pdf->Cell(0, 6, 'THE COMPANY', 0, 1, 'L');
 $pdf->SetFont('Arial', '', 10);
 $pdf->MultiCell(0, 5, $contract['company_name'] . "\n" .
                      'Represented by: ' . $contract['contact_person'] . "\n" .
-                     'Address: ' . $contract['address']);
+                     'Address: ' . $contract['company_address']);
 $pdf->Ln(5);
 
 // Intern Information
@@ -166,7 +176,7 @@ $pdf->SectionTitle('INTERN INFORMATION');
 $pdf->LabelValue('University', $contract['university'] ?: 'Not specified');
 $pdf->LabelValue('Course', $contract['course'] ?: 'Not specified');
 $pdf->LabelValue('Year Level', $contract['year_level'] ?: 'Not specified');
-$pdf->LabelValue('Address', $contract['city'] . ', ' . $contract['province'] . ' ' . $contract['postal_code']);
+$pdf->LabelValue('Address', trim(($contract['intern_address'] ?? '') . ', ' . ($contract['city'] ?? '') . ', ' . ($contract['province'] ?? '') . ' ' . ($contract['postal_code'] ?? '')));
 $pdf->Ln(5);
 
 // TERMS AND CONDITIONS

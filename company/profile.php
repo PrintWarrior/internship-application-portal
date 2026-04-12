@@ -32,7 +32,7 @@ if (isset($_POST['update_profile'])) {
         $stmt = $pdo->prepare("
             UPDATE companies 
             SET company_name=?, industry=?, contact_person=?, contact_phone=?, 
-                address=?, city=?, province=?, postal_code=?, country=?, website=?, description=? 
+                website=?, description=? 
             WHERE company_id=?
         ");
 
@@ -41,14 +41,16 @@ if (isset($_POST['update_profile'])) {
             $_POST['industry'],
             $_POST['contact_person'],
             $_POST['contact_phone'],
-            $_POST['address'],
-            $_POST['city'],
-            $_POST['province'],
-            $_POST['postal_code'],
-            $_POST['country'],
             $_POST['website'],
             $_POST['description'],
             $company['company_id']
+        ]);
+        upsertEntityAddress((int) $company['company_id'], 'company', [
+            'address_line' => $_POST['address'] ?? null,
+            'city' => $_POST['city'] ?? null,
+            'province' => $_POST['province'] ?? null,
+            'postal_code' => $_POST['postal_code'] ?? null,
+            'country' => $_POST['country'] ?? 'Philippines'
         ]);
         $company_id = $company['company_id'];
 

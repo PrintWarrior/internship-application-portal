@@ -10,9 +10,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 $id = $_GET['id'] ?? 0;
 
 $stmt = $pdo->prepare("
-    SELECT i.*, u.email, u.created_at
+    SELECT i.*, u.email, u.created_at,
+           addr.address_line AS address, addr.city, addr.province, addr.postal_code, addr.country
     FROM interns i
     JOIN users u ON i.user_id = u.user_id
+    LEFT JOIN addresses addr
+        ON addr.entity_id = i.intern_id
+        AND addr.entity_type = 'intern'
+        AND addr.is_primary = 1
     WHERE i.intern_id = ?
 ");
 

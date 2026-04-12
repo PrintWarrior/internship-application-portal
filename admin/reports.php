@@ -19,7 +19,7 @@ $totalInternships = $pdo->query("SELECT COUNT(*) FROM internships")->fetchColumn
 $totalApplications = $pdo->query("SELECT COUNT(*) FROM applications")->fetchColumn();
 
 // Additional stats
-$openInternships = $pdo->query("SELECT COUNT(*) FROM internships WHERE status = 'open'")->fetchColumn();
+$openInternships = $pdo->query("SELECT COUNT(*) FROM internships WHERE status = 'approved'")->fetchColumn();
 $pendingApplications = $pdo->query("SELECT COUNT(*) FROM applications WHERE status = 'Pending'")->fetchColumn();
 $acceptedApplications = $pdo->query("SELECT COUNT(*) FROM applications WHERE status = 'Accepted'")->fetchColumn();
 $rejectedApplications = $pdo->query("SELECT COUNT(*) FROM applications WHERE status = 'Rejected'")->fetchColumn();

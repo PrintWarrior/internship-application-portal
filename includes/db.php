@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$dbname = 'application_portal';
+$dbname = 'internapp_portal';
 $username = 'root';
 $password = '';
 

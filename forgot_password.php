@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$token, $expiry, $email]);
 
         // Reset link
-        $link = "http://localhost/intern%20app%20portal%20v2/reset_password.php?token=" . $token;
+        $link = "http://localhost/intern%20app%20portal%20v3/reset_password.php?token=" . $token;
 
         $mail = new PHPMailer(true);
 

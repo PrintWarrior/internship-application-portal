@@ -10,7 +10,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 
 $id = $_GET['id'] ?? 0;
 
-$stmt = $pdo->prepare("SELECT * FROM companies WHERE company_id = ?");
+$stmt = $pdo->prepare("
+    SELECT c.*, addr.address_line AS address
+    FROM companies c
+    LEFT JOIN addresses addr
+        ON addr.entity_id = c.company_id
+        AND addr.entity_type = 'company'
+        AND addr.is_primary = 1
+    WHERE c.company_id = ?
+");
 $stmt->execute([$id]);
 $company = $stmt->fetch();
 
@@ -28,11 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $stmt = $pdo->prepare("
         UPDATE companies
-        SET company_name=?, industry=?, contact_phone=?, address=?
+        SET company_name=?, industry=?, contact_phone=?
         WHERE company_id=?
     ");
 
-    $stmt->execute([$name,$industry,$phone,$address,$id]);
+    $stmt->execute([$name,$industry,$phone,$id]);
+    upsertEntityAddress((int) $id, 'company', [
+        'address_line' => $address
+    ]);
 
     logAction("Edit Company", "Updated company ID $id");
 

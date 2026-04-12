@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../includes/db.php';
+require_once '../includes/functions.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'intern') {
     header('Location: ../index.php');
@@ -17,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile_info']
     $stmt = $pdo->prepare("
             UPDATE interns SET
                 first_name = ?, middle_name = ?, last_name = ?,
-                contact_no = ?, address = ?, city = ?, province = ?, postal_code = ?,
+                contact_no = ?,
                 university = ?, course = ?, year_level = ?
             WHERE user_id = ?
         ");
@@ -27,15 +28,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile_info']
         $_POST['middle_name'],
         $_POST['last_name'],
         $_POST['contact_no'],
-        $_POST['address'],
-        $_POST['city'],
-        $_POST['province'],
-        $_POST['postal_code'],
         $_POST['university'],
         $_POST['course'],
         $_POST['year_level'],
         $user_id
     ]);
+
+    $internStmt = $pdo->prepare("SELECT intern_id FROM interns WHERE user_id = ?");
+    $internStmt->execute([$user_id]);
+    $internId = $internStmt->fetchColumn();
+
+    if ($internId) {
+        upsertEntityAddress((int) $internId, 'intern', [
+            'address_line' => $_POST['address'] ?? null,
+            'city' => $_POST['city'] ?? null,
+            'province' => $_POST['province'] ?? null,
+            'postal_code' => $_POST['postal_code'] ?? null,
+            'country' => $_POST['country'] ?? 'Philippines'
+        ]);
+    }
 
     header("Location: profile.php?profile_success=1");
     exit;
@@ -117,9 +128,18 @@ FETCH PROFILE
 ======================== */
 
 $stmt = $pdo->prepare("
-        SELECT i.*, u.email 
+        SELECT i.*, u.email,
+               addr.address_line AS address,
+               addr.city,
+               addr.province,
+               addr.postal_code,
+               addr.country
         FROM interns i
         JOIN users u ON i.user_id = u.user_id
+        LEFT JOIN addresses addr
+            ON addr.entity_id = i.intern_id
+            AND addr.entity_type = 'intern'
+            AND addr.is_primary = 1
         WHERE i.user_id = ?
     ");
 $stmt->execute([$user_id]);

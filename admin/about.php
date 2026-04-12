@@ -22,8 +22,11 @@ $adminProfile = $stmt->fetch();
 
 // If no profile exists, create one
 if (!$adminProfile) {
-    $insertStmt = $pdo->prepare("INSERT INTO admin_profiles (user_id, profile_image, full_name, title) VALUES (?, 'default.png', ?, ?)");
-    $insertStmt->execute([$user_id, 'Administrator', 'System Administrator']);
+    $insertStmt = $pdo->prepare("
+        INSERT INTO admin_profiles (user_id, admin_fname, admin_lname, profile_image)
+        VALUES (?, ?, ?, 'default.png')
+    ");
+    $insertStmt->execute([$user_id, 'Administrator', '']);
     
     $stmt = $pdo->prepare("SELECT * FROM admin_profiles WHERE user_id = ?");
     $stmt->execute([$user_id]);
@@ -105,21 +108,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_image'])) {
 // Handle profile update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     $full_name = $_POST['full_name'] ?? '';
-    $title = $_POST['title'] ?? '';
-    $location = $_POST['location'] ?? '';
-    $bio = $_POST['bio'] ?? '';
-    $github = $_POST['github'] ?? '';
-    $linkedin = $_POST['linkedin'] ?? '';
-    $twitter = $_POST['twitter'] ?? '';
-    $portfolio = $_POST['portfolio'] ?? '';
+    $nameParts = preg_split('/\s+/', trim($full_name), 2);
+    $first_name = $nameParts[0] ?? 'Administrator';
+    $last_name = $nameParts[1] ?? '';
     
     $updateStmt = $pdo->prepare("
-        UPDATE admin_profiles 
-        SET full_name = ?, title = ?, location = ?, bio = ?, 
-            github = ?, linkedin = ?, twitter = ?, portfolio = ?
+        UPDATE admin_profiles
+        SET admin_fname = ?, admin_lname = ?
         WHERE user_id = ?
     ");
-    $updateStmt->execute([$full_name, $title, $location, $bio, $github, $linkedin, $twitter, $portfolio, $user_id]);
+    $updateStmt->execute([$first_name, $last_name, $user_id]);
     
     // Refresh admin profile data
     $stmt = $pdo->prepare("SELECT * FROM admin_profiles WHERE user_id = ?");
@@ -138,14 +136,14 @@ if (!file_exists($imagePath)) {
 }
 
 // Set default values if empty
-$full_name = $adminProfile['full_name'] ?? 'John Michael Santos';
-$title = $adminProfile['title'] ?? 'Full Stack Developer & System Architect';
-$location = $adminProfile['location'] ?? 'Manila, Philippines';
-$bio = $adminProfile['bio'] ?? 'I am a passionate Full Stack Developer with over 5 years of experience in building robust web applications. I specialize in creating scalable and efficient systems that solve real-world problems. This Internship Portal is one of my proudest projects, designed to bridge the gap between talented students and forward-thinking companies.';
-$github = $adminProfile['github'] ?? '#';
-$linkedin = $adminProfile['linkedin'] ?? '#';
-$twitter = $adminProfile['twitter'] ?? '#';
-$portfolio = $adminProfile['portfolio'] ?? '#';
+$full_name = trim(($adminProfile['admin_fname'] ?? 'John Michael') . ' ' . ($adminProfile['admin_lname'] ?? 'Santos'));
+$title = 'Full Stack Developer & System Architect';
+$location = 'Manila, Philippines';
+$bio = 'I am a passionate Full Stack Developer with over 5 years of experience in building robust web applications. I specialize in creating scalable and efficient systems that solve real-world problems. This Internship Portal is one of my proudest projects, designed to bridge the gap between talented students and forward-thinking companies.';
+$github = '#';
+$linkedin = '#';
+$twitter = '#';
+$portfolio = '#';
 ?>
 
 <!DOCTYPE html>

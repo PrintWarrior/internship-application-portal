@@ -15,7 +15,7 @@ $unread = $stmt->fetchColumn();
 
 // Get all contracts
 $stmt = $pdo->prepare("
-    SELECT ct.*, ir.first_name, ir.last_name, u.email, i.title, i.start_date, i.end_date
+    SELECT ct.*, ir.intern_id, ir.first_name, ir.last_name, u.email, i.title, i.start_date, i.end_date
     FROM contracts ct
     JOIN applications a ON ct.application_id = a.application_id
     JOIN internships i ON a.internship_id = i.internship_id

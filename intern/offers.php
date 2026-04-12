@@ -128,7 +128,7 @@
 
         <!-- MAIN CONTENT -->
         <div class="main-content">
-            <h2>Job Offers</h2>
+            <h2>Internship Offers</h2>
 
             <div class="table-container">
                 <?php if (count($offers) > 0): ?>

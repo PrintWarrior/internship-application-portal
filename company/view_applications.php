@@ -32,10 +32,10 @@ $stmt = $pdo->prepare("
            ir.gender,
            ir.birthdate,
            ir.age,
-           ir.address,
-           ir.city,
-           ir.province,
-           ir.postal_code,
+           addr.address_line AS address,
+           addr.city,
+           addr.province,
+           addr.postal_code,
            ir.university,
            ir.course,
            ir.year_level,
@@ -46,6 +46,10 @@ $stmt = $pdo->prepare("
     JOIN companies c ON i.company_id = c.company_id
     JOIN interns ir ON a.intern_id = ir.intern_id
     JOIN users u ON ir.user_id = u.user_id
+    LEFT JOIN addresses addr
+        ON addr.entity_id = ir.intern_id
+        AND addr.entity_type = 'intern'
+        AND addr.is_primary = 1
     WHERE a.application_id = ? AND i.company_id = ?
 ");
 $stmt->execute([$application_id, $company['company_id']]);

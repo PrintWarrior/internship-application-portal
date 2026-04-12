@@ -29,28 +29,36 @@ if (!$internship) {
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $stmt = $pdo->prepare("
-        UPDATE internships 
-        SET title = ?, description = ?, requirements = ?, 
-            duration = ?, allowance = ?, deadline = ?
-        WHERE internship_id = ?
-    ");
-    $stmt->execute([
-        $_POST['title'],
-        $_POST['description'],
-        $_POST['requirements'],
-        $_POST['duration'],
-        $_POST['allowance'],
-        $_POST['deadline'],
-        //$_POST['status'],
-        $internship_id
-    ]);
-    
-    // Log the action
-    logAction('Update internship', 'Updated internship: ' . $_POST['title'] . ' (ID: ' . $internship_id . ')');
-    
-    header("Location: view_internship.php?id=" . $internship_id . "&updated=1");
-    exit;
+    $start_date = !empty($_POST['start_date']) ? $_POST['start_date'] : null;
+    $end_date = !empty($_POST['end_date']) ? $_POST['end_date'] : null;
+
+    if ($start_date && $end_date && $end_date < $start_date) {
+        $error = 'date_range';
+    } else {
+        $stmt = $pdo->prepare("
+            UPDATE internships 
+            SET title = ?, description = ?, requirements = ?, 
+                duration = ?, allowance = ?, deadline = ?, start_date = ?, end_date = ?
+            WHERE internship_id = ?
+        ");
+        $stmt->execute([
+            $_POST['title'],
+            $_POST['description'],
+            $_POST['requirements'],
+            $_POST['duration'],
+            $_POST['allowance'],
+            $_POST['deadline'],
+            $start_date,
+            $end_date,
+            $internship_id
+        ]);
+        
+        // Log the action
+        logAction('Update internship', 'Updated internship: ' . $_POST['title'] . ' (ID: ' . $internship_id . ')');
+        
+        header("Location: view_internship.php?id=" . $internship_id . "&updated=1");
+        exit;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -100,40 +108,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="form-container">
             <form method="POST">
+                <?php if (!empty($error)): ?>
+                    <div class="error-message"
+                        style="border: 2px solid #ff0000; padding: 10px; margin-bottom: 20px; color: #ff0000; font-weight: bold;">
+                        End date must be on or after the start date.
+                    </div>
+                <?php endif; ?>
+
                 <div class="form-group">
                     <label for="title">Internship Title *</label>
                     <input type="text" id="title" name="title" 
-                           value="<?= htmlspecialchars($internship['title']) ?>" required>
+                           value="<?= htmlspecialchars($_POST['title'] ?? $internship['title']) ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" rows="5"><?= htmlspecialchars($internship['description']) ?></textarea>
+                    <textarea id="description" name="description" rows="5"><?= htmlspecialchars($_POST['description'] ?? $internship['description']) ?></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="requirements">Requirements</label>
-                    <textarea id="requirements" name="requirements" rows="5"><?= htmlspecialchars($internship['requirements']) ?></textarea>
+                    <textarea id="requirements" name="requirements" rows="5"><?= htmlspecialchars($_POST['requirements'] ?? $internship['requirements']) ?></textarea>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group half">
                         <label for="duration">Duration</label>
                         <input type="text" id="duration" name="duration" 
-                               value="<?= htmlspecialchars($internship['duration']) ?>">
+                               value="<?= htmlspecialchars($_POST['duration'] ?? $internship['duration']) ?>">
                     </div>
 
                     <div class="form-group half">
                         <label for="allowance">Allowance (₱)</label>
                         <input type="number" step="0.01" id="allowance" name="allowance" 
-                               value="<?= htmlspecialchars($internship['allowance']) ?>">
+                               value="<?= htmlspecialchars($_POST['allowance'] ?? $internship['allowance']) ?>">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="start_date">Start Date</label>
+                        <input type="date" id="start_date" name="start_date"
+                               value="<?= htmlspecialchars($_POST['start_date'] ?? $internship['start_date']) ?>">
+                    </div>
+
+                    <div class="form-group half">
+                        <label for="end_date">End Date</label>
+                        <input type="date" id="end_date" name="end_date"
+                               value="<?= htmlspecialchars($_POST['end_date'] ?? $internship['end_date']) ?>">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="deadline">Application Deadline</label>
                     <input type="date" id="deadline" name="deadline" 
-                           value="<?= htmlspecialchars($internship['deadline']) ?>">
+                           value="<?= htmlspecialchars($_POST['deadline'] ?? $internship['deadline']) ?>">
                 </div>
 
                 <div class="form-actions">

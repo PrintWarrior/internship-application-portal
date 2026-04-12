@@ -12,15 +12,20 @@ $contract_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 // Get contract details
 $stmt = $pdo->prepare("
-    SELECT ct.*, 
-           ir.first_name, ir.last_name, ir.email,
+    SELECT ct.*, a.intern_id,
+           ir.first_name, ir.last_name, u.email,
            i.title, i.start_date, i.end_date, i.allowance,
-           c.company_name, c.contact_person, c.address
+           c.company_name, c.contact_person, addr.address_line AS company_address
     FROM contracts ct
     JOIN applications a ON ct.application_id = a.application_id
     JOIN internships i ON a.internship_id = i.internship_id
     JOIN companies c ON i.company_id = c.company_id
     JOIN interns ir ON a.intern_id = ir.intern_id
+    JOIN users u ON ir.user_id = u.user_id
+    LEFT JOIN addresses addr
+        ON addr.entity_id = c.company_id
+        AND addr.entity_type = 'company'
+        AND addr.is_primary = 1
     WHERE ct.contract_id = ? AND i.company_id = ?
 ");
 $stmt->execute([$contract_id, $company['company_id']]);
@@ -63,7 +68,7 @@ $pdf->Cell(0, 7, "THE COMPANY:", 0, 1);
 $pdf->SetFont('Arial', '', 12);
 $pdf->Cell(0, 7, $contract['company_name'], 0, 1);
 $pdf->Cell(0, 7, "Represented by: " . $contract['contact_person'], 0, 1);
-$pdf->Cell(0, 7, "Address: " . $contract['address'], 0, 1);
+$pdf->Cell(0, 7, "Address: " . $contract['company_address'], 0, 1);
 $pdf->Ln(5);
 
 // Intern details
@@ -126,8 +131,8 @@ $pdf_path = '../temp_contracts/' . $pdf_filename;
 $pdf->Output('F', $pdf_path);
 
 // Update contract with PDF path
-$stmt = $pdo->prepare("UPDATE contracts SET contract_pdf = ? WHERE contract_id = ?");
-$stmt->execute([$pdf_filename, $contract_id]);
+$stmt = $pdo->prepare("UPDATE contracts SET contract_pdf = ?, contract_file = ? WHERE contract_id = ?");
+$stmt->execute([$pdf_filename, $pdf_filename, $contract_id]);
 
 // Create notification for intern
 $stmt = $pdo->prepare("

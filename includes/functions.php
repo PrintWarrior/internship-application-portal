@@ -110,26 +110,70 @@ function getStaffCompanyContext($userId) {
             s.profile_image AS staff_profile_image,
             c.company_name,
             c.contact_phone,
-            c.address,
             c.industry,
             c.contact_person,
             c.website,
             c.description,
             c.profile_image,
-            c.city,
-            c.province,
-            c.postal_code,
-            c.country,
             c.contact_email,
             c.created_at,
-            c.updated_at
+            c.updated_at,
+            addr.address_line AS address,
+            addr.city,
+            addr.province,
+            addr.postal_code,
+            addr.country
         FROM staffs s
         JOIN companies c ON s.company_id = c.company_id
+        LEFT JOIN addresses addr
+            ON addr.entity_id = c.company_id
+            AND addr.entity_type = 'company'
+            AND addr.is_primary = 1
         WHERE s.user_id = ?
         LIMIT 1
     ");
     $stmt->execute([$userId]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function upsertEntityAddress($entityId, $entityType, array $addressData, $addressType = 'primary') {
+    global $pdo;
+
+    $stmt = $pdo->prepare("
+        SELECT address_id
+        FROM addresses
+        WHERE entity_id = ? AND entity_type = ? AND is_primary = 1
+        LIMIT 1
+    ");
+    $stmt->execute([$entityId, $entityType]);
+    $addressId = $stmt->fetchColumn();
+
+    $payload = [
+        $addressType,
+        $addressData['address_line'] ?? null,
+        $addressData['city'] ?? null,
+        $addressData['province'] ?? null,
+        $addressData['postal_code'] ?? null,
+        $addressData['country'] ?? 'Philippines'
+    ];
+
+    if ($addressId) {
+        $update = $pdo->prepare("
+            UPDATE addresses
+            SET address_type = ?, address_line = ?, city = ?, province = ?, postal_code = ?, country = ?
+            WHERE address_id = ?
+        ");
+        $update->execute([...$payload, $addressId]);
+        return (int) $addressId;
+    }
+
+    $insert = $pdo->prepare("
+        INSERT INTO addresses (entity_id, entity_type, address_type, address_line, city, province, postal_code, country, is_primary)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)
+    ");
+    $insert->execute([$entityId, $entityType, ...$payload]);
+
+    return (int) $pdo->lastInsertId();
 }
 
 function getCompanyStaffUserIds($companyId) {

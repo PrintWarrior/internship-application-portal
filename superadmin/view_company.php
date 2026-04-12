@@ -20,10 +20,15 @@ $stmt->execute([$_SESSION['user_id']]);
 $unread = $stmt->fetchColumn();
 
 $stmt = $pdo->prepare("
-    SELECT c.*, u.email, u.created_at, s.first_name, s.last_name
+    SELECT c.*, u.email, u.created_at, s.first_name, s.last_name,
+           addr.address_line AS address, addr.city, addr.province, addr.postal_code, addr.country
     FROM companies c
     LEFT JOIN staffs s ON c.company_id = s.company_id
     LEFT JOIN users u ON s.user_id = u.user_id
+    LEFT JOIN addresses addr
+        ON addr.entity_id = c.company_id
+        AND addr.entity_type = 'company'
+        AND addr.is_primary = 1
     WHERE c.company_id = ?
     ORDER BY s.staff_id ASC
     LIMIT 1

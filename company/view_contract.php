@@ -16,13 +16,15 @@ $unread = $stmt->fetchColumn();
 
 // Get contract details and verify it belongs to this company
 $stmt = $pdo->prepare("
-    SELECT ct.*, 
-           ir.first_name, ir.last_name, ir.middle_name, ir.contact_no, ir.address,
-           ir.city, ir.province, ir.postal_code, ir.university, ir.course, ir.year_level,
+    SELECT ct.*, a.intern_id,
+           ir.first_name, ir.last_name, ir.middle_name, ir.contact_no,
+           intern_addr.address_line AS intern_address,
+           intern_addr.city, intern_addr.province, intern_addr.postal_code,
+           ir.university, ir.course, ir.year_level,
            u.email,
            i.title as internship_title, i.description, i.duration, i.allowance,
            i.start_date, i.end_date, i.internship_id,
-           c.company_name, c.industry, c.contact_person, c.address,
+           c.company_name, c.industry, c.contact_person, company_addr.address_line AS company_address,
            a.application_id, a.status as application_status,
            CONCAT(ir.first_name, ' ', ir.last_name) as intern_name
     FROM contracts ct
@@ -31,6 +33,14 @@ $stmt = $pdo->prepare("
     JOIN companies c ON i.company_id = c.company_id
     JOIN interns ir ON a.intern_id = ir.intern_id
     JOIN users u ON ir.user_id = u.user_id
+    LEFT JOIN addresses company_addr
+        ON company_addr.entity_id = c.company_id
+        AND company_addr.entity_type = 'company'
+        AND company_addr.is_primary = 1
+    LEFT JOIN addresses intern_addr
+        ON intern_addr.entity_id = ir.intern_id
+        AND intern_addr.entity_type = 'intern'
+        AND intern_addr.is_primary = 1
     WHERE ct.contract_id = ? AND i.company_id = ?
 ");
 $stmt->execute([$contract_id, $company['company_id']]);
@@ -156,7 +166,7 @@ function getContractDuration($start_date, $end_date)
                                 <span class="info-value"><?= htmlspecialchars($contract['company_name']) ?></span>
                                 <div style="margin-top: 5px; font-size: 14px; color: #6c757d;">
                                     Represented by: <?= htmlspecialchars($contract['contact_person']) ?><br>
-                                    Address: <?= htmlspecialchars($contract['address']) ?>
+                                    Address: <?= htmlspecialchars($contract['company_address']) ?>
                                 </div>
                             </div>
 
@@ -228,7 +238,7 @@ function getContractDuration($start_date, $end_date)
                             <div class="info-item">
                                 <span class="info-label">Address</span>
                                 <span class="info-value">
-                                    <!--<?= htmlspecialchars($contract['address'] ?: '') ?><br>-->
+                                    <?= htmlspecialchars($contract['intern_address'] ?: '') ?><br>
                                     <?= htmlspecialchars($contract['city'] ?: '') ?>,
                                     <?= htmlspecialchars($contract['province'] ?: '') ?>
                                     <?= htmlspecialchars($contract['postal_code'] ?: '') ?>

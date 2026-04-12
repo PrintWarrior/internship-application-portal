@@ -20,9 +20,9 @@ $stmt = $pdo->prepare("
     SELECT a.application_id, a.intern_id,
            i.title AS internship_title, i.description, i.duration, i.allowance,
            i.start_date, i.end_date, i.internship_id,
-           c.company_name, c.contact_person, c.address,
+           c.company_name, c.contact_person, company_addr.address_line AS company_address,
            ir.first_name, ir.last_name, ir.middle_name, ir.contact_no,
-           ir.address as intern_address, ir.city, ir.province, ir.postal_code,
+           intern_addr.address_line AS intern_address, intern_addr.city, intern_addr.province, intern_addr.postal_code,
            ir.university, ir.course, ir.year_level,
            u.email
     FROM applications a
@@ -30,6 +30,14 @@ $stmt = $pdo->prepare("
     JOIN companies c ON i.company_id = c.company_id
     JOIN interns ir ON a.intern_id = ir.intern_id
     JOIN users u ON ir.user_id = u.user_id
+    LEFT JOIN addresses company_addr
+        ON company_addr.entity_id = c.company_id
+        AND company_addr.entity_type = 'company'
+        AND company_addr.is_primary = 1
+    LEFT JOIN addresses intern_addr
+        ON intern_addr.entity_id = ir.intern_id
+        AND intern_addr.entity_type = 'intern'
+        AND intern_addr.is_primary = 1
     WHERE a.application_id = ? AND i.company_id = ?
 ");
 $stmt->execute([$application_id, $company['company_id']]);
@@ -121,10 +129,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Insert into contracts table
         $insertStmt = $pdo->prepare("
-            INSERT INTO contracts (application_id, contract_pdf, hr_confirmed, created_at)
-            VALUES (?, ?, 0, NOW())
+            INSERT INTO contracts (application_id, contract_pdf, contract_file, hr_confirmed, created_at)
+            VALUES (?, ?, ?, 0, NOW())
         ");
-        $insertStmt->execute([$application_id, $pdf_filename]);
+        $insertStmt->execute([$application_id, $pdf_filename, $pdf_filename]);
         
         $contract_id = $pdo->lastInsertId();
 
@@ -278,7 +286,7 @@ THIS INTERNSHIP AGREEMENT (the "Agreement") is entered into on this day, _______
 
 THE COMPANY: ${<?= json_encode($application['company_name']) ?>}
 Represented by: ${<?= json_encode($application['contact_person']) ?>}
-Address: ${<?= json_encode($application['address']) ?>}
+Address: ${<?= json_encode($application['company_address']) ?>}
 
 AND
 

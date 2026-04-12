@@ -16,50 +16,60 @@ $unread = $stmt->fetchColumn();
 $company = getStaffCompanyContext($user_id);
 $company_id = $company['company_id'];
 $company_name = $company['company_name'];
+$formData = $_POST;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Insert internship
-    $stmt = $pdo->prepare("
-        INSERT INTO internships 
-        (company_id, title, description, requirements, duration, allowance, deadline, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')
-    ");
+    $start_date = !empty($_POST['start_date']) ? $_POST['start_date'] : null;
+    $end_date = !empty($_POST['end_date']) ? $_POST['end_date'] : null;
 
-    $stmt->execute([
-        $company_id,
-        $_POST['title'],
-        $_POST['description'],
-        $_POST['requirements'],
-        $_POST['duration'],
-        $_POST['allowance'],
-        $_POST['deadline']
-    ]);
-
-    $internship_id = $pdo->lastInsertId();
-
-    // Notify all admins
-    $stmt = $pdo->prepare("SELECT user_id FROM users WHERE user_type = 'admin'");
-    $stmt->execute();
-    $admins = $stmt->fetchAll();
-
-    $message = "Company '" . $company_name . "' has posted a new internship: " . $_POST['title'];
-
-    foreach ($admins as $admin) {
+    if ($start_date && $end_date && $end_date < $start_date) {
+        $error = 'date_range';
+    } else {
+        // Insert internship
         $stmt = $pdo->prepare("
-            INSERT INTO notifications (user_id, message, link)
-            VALUES (?, ?, ?)
+            INSERT INTO internships 
+            (company_id, title, description, requirements, duration, allowance, deadline, status, start_date, end_date)
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)
         ");
-        $link = "../admin/view_internship.php?id=" . $internship_id;
-        $stmt->execute([$admin['user_id'], $message, $link]);
+
+        $stmt->execute([
+            $company_id,
+            $_POST['title'],
+            $_POST['description'],
+            $_POST['requirements'],
+            $_POST['duration'],
+            $_POST['allowance'],
+            $_POST['deadline'],
+            $start_date,
+            $end_date
+        ]);
+
+        $internship_id = $pdo->lastInsertId();
+
+        // Notify all admins
+        $stmt = $pdo->prepare("SELECT user_id FROM users WHERE user_type = 'admin'");
+        $stmt->execute();
+        $admins = $stmt->fetchAll();
+
+        $message = "Company '" . $company_name . "' has posted a new internship: " . $_POST['title'];
+
+        foreach ($admins as $admin) {
+            $stmt = $pdo->prepare("
+                INSERT INTO notifications (user_id, message, link)
+                VALUES (?, ?, ?)
+            ");
+            $link = "../admin/view_internship.php?id=" . $internship_id;
+            $stmt->execute([$admin['user_id'], $message, $link]);
+        }
+
+        // Log the action
+        $logDescription = "Created new internship: " . $_POST['title'] . " (ID: " . $internship_id . ")";
+        logAction('Create internship', $logDescription);
+
+        // Redirect with success parameter to the same page
+        header("Location: post_internship.php?post_success=1");
+        exit;
     }
-
-    // Log the action
-    $logDescription = "Created new internship: " . $_POST['title'] . " (ID: " . $internship_id . ")";
-    logAction('Create internship', $logDescription);
-
-    // Redirect with success parameter to the same page
-header("Location: post_internship.php?post_success=1");
-exit;
 
 }
 ?>
@@ -107,10 +117,12 @@ exit;
         <div class="main-content">
             <h2>Post Internship</h2>
 
-            <?php if (isset($_GET['error'])): ?>
+            <?php if (isset($_GET['error']) || !empty($error)): ?>
                 <div class="error-message"
                     style="border: 2px solid #ff0000; padding: 10px; margin-bottom: 20px; color: #ff0000; font-weight: bold;">
-                    Failed to post internship. Please try again.
+                    <?= (($_GET['error'] ?? $error ?? '') === 'date_range')
+                        ? 'End date must be on or after the start date.'
+                        : 'Failed to post internship. Please try again.' ?>
                 </div>
             <?php endif; ?>
 
@@ -118,36 +130,54 @@ exit;
                 <form method="POST">
                     <div class="form-group">
                         <label for="title">Internship Title *</label>
-                        <input type="text" id="title" name="title" placeholder="e.g. Web Developer Intern" required>
+                        <input type="text" id="title" name="title" placeholder="e.g. Web Developer Intern"
+                            value="<?= htmlspecialchars($formData['title'] ?? '') ?>" required>
                     </div>
 
                     <div class="form-group">
                         <label for="description">Description</label>
                         <textarea id="description" name="description" rows="5"
-                            placeholder="Describe the internship role, responsibilities, and what the intern will learn..."></textarea>
+                            placeholder="Describe the internship role, responsibilities, and what the intern will learn..."><?= htmlspecialchars($formData['description'] ?? '') ?></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="requirements">Requirements</label>
                         <textarea id="requirements" name="requirements" rows="4"
-                            placeholder="List the required skills, qualifications, and prerequisites..."></textarea>
+                            placeholder="List the required skills, qualifications, and prerequisites..."><?= htmlspecialchars($formData['requirements'] ?? '') ?></textarea>
                     </div>
 
                     <div class="form-row" style="display: flex; gap: 20px;">
                         <div class="form-group" style="flex: 1;">
                             <label for="duration">Duration</label>
-                            <input type="text" id="duration" name="duration" placeholder="e.g. 3 months, 6 months">
+                            <input type="text" id="duration" name="duration" placeholder="e.g. 3 months, 6 months"
+                                value="<?= htmlspecialchars($formData['duration'] ?? '') ?>">
                         </div>
 
                         <div class="form-group" style="flex: 1;">
                             <label for="allowance">Allowance (₱)</label>
-                            <input type="number" step="0.01" id="allowance" name="allowance" placeholder="e.g. 5000.00">
+                            <input type="number" step="0.01" id="allowance" name="allowance" placeholder="e.g. 5000.00"
+                                value="<?= htmlspecialchars($formData['allowance'] ?? '') ?>">
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="display: flex; gap: 20px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="start_date">Start Date</label>
+                            <input type="date" id="start_date" name="start_date"
+                                value="<?= htmlspecialchars($formData['start_date'] ?? '') ?>">
+                        </div>
+
+                        <div class="form-group" style="flex: 1;">
+                            <label for="end_date">End Date</label>
+                            <input type="date" id="end_date" name="end_date"
+                                value="<?= htmlspecialchars($formData['end_date'] ?? '') ?>">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="deadline">Application Deadline</label>
-                        <input type="date" id="deadline" name="deadline" min="<?= date('Y-m-d') ?>">
+                        <input type="date" id="deadline" name="deadline" min="<?= date('Y-m-d') ?>"
+                            value="<?= htmlspecialchars($formData['deadline'] ?? '') ?>">
                     </div>
 
                     <div class="form-actions">
