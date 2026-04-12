@@ -21,7 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Check account status only after user is found
     if ($user['status'] !== 'active') {
-        die("Your account is " . $user['status']);
+        if ($user['status'] === 'banned') {
+            $_SESSION['error'] = 'Your account has been banned. Please check your email for more information.';
+        } elseif ($user['status'] === 'suspended') {
+            $_SESSION['error'] = 'Your account is suspended. Please check your email for more information.';
+        } else {
+            $_SESSION['error'] = 'Your account is currently ' . $user['status'] . '.';
+        }
+
+        header('Location: ../index.php');
+        exit;
     }
 
     // Email must be verified

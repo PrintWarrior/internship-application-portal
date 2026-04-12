@@ -18,6 +18,9 @@
             font-weight: bold;
             z-index: 1000;
             animation: slideIn 0.5s ease-out;
+            border: 1px solid black;
+            border-radius: 0;
+            box-shadow: none;
         }
 
         .notification.success {
@@ -30,8 +33,14 @@
             color: white;
         }
 
-        .notification.info {
-            background-color: #2196F3;
+        #notification-ok {
+            background-color: transparent;
+            color: inherit;
+            border: 1px solid currentColor;
+            border-radius: 0;
+            padding: 8px 16px;
+            font: inherit;
+            cursor: pointer;
         }
 
         @keyframes slideIn {

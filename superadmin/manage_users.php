@@ -23,6 +23,12 @@ $statusLabels = [
     'suspended' => 'Suspended',
 ];
 
+$nextStatusLabels = [
+    'active' => 'Suspend',
+    'suspended' => 'Ban',
+    'banned' => 'Activate',
+];
+
 $superAdminUsers = array_filter($users, function ($user) {
     return $user['user_type'] === 'superadmin';
 });
@@ -75,6 +81,16 @@ $otherUsers = array_filter($users, function ($user) {
         <!-- MAIN CONTENT -->
         <div class="content">
             <h1>Manage Users</h1>
+
+            <?php if (isset($_SESSION['feedback_message'])): ?>
+                <div style="margin-bottom: 20px; padding: 12px 16px; border: 1px solid #000; background: <?= ($_SESSION['feedback_type'] ?? 'success') === 'error' ? '#000' : '#fff' ?>; color: <?= ($_SESSION['feedback_type'] ?? 'success') === 'error' ? '#fff' : '#000' ?>;">
+                    <?= htmlspecialchars($_SESSION['feedback_message']) ?>
+                </div>
+                <?php
+                unset($_SESSION['feedback_message']);
+                unset($_SESSION['feedback_type']);
+                ?>
+            <?php endif; ?>
 
             <section class="user-group user-group-superadmin">
                 <div class="section-heading">
@@ -158,7 +174,9 @@ $otherUsers = array_filter($users, function ($user) {
                                     </td>
                                     <td>
                                         <a href="view_users.php?id=<?= $user['user_id'] ?>">View</a>
-                                        <a href="toggle_status.php?id=<?= $user['user_id'] ?>">Ban/Suspend</a>
+                                        <a href="toggle_status.php?id=<?= $user['user_id'] ?>">
+                                            <?= htmlspecialchars($nextStatusLabels[$user['status']] ?? 'Update Status') ?>
+                                        </a>
                                         <a href="delete_users.php?id=<?= $user['user_id'] ?>"
                                            onclick="return confirm('Delete user <?= htmlspecialchars($user['email']) ?>? This action cannot be undone.')">
                                            Delete
