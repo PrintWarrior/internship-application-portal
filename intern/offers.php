@@ -92,6 +92,7 @@
     <html>
 
     <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>My Offers</title>
         <link rel="stylesheet" href="../assets/css/intern_offer.css">
         <link rel="stylesheet" href="../assets/css/logout_modal.css">
@@ -109,7 +110,8 @@
                 border: 1px solid #ffffff;
             }
         </style>
-    </head>
+        <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
 
     <body>
 
@@ -153,7 +155,7 @@
                                     </td>
                                     <td><?= htmlspecialchars($offer['company_name']) ?></td>
                                     <td><?= date('M d, Y', strtotime($offer['date_applied'])) ?></td>
-                                    <td>₱<?= number_format($offer['allowance'], 2) ?></td>
+                                    <td>PHP <?= number_format($offer['allowance'], 2) ?></td>
                                     <td>
                                         <div class="offer-actions">
                                             <form method="POST" style="display: inline;">
@@ -176,7 +178,7 @@
                     <!-- Additional info section -->
                     <div style="margin-top: 20px; padding: 15px; border: 2px solid #000000; background-color: #f5f5f5;">
                         <p style="font-size: 13px; text-transform: uppercase; font-weight: bold;">
-                            ⚡ You have <?= count($offers) ?> active offer(s). Accept or decline within the specified timeframe.
+                             You have <?= count($offers) ?> active offer(s). Accept or decline within the specified timeframe.
                         </p>
                     </div>
 
@@ -222,6 +224,7 @@
         </script>
         <?php endif; ?>
         
-    </body>
+        
+</body>
 
     </html>

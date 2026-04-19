@@ -3,10 +3,8 @@ session_start();
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
-    header('Location: ../index.php');
-    exit;
-}
+requireAdminAreaAccess();
+$panelLabel = getAdminAreaLabel();
 
 $pdo->prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ?")->execute([$_SESSION['user_id']]);
 
@@ -61,7 +59,8 @@ if (isset($_SESSION['feedback_message'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Super Admin Notifications</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= htmlspecialchars($panelLabel) ?> Notifications</title>
     <link rel="stylesheet" href="../assets/css/admin_notification.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
     <style>
@@ -188,6 +187,7 @@ if (isset($_SESSION['feedback_message'])) {
             }
         }
     </style>
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -276,5 +276,6 @@ if (isset($_SESSION['feedback_message'])) {
         }, 5000);
     </script>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

@@ -54,12 +54,14 @@ return "system";
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Company Notifications</title>
 
 <link rel="stylesheet" href="../assets/css/company_notification.css">
 <link rel="stylesheet" href="../assets/css/logout_modal.css">
 <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -155,5 +157,6 @@ return "system";
 <?php include '../html/logout_modal.html'; ?>
 <script src="../js/logout_modal.js"></script>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

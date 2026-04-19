@@ -3,11 +3,8 @@ session_start();
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
-// Check if user is logged in and is super admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
-    header('Location: ../index.php');
-    exit;
-}
+requireAdminAreaAccess();
+$panelLabel = getAdminAreaLabel();
 
 $userId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
@@ -129,9 +126,10 @@ function getProfileImageName(array $user): string {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View User - Super Admin</title>
+    <title>View User - <?= htmlspecialchars($panelLabel) ?></title>
     <link rel="stylesheet" href="../assets/css/super_view.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -139,7 +137,7 @@ function getProfileImageName(array $user): string {
     <div class="topnav">
         <div class="logo-section">
             <img src="../assets/img/logo.png" alt="Logo">
-            <h2>Internship Portal - Super Admin</h2>
+            <h2>Internship Portal - <?= htmlspecialchars($panelLabel) ?></h2>
         </div>
 
         <div class="topnav-right">
@@ -270,5 +268,6 @@ function getProfileImageName(array $user): string {
 
     </div>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

@@ -34,26 +34,31 @@ function generateOTP($length = 6) {
 function getAdminNotificationRecipients($preferredUserId = null) {
     global $pdo;
 
+    $recipientIds = [];
+
     if ($preferredUserId) {
         $stmt = $pdo->prepare("
             SELECT user_id
             FROM users
-            WHERE user_id = ? AND user_type = 'admin' AND status = 'active'
+            WHERE user_id = ? AND user_type IN ('admin', 'superadmin') AND status = 'active'
         ");
         $stmt->execute([$preferredUserId]);
         $preferred = $stmt->fetchColumn();
 
         if ($preferred) {
-            return [$preferred];
+            $recipientIds[] = (int) $preferred;
         }
     }
 
     $stmt = $pdo->query("
         SELECT user_id
         FROM users
-        WHERE user_type = 'admin' AND status = 'active'
+        WHERE user_type IN ('admin', 'superadmin') AND status = 'active'
     ");
-    return $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    $recipientIds = array_merge($recipientIds, array_map('intval', $stmt->fetchAll(PDO::FETCH_COLUMN)));
+
+    return array_values(array_unique($recipientIds));
 }
 
 function createNotification($admin_id, $message, $action_url, $action_label, $related_user_id) {
@@ -85,6 +90,27 @@ function redirectIfNotLoggedIn() {
         header('Location: ../index.php');
         exit;
     }
+}
+
+function isAdminAreaUser($userType = null) {
+    $userType = $userType ?? ($_SESSION['user_type'] ?? null);
+    return in_array($userType, ['admin', 'superadmin'], true);
+}
+
+function isSuperAdminUser($userType = null) {
+    $userType = $userType ?? ($_SESSION['user_type'] ?? null);
+    return $userType === 'superadmin';
+}
+
+function requireAdminAreaAccess() {
+    if (!isset($_SESSION['user_id']) || !isAdminAreaUser()) {
+        header('Location: ../index.php');
+        exit;
+    }
+}
+
+function getAdminAreaLabel() {
+    return isSuperAdminUser() ? 'Super Admin' : 'Admin';
 }
 
 function requireStaffUser() {

@@ -82,6 +82,7 @@ $unread = $stmt->fetchColumn();
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Browse Internships</title>
     <link rel="stylesheet" href="../assets/css/intern_browse.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
@@ -99,6 +100,7 @@ $unread = $stmt->fetchColumn();
             border: 1px solid #ffffff;
         }
     </style>
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -138,7 +140,7 @@ $unread = $stmt->fetchColumn();
                                 <td><strong><?= htmlspecialchars($job['title']) ?></strong></td>
                                 <td><?= htmlspecialchars($job['company_name']) ?></td>
                                 <td><?= date('M d, Y', strtotime($job['deadline'])) ?></td>
-                                <td>₱<?= number_format($job['allowance'], 2) ?></td>
+                                <td>PHP <?= number_format($job['allowance'], 2) ?></td>
                                 <td>
                                     <form method="POST">
                                         <input type="hidden" name="internship_id" value="<?= $job['internship_id'] ?>">
@@ -190,6 +192,7 @@ $unread = $stmt->fetchColumn();
             });
         </script>
     <?php endif; ?>
+    
 </body>
 
 </html>

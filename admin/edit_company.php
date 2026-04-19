@@ -55,7 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Edit Company</title>
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -83,5 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <a href="manage_companies.php">Back</a>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

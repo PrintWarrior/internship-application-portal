@@ -1,11 +1,10 @@
 <?php
 session_start();
 require_once '../includes/db.php';
+require_once '../includes/functions.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
-    header('Location: ../index.php');
-    exit;
-}
+requireAdminAreaAccess();
+$panelLabel = getAdminAreaLabel();
 
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0");
 $stmt->execute([$_SESSION['user_id']]);
@@ -35,9 +34,11 @@ function getStatusClass($status) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>View Internship - Super Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Internship - <?= htmlspecialchars($panelLabel) ?></title>
     <link rel="stylesheet" href="../assets/css/admininternship_view.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
     <div class="container">
@@ -132,5 +133,6 @@ function getStatusClass($status) {
             <a href="manage_internships.php" class="btn btn-back">Back to List</a>
         </div>
     </div>
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

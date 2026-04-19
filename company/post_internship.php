@@ -46,21 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $internship_id = $pdo->lastInsertId();
 
-        // Notify all admins
-        $stmt = $pdo->prepare("SELECT user_id FROM users WHERE user_type = 'admin'");
-        $stmt->execute();
-        $admins = $stmt->fetchAll();
-
         $message = "Company '" . $company_name . "' has posted a new internship: " . $_POST['title'];
-
-        foreach ($admins as $admin) {
-            $stmt = $pdo->prepare("
-                INSERT INTO notifications (user_id, message, link)
-                VALUES (?, ?, ?)
-            ");
-            $link = "../admin/view_internship.php?id=" . $internship_id;
-            $stmt->execute([$admin['user_id'], $message, $link]);
-        }
+        createNotification(
+            null,
+            $message,
+            "view_internship.php?id=" . $internship_id,
+            "View Internship",
+            null
+        );
 
         // Log the action
         $logDescription = "Created new internship: " . $_POST['title'] . " (ID: " . $internship_id . ")";
@@ -77,11 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Internship</title>
     <link rel="stylesheet" href="../assets/css/company_internship.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="stylesheet" href="../assets/css/companyinternship_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -154,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
 
                         <div class="form-group" style="flex: 1;">
-                            <label for="allowance">Allowance (₱)</label>
+                            <label for="allowance">Allowance (PHP)</label>
                             <input type="number" step="0.01" id="allowance" name="allowance" placeholder="e.g. 5000.00"
                                 value="<?= htmlspecialchars($formData['allowance'] ?? '') ?>">
                         </div>
@@ -204,6 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             showNotification('Internship Posted Successfully');
         </script>
     <?php endif; ?>
+    <script src="../js/responsive-nav.js"></script>
 </body>
 
 </html>

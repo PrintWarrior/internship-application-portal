@@ -78,10 +78,12 @@ function formatStaffDate(?string $date): string
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Profile - Company</title>
     <link rel="stylesheet" href="../assets/css/staff_profile.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -349,5 +351,6 @@ function showToast(message, type) {
 }
 </script>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

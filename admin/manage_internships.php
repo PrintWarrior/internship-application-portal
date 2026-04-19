@@ -40,12 +40,14 @@ function isDeadlineExpired($deadline) {
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Internships - Admin</title>
     <link rel="stylesheet" href="../assets/css/admin_internship.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="stylesheet" href="../assets/css/delete_modal.css">
     <link rel="stylesheet" href="../assets/css/modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -273,5 +275,6 @@ function filterTable() {
     <script src="../js/approve_modal.js"></script>
     <script src="../js/reject_modal.js"></script>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

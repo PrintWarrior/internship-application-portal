@@ -53,10 +53,12 @@ $unread = $stmt->fetchColumn();
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company Dashboard</title>
     <link rel="stylesheet" href="../assets/css/company_index.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -213,6 +215,7 @@ $unread = $stmt->fetchColumn();
 
     <!-- Include Logout Modal JavaScript -->
     <script src="../js/logout_modal.js"></script>
+    <script src="../js/responsive-nav.js"></script>
 </body>
 
 </html>

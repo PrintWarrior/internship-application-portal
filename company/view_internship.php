@@ -40,11 +40,13 @@ $applicant_count = $stmt->fetchColumn();
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Internship - <?= htmlspecialchars($internship['title']) ?></title>
     <link rel="stylesheet" href="../assets/css/company_view_internship.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="stylesheet" href="../assets/css/companyinternship_view.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -78,7 +80,7 @@ $applicant_count = $stmt->fetchColumn();
     <div class="main-content">
         <!--<div class="page-header">
             <h2>Internship Details</h2>
-            <a href="manage_internships.php" class="btn-back">← Back to List</a>
+            <a href="manage_internships.php" class="btn-back">Back to List</a>
         </div> -->
 
         <div class="internship-detail-card">
@@ -104,7 +106,7 @@ $applicant_count = $stmt->fetchColumn();
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Allowance:</span>
-                    <span class="meta-value">₱<?= number_format($internship['allowance'], 2) ?></span>
+                    <span class="meta-value">PHP <?= number_format($internship['allowance'], 2) ?></span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Applicants:</span>
@@ -135,5 +137,6 @@ $applicant_count = $stmt->fetchColumn();
 
 <!-- Include Logout Modal JavaScript -->
 <script src="../js/logout_modal.js"></script>
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

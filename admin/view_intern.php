@@ -38,6 +38,7 @@ $profilePic = !empty($intern['profile_image'])
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Intern</title>
 
     <style>
@@ -86,6 +87,7 @@ $profilePic = !empty($intern['profile_image'])
     </style>
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
 
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -135,6 +137,7 @@ $profilePic = !empty($intern['profile_image'])
 
     </div>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 
 </html>

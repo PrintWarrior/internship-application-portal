@@ -96,10 +96,12 @@ function getContractDuration($start_date, $end_date)
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Contract - <?= htmlspecialchars($contract['intern_name']) ?></title>
     <link rel="stylesheet" href="../assets/css/companycontract_view.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -144,7 +146,7 @@ function getContractDuration($start_date, $end_date)
                     <p>Internship Agreement</p>
                     <div
                         class="contract-status <?= $contract['hr_confirmed'] ? 'status-confirmed' : 'status-pending' ?>">
-                        <?= $contract['hr_confirmed'] ? '✓ CONFIRMED' : '⏳ PENDING CONFIRMATION' ?>
+                        <?= $contract['hr_confirmed'] ? '“ CONFIRMED' : 'PENDING CONFIRMATION' ?>
                     </div>
                 </div>
 
@@ -210,7 +212,7 @@ function getContractDuration($start_date, $end_date)
 
                             <div class="info-item">
                                 <span class="info-label">Allowance</span>
-                                <span class="info-value">₱<?= number_format($contract['allowance'], 2) ?>/month</span>
+                                <span class="info-value">PHP <?= number_format($contract['allowance'], 2) ?>/month</span>
                             </div>
                         </div>
                     </div>
@@ -264,7 +266,7 @@ function getContractDuration($start_date, $end_date)
 
                             <h3>3. Compensation</h3>
                             <p>The Intern shall receive a monthly allowance of
-                                ₱<?= number_format($contract['allowance'], 2) ?>, payable on the
+                                PHP <?= number_format($contract['allowance'], 2) ?>, payable on the
                                 <?= date('jS', strtotime($contract['start_date'])) ?> day of each month.
                             </p>
 
@@ -307,7 +309,7 @@ function getContractDuration($start_date, $end_date)
                                 <?php if ($contract['signed_file']): ?>
                                     <!-- Extract signature from PDF or show placeholder -->
                                     <div class="signature-status">
-                                        <span class="badge-success">✓ Intern has signed</span>
+                                        <span class="badge-success">Intern has signed</span>
                                     </div>
                                     <div class="signature-preview">
                                         <a href="../uploads/contracts/<?= $contract['signed_file'] ?>" target="_blank"
@@ -318,7 +320,7 @@ function getContractDuration($start_date, $end_date)
                                 <?php else: ?>
                                     <div class="signature-line"></div>
                                     <div class="signature-status">
-                                       <!-- <span class="badge-warning">⏳ Awaiting intern signature</span> -->
+                                       <!-- <span class="badge-warning">Awaiting intern signature</span> -->
                                     </div>
                                 <?php endif; ?>
                                 <div class="info-value"><?= htmlspecialchars($contract['intern_name']) ?></div>
@@ -355,20 +357,20 @@ function getContractDuration($start_date, $end_date)
                     <div class="action-buttons">
 
                         <!--<a href="download_contract.php?id=<?= $contract_id ?>" class="btn-download">
-                            <span>📥</span> Download PDF
+                            <span>ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â¥</span> Download PDF
                         </a>`-->
 
                         <a href="contracts.php" class="btn-back">
-                            <span>←</span> Back to List
+                            <span></span> Back to List
                         </a>
 
                         <?php if ($contract['signed_file']): ?>
                             <a href="download_contract.php?id=<?= $contract_id ?>&type=signed" class="btn-download">
-                                <span>📥</span> Download Signed Contract
+                                <span></span> Download Signed Contract
                             </a>
                         <?php else: ?>
                             <a href="download_contract.php?id=<?= $contract_id ?>&type=unsigned" class="btn-download">
-                                <span>📥</span> Download Contract Template
+                                <span></span> Download Contract Template
                             </a>
                         <?php endif; ?>
                     </div>
@@ -402,6 +404,7 @@ function getContractDuration($start_date, $end_date)
         };
     </script>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 
 </html>

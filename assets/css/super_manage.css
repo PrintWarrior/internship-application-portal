@@ -232,6 +232,31 @@ body {
     background-color: #ffffff;
 }
 
+.filter-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.filter-tab {
+    padding: 8px 16px;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-tab:hover,
+.filter-tab.active {
+    background-color: #000000;
+    color: #ffffff;
+}
+
 /* Table Styles */
 table {
     width: 100%;
@@ -305,7 +330,8 @@ tr:hover {
     color: #000000;
 }
 
-.user-type-company {
+.user-type-company,
+.user-type-staff {
     background-color: #ffffff;
     color: #000000;
     border: 2px dashed #000000;
@@ -327,6 +353,16 @@ td:last-child a {
     border: 2px solid #000000;
     transition: all 0.3s ease;
     margin-right: 8px;
+}
+
+.action-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.action-group a {
+    margin-right: 0;
 }
 
 td:last-child a:first-child {
@@ -357,6 +393,11 @@ td:last-child a:last-child {
 td:last-child a:last-child:hover {
     background-color: #000000;
     color: #ffffff;
+}
+
+.current-status-action {
+    background-color: #000000 !important;
+    color: #ffffff !important;
 }
 
 .protected-label {
@@ -467,6 +508,10 @@ td:last-child a:last-child:hover {
         display: block;
         margin-bottom: 5px;
         text-align: center;
+    }
+
+    .action-group {
+        display: block;
     }
     
     td:last-child a:last-child {

@@ -1,7 +1,8 @@
-<?php include '../includes/functions.php'; ?>
-
 <?php
 session_start();
+require_once '../includes/functions.php';
+
+requireAdminAreaAccess();
 
 function buildStatusEmailBody($status, $email)
 {
@@ -12,13 +13,13 @@ function buildStatusEmailBody($status, $email)
     ];
 
     $statusMessages = [
-        'active' => 'A superadmin has activated your account. You can now sign in to the Internship Application Portal.',
-        'suspended' => 'A superadmin has suspended your account. You will not be able to sign in while the suspension is in effect.',
-        'banned' => 'A superadmin has banned your account. This is done for severe violations. You will not be able to sign in or create a new account with this email.',
+        'active' => 'An administrator has activated your account. You can now sign in to the Internship Application Portal.',
+        'suspended' => 'An administrator has suspended your account. You will not be able to sign in while the suspension is in effect.',
+        'banned' => 'An administrator has banned your account. This is done for severe violations. You will not be able to sign in or create a new account with this email.',
     ];
 
     $heading = $statusHeadings[$status] ?? 'Your account status has changed';
-    $message = $statusMessages[$status] ?? 'A superadmin has updated your account status.';
+    $message = $statusMessages[$status] ?? 'An administrator has updated your account status.';
 
     return "
     <div style='background:#f5f5f5;padding:40px;font-family:Arial,sans-serif'>
@@ -33,14 +34,11 @@ function buildStatusEmailBody($status, $email)
     ";
 }
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
-    header('Location: ../index.php');
-    exit;
-}
-
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+$requestedStatus = isset($_GET['status']) ? strtolower(trim($_GET['status'])) : '';
+$allowedStatuses = ['active', 'suspended', 'banned'];
 
-if ($id <= 0) {
+if ($id <= 0 || !in_array($requestedStatus, $allowedStatuses, true)) {
     header("Location: manage_users.php");
     exit;
 }
@@ -54,17 +52,8 @@ if (!$user || $user['user_type'] === 'superadmin') {
     exit;
 }
 
-$current = $user['status'];
-
-// cycle: active → suspended → banned → active
-$newStatus = 'active';
-
-if ($current === 'active') $newStatus = 'suspended';
-elseif ($current === 'suspended') $newStatus = 'banned';
-elseif ($current === 'banned') $newStatus = 'active';
-
 $stmt = $pdo->prepare("UPDATE users SET status = ? WHERE user_id = ?");
-$stmt->execute([$newStatus, $id]);
+$stmt->execute([$requestedStatus, $id]);
 
 $subjects = [
     'active' => 'Your account has been activated',
@@ -74,17 +63,18 @@ $subjects = [
 
 $emailSent = sendEmail(
     $user['email'],
-    $subjects[$newStatus] ?? 'Your account status has changed',
-    buildStatusEmailBody($newStatus, htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'))
+    $subjects[$requestedStatus] ?? 'Your account status has changed',
+    buildStatusEmailBody($requestedStatus, htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'))
 );
 
 if ($emailSent) {
-    $_SESSION['feedback_message'] = 'User status updated to ' . $newStatus . ' and notification email sent to ' . $user['email'] . '.';
+    $_SESSION['feedback_message'] = 'User status updated to ' . $requestedStatus . ' and notification email sent to ' . $user['email'] . '.';
     $_SESSION['feedback_type'] = 'success';
 } else {
-    $_SESSION['feedback_message'] = 'User status updated to ' . $newStatus . ', but the notification email could not be sent to ' . $user['email'] . '.';
+    $_SESSION['feedback_message'] = 'User status updated to ' . $requestedStatus . ', but the notification email could not be sent to ' . $user['email'] . '.';
     $_SESSION['feedback_type'] = 'error';
 }
 
 header("Location: manage_users.php");
 exit;
+?>

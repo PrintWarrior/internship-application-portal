@@ -43,7 +43,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Edit Intern</title>
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -64,5 +66,6 @@ Last Name<br>
 <br>
 <a href="manage_interns.php">Cancel</a>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

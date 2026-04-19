@@ -67,6 +67,7 @@ if (isset($_SESSION['feedback_message'])) {
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Notifications</title>
     <link rel="stylesheet" href="../assets/css/admin_notification.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
@@ -196,6 +197,7 @@ if (isset($_SESSION['feedback_message'])) {
             }
         }
     </style>
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -209,7 +211,7 @@ if (isset($_SESSION['feedback_message'])) {
                 <?php elseif ($feedback_type === 'error'): ?>
                     ✕
                 <?php else: ?>
-                    ℹ
+                    ⓘ
                 <?php endif; ?>
             </div>
             <div class="feedback-content">
@@ -292,6 +294,7 @@ if (isset($_SESSION['feedback_message'])) {
         }, 5000);
     </script>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 
 </html>

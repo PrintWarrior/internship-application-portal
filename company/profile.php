@@ -217,6 +217,7 @@ if (isset($_POST['change_password'])) {
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company Profile</title>
     <link rel="stylesheet" href="../assets/css/company_profile.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
@@ -224,6 +225,7 @@ if (isset($_POST['change_password'])) {
     <link rel="stylesheet" href="../assets/css/companyupdate_modal.css">
     <link rel="stylesheet" href="../assets/css/password_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -424,6 +426,7 @@ if (isset($_POST['change_password'])) {
             showNotification('Current password is incorrect', false);
         <?php endif; ?>
     </script>
+    <script src="../js/responsive-nav.js"></script>
 </body>
 
 </html>

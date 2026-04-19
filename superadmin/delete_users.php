@@ -1,6 +1,9 @@
-<?php include '../includes/functions.php'; ?>
-
 <?php
+session_start();
+require_once '../includes/functions.php';
+
+requireAdminAreaAccess();
+
 $id = $_GET['id'];
 
 // prevent deleting superadmin
@@ -9,7 +12,7 @@ $stmt->execute([$id]);
 $type = $stmt->fetchColumn();
 
 if ($type === 'superadmin') {
-    die("Cannot delete superadmin.");
+    die("Cannot delete protected admin account.");
 }
 
 $stmt = $pdo->prepare("DELETE FROM users WHERE user_id=?");

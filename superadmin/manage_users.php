@@ -3,17 +3,13 @@ session_start();
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
-// Check if user is logged in and is super admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
-    header('Location: ../index.php');
-    exit;
-}
+requireAdminAreaAccess();
+$panelLabel = getAdminAreaLabel();
 
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0");
 $stmt->execute([$_SESSION['user_id']]);
 $unread = $stmt->fetchColumn();
 
-// Fetch all users
 $stmt = $pdo->query("SELECT * FROM users ORDER BY user_id DESC");
 $users = $stmt->fetchAll();
 
@@ -21,12 +17,6 @@ $statusLabels = [
     'active' => 'Active',
     'banned' => 'Banned',
     'suspended' => 'Suspended',
-];
-
-$nextStatusLabels = [
-    'active' => 'Suspend',
-    'suspended' => 'Ban',
-    'banned' => 'Activate',
 ];
 
 $superAdminUsers = array_filter($users, function ($user) {
@@ -43,17 +33,17 @@ $otherUsers = array_filter($users, function ($user) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Users - Super Admin</title>
+    <title>Manage Users - <?= htmlspecialchars($panelLabel) ?></title>
     <link rel="stylesheet" href="../assets/css/super_manage.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
-    <!-- TOP NAVIGATION -->
     <div class="topnav">
         <div class="logo-section">
             <img src="../assets/img/logo.png" alt="Logo">
-            <h2>Internship Portal - Super Admin</h2>
+            <h2>Internship Portal - <?= htmlspecialchars($panelLabel) ?></h2>
         </div>
 
         <div class="topnav-right">
@@ -64,21 +54,20 @@ $otherUsers = array_filter($users, function ($user) {
         </div>
     </div>
 
-    <!-- MAIN WRAPPER -->
     <div class="wrapper">
-
-        <!-- SIDEBAR -->
         <div class="sidebar">
             <ul>
                 <li><a href="index.php" class="active">Dashboard</a></li>
+                <li><a href="profile.php">Profile</a></li>
                 <li><a href="create_users.php">Create Users</a></li>
                 <li><a href="manage_users.php">Manage Users</a></li>
                 <li><a href="manage_internships.php">Manage Internships</a></li>
+                <li><a href="applications.php">All Applications</a></li>
                 <li><a href="system_logs.php">System Logs</a></li>
+                <li><a href="about.php">About</a></li>
             </ul>
         </div>
 
-        <!-- MAIN CONTENT -->
         <div class="content">
             <h1>Manage Users</h1>
 
@@ -94,9 +83,8 @@ $otherUsers = array_filter($users, function ($user) {
 
             <section class="user-group user-group-superadmin">
                 <div class="section-heading">
-                    
-                    <h2>Super Admin</h2>
-                    <p>Protected system-level accounts are displayed separately for emphasis.</p>
+                    <h2>Protected Admin Accounts</h2>
+                    <p>These accounts use the same features as admins, but they cannot be deleted.</p>
                 </div>
 
                 <div class="table-section table-section-superadmin">
@@ -139,9 +127,15 @@ $otherUsers = array_filter($users, function ($user) {
 
             <section class="user-group">
                 <div class="section-heading">
-                    
                     <h2>Other Users</h2>
                     <p>Administrative and operational accounts appear below the super admin tier.</p>
+                </div>
+
+                <div class="filter-tabs" aria-label="User type filters">
+                    <button type="button" class="filter-tab active" data-filter="all">All</button>
+                    <button type="button" class="filter-tab" data-filter="staff">Staff</button>
+                    <button type="button" class="filter-tab" data-filter="intern">Intern</button>
+                    <button type="button" class="filter-tab" data-filter="admin">Admin</button>
                 </div>
 
                 <div class="table-section">
@@ -160,7 +154,7 @@ $otherUsers = array_filter($users, function ($user) {
                                 $statusClass = $user['status'] === 'active' ? 'status-active' : 'status-inactive';
                                 $userTypeClass = 'user-type-' . strtolower($user['user_type']);
                                 ?>
-                                <tr>
+                                <tr class="user-row" data-user-type="<?= htmlspecialchars($user['user_type']) ?>">
                                     <td><?= htmlspecialchars($user['email']) ?></td>
                                     <td>
                                         <span class="user-type <?= $userTypeClass ?>">
@@ -173,14 +167,14 @@ $otherUsers = array_filter($users, function ($user) {
                                         </span>
                                     </td>
                                     <td>
-                                        <a href="view_users.php?id=<?= $user['user_id'] ?>">View</a>
-                                        <a href="toggle_status.php?id=<?= $user['user_id'] ?>">
-                                            <?= htmlspecialchars($nextStatusLabels[$user['status']] ?? 'Update Status') ?>
-                                        </a>
-                                        <a href="delete_users.php?id=<?= $user['user_id'] ?>"
-                                           onclick="return confirm('Delete user <?= htmlspecialchars($user['email']) ?>? This action cannot be undone.')">
-                                           Delete
-                                        </a>
+                                        <div class="action-group">
+                                            <a href="view_users.php?id=<?= $user['user_id'] ?>">View</a>
+                                            <a href="toggle_status.php?id=<?= $user['user_id'] ?>&status=active" class="<?= $user['status'] === 'active' ? 'current-status-action' : '' ?>">Activate</a>
+                                            <a href="toggle_status.php?id=<?= $user['user_id'] ?>&status=suspended" class="<?= $user['status'] === 'suspended' ? 'current-status-action' : '' ?>">Suspend</a>
+                                            <a href="toggle_status.php?id=<?= $user['user_id'] ?>&status=banned" class="<?= $user['status'] === 'banned' ? 'current-status-action' : '' ?>">Ban</a>
+                                            <a href="delete_users.php?id=<?= $user['user_id'] ?>"
+                                               onclick="return confirm('Delete user <?= htmlspecialchars($user['email']) ?>? This action cannot be undone.')">Delete</a>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -189,8 +183,27 @@ $otherUsers = array_filter($users, function ($user) {
                 </div>
             </section>
         </div>
-
     </div>
 
+    <script>
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const userRows = document.querySelectorAll('.user-row');
+
+        filterTabs.forEach((tab) => {
+            tab.addEventListener('click', () => {
+                const filterType = tab.dataset.filter;
+
+                filterTabs.forEach((item) => item.classList.remove('active'));
+                tab.classList.add('active');
+
+                userRows.forEach((row) => {
+                    const showRow = filterType === 'all' || row.dataset.userType === filterType;
+                    row.style.display = showRow ? '' : 'none';
+                });
+            });
+        });
+    </script>
+
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

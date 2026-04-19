@@ -101,11 +101,13 @@ function getStatusClass($status)
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Application Details</title>
     <link rel="stylesheet" href="../assets/css/company_application.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="stylesheet" href="../assets/css/companyapplication_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -266,7 +268,7 @@ function getStatusClass($status)
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Allowance:</span>
-                            <span class="detail-value">₱<?= number_format($application['allowance'] ?? 0, 2) ?></span>
+                            <span class="detail-value">PHP <?= number_format($application['allowance'] ?? 0, 2) ?></span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Deadline:</span>
@@ -335,6 +337,7 @@ function getStatusClass($status)
     <script src="../js/logout_modal.js"></script>
     <script src="../js/companyapplication_modal.js"></script>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 
 </html>

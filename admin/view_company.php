@@ -44,10 +44,12 @@ $profile = !empty($company['profile_image'])
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Company - Admin</title>
     <link rel="stylesheet" href="../assets/css/admin_company.css">
     <link rel="stylesheet" href="../assets/css/admincompany_view.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -209,5 +211,6 @@ $profile = !empty($company['profile_image'])
     </div>
 </div>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

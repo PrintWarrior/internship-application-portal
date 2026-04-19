@@ -163,11 +163,13 @@ function formatDate($date) {
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Contract</title>
     <link rel="stylesheet" href="../assets/css/company_contract.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="stylesheet" href="../assets/css/companycontract_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -227,7 +229,7 @@ function formatDate($date) {
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Allowance</span>
-                        <span class="detail-value">₱<?= number_format($application['allowance'], 2) ?>/month</span>
+                        <span class="detail-value">PHP <?= number_format($application['allowance'], 2) ?>/month</span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">University</span>
@@ -263,7 +265,7 @@ function formatDate($date) {
 
             <!-- Help Text -->
             <div class="help-text" style="margin-top: 20px; background-color: #f9f9f9; padding: 15px; border: 1px solid #000000;">
-                <strong style="font-size: 16px;">📝 Contract Guidelines:</strong>
+                <strong style="font-size: 16px;">Contract Guidelines:</strong>
                 <ul style="margin-top: 10px;">
                     <li>Include full names of both parties (Company and Intern)</li>
                     <li>Specify the internship position, start date, and end date</li>
@@ -303,7 +305,7 @@ The Intern shall undertake an internship position as ${<?= json_encode($applicat
 This internship shall commence on ${<?= json_encode(formatDate($application['start_date'])) ?>} and shall continue until ${<?= json_encode(formatDate($application['end_date'])) ?>}, unless terminated earlier.
 
 3. COMPENSATION
-The Intern shall receive a monthly allowance of ₱${<?= json_encode(number_format($application['allowance'], 2)) ?>}.
+The Intern shall receive a monthly allowance of PHP ${<?= json_encode(number_format($application['allowance'], 2)) ?>}.
 
 4. SCOPE OF WORK
 The Intern agrees to:
@@ -359,5 +361,6 @@ Date: ___________________                    Date: ___________________`;
 <?php unset($_SESSION['success']); ?>
 <?php endif; ?>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

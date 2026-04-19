@@ -38,10 +38,12 @@ $unread = $stmt->fetchColumn();
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Notifications</title>
 <link rel="stylesheet" href="../assets/css/intern_notification.css">
 <link rel="stylesheet" href="../assets/css/logout_modal.css">
 <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -108,5 +110,6 @@ $unread = $stmt->fetchColumn();
 <?php include '../html/logout_modal.html'; ?>
 <script src="../js/logout_modal.js"></script>
 
+  
 </body>
 </html>

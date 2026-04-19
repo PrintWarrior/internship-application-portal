@@ -64,12 +64,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Internship - <?= htmlspecialchars($internship['title']) ?></title>
     <link rel="stylesheet" href="../assets/css/company_edit_internship.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="stylesheet" href="../assets/css/companyinternship_edit.css">
     <link rel="stylesheet" href="../assets/css/companyedit_internshipmodal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 <div id="notification" class="notification"></div>
@@ -103,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="main-content">
         <!--<div class="page-header">
             <h2>Edit Internship</h2>
-            <a href="view_internship.php?id=<?= $internship_id ?>" class="btn-back">← Back to Details</a>
+            <a href="view_internship.php?id=<?= $internship_id ?>" class="btn-back">ÃƒÂ¢Ã¢â‚¬Â Ã‚Â Back to Details</a>
         </div>-->
 
         <div class="form-container">
@@ -139,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <div class="form-group half">
-                        <label for="allowance">Allowance (₱)</label>
+                        <label for="allowance">Allowance (PHP)</label>
                         <input type="number" step="0.01" id="allowance" name="allowance" 
                                value="<?= htmlspecialchars($_POST['allowance'] ?? $internship['allowance']) ?>">
                     </div>
@@ -196,5 +198,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
 </script>
 <?php endif; ?>
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

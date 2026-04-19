@@ -23,54 +23,55 @@ if ($tokenData) {
 
     // Notify admin
     $message = "User {$user['email']} has verified their email.";
-    $action_url = "send_otp.php?user_id={$tokenData['user_id']}";  // ← REMOVE 'admin/'
+    $action_url = "send_otp.php?user_id={$tokenData['user_id']}";
     $action_label = "Send Temopory Password";
     createNotification(1, $message, $action_url, $action_label, $tokenData['user_id']);
 
-    echo "
+    echo <<<HTML
 <!DOCTYPE html>
 <html>
 <head>
-<title>Email Verified</title>
-<style>
-body{
-    font-family: Arial, sans-serif;
-    background:#f2f4f6;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    margin:0;
-}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verified</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
 
-.card{
-    background:white;
-    padding:40px;
-    text-align:center;
-    max-width:400px;
-}
+        .card {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+        }
 
-.card h2{
-    color:#2ecc71;
-}
+        .card h2 {
+            color: #2ecc71;
+        }
 
-.card p{
-    color:black;
-}
-</style>
+        .card p {
+            color: black;
+        }
+    </style>
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
-
 <body>
-
-<div class='card'>
-    <h2>Email Verified ✔</h2>
-    <p>Your email has been successfully verified.</p>
-    <p>You can now wait for the administrator to send your Temporary Password via email.</p>
-</div>
-
+    <div class="card">
+        <h2>Email Verified</h2>
+        <p>Your email has been successfully verified.</p>
+        <p>You can now wait for the administrator to send your Temporary Password via email.</p>
+    </div>
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>
-";
+HTML;
 } else {
     echo "Invalid or expired verification link.";
 }

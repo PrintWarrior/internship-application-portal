@@ -3,10 +3,8 @@ session_start();
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
-    header('Location: ../index.php');
-    exit;
-}
+requireAdminAreaAccess();
+$panelLabel = getAdminAreaLabel();
 
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0");
 $stmt->execute([$_SESSION['user_id']]);
@@ -61,9 +59,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create User - Super Admin</title>
+    <title>Create User - <?= htmlspecialchars($panelLabel) ?></title>
     <link rel="stylesheet" href="../assets/css/super_create.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -71,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="topnav">
         <div class="logo-section">
             <img src="../assets/img/logo.png" alt="Logo">
-            <h2>Internship Portal - Super Admin</h2>
+            <h2>Internship Portal - <?= htmlspecialchars($panelLabel) ?></h2>
         </div>
 
         <div class="topnav-right">
@@ -89,10 +88,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="sidebar">
             <ul>
                 <li><a href="index.php" class="active">Dashboard</a></li>
+                <li><a href="profile.php">Profile</a></li>
                 <li><a href="create_users.php">Create Users</a></li>
                 <li><a href="manage_users.php">Manage Users</a></li>
                 <li><a href="manage_internships.php">Manage Internships</a></li>
+                <li><a href="applications.php">All Applications</a></li>
                 <li><a href="system_logs.php">System Logs</a></li>
+                <li><a href="about.php">About</a></li>
             </ul>
         </div>
 
@@ -150,5 +152,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     </div>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

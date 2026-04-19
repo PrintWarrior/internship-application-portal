@@ -30,10 +30,12 @@ $closed = count(array_filter($internships, fn($i) => $i['status'] === 'closed'))
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Internships</title>
     <link rel="stylesheet" href="../assets/css/company_manage.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -131,5 +133,6 @@ $closed = count(array_filter($internships, fn($i) => $i['status'] === 'closed'))
 
     <!-- Include Logout Modal JavaScript -->
     <script src="../js/logout_modal.js"></script>
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

@@ -41,11 +41,13 @@ foreach ($companies as $company) {
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Companies - Admin</title>
     <link rel="stylesheet" href="../assets/css/admin_company.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="stylesheet" href="../assets/css/delete_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -238,6 +240,7 @@ foreach ($companies as $company) {
     <!-- Include Logout Modal JavaScript -->
     <script src="../js/delete_modal.js"></script>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 
 </html>

@@ -3,10 +3,8 @@ session_start();
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
-    header('Location: ../index.php');
-    exit;
-}
+requireAdminAreaAccess();
+$panelLabel = getAdminAreaLabel();
 
 // Get notification count
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0");
@@ -40,12 +38,14 @@ function isDeadlineExpired($deadline)
 <html>
 
 <head>
-    <title>Manage Internships - Super Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Internships - <?= htmlspecialchars($panelLabel) ?></title>
     <link rel="stylesheet" href="../assets/css/admin_internship.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="stylesheet" href="../assets/css/delete_modal.css">
     <link rel="stylesheet" href="../assets/css/modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -53,7 +53,7 @@ function isDeadlineExpired($deadline)
     <div class="topnav">
         <div class="logo-section">
             <img src="../assets/img/logo.png" alt="Logo">
-            <h4>Internship Portal - Super Admin</h4>
+            <h4>Internship Portal - <?= htmlspecialchars($panelLabel) ?></h4>
         </div>
 
         <div class="topnav-right">
@@ -67,10 +67,13 @@ function isDeadlineExpired($deadline)
     <div class="wrapper">
         <div class="sidebar">
             <li><a href="index.php" class="active">Dashboard</a></li>
+            <li><a href="profile.php">Profile</a></li>
             <li><a href="create_users.php">Create Users</a></li>
             <li><a href="manage_users.php">Manage Users</a></li>
             <li><a href="manage_internships.php">Manage Internships</a></li>
+            <li><a href="applications.php">All Applications</a></li>
             <li><a href="system_logs.php">System Logs</a></li>
+            <li><a href="about.php">About</a></li>
         </div>
 
         <div class="main-content">
@@ -244,6 +247,7 @@ function isDeadlineExpired($deadline)
     <script src="../js/approve_modal.js"></script>
     <script src="../js/reject_modal.js"></script>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 
 </html>

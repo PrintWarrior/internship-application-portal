@@ -155,6 +155,7 @@ $portfolio = '#';
     <link rel="stylesheet" href="../assets/css/admin_about.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -496,5 +497,6 @@ $portfolio = '#';
         <?php endif; ?>
     </script>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

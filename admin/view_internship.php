@@ -38,9 +38,11 @@ function getStatusClass($status) {
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Internship - Admin</title>
     <link rel="stylesheet" href="../assets/css/admininternship_view.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
     <div class="container">
@@ -74,7 +76,7 @@ function getStatusClass($status) {
                 
                 <div class="detail-row">
                     <span class="detail-label">Allowance:</span>
-                    <span class="detail-value">₱<?= number_format($job['allowance'] ?? 0, 2) ?></span>
+                    <span class="detail-value">PHP <?= number_format($job['allowance'] ?? 0, 2) ?></span>
                 </div>
                 
                 <div class="detail-row">
@@ -166,5 +168,6 @@ function getStatusClass($status) {
         }
     }
     </script>
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

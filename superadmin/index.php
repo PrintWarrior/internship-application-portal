@@ -3,11 +3,8 @@ session_start();
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
-// Check if user is logged in and is super admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
-    header('Location: ../index.php');
-    exit;
-}
+requireAdminAreaAccess();
+$panelLabel = getAdminAreaLabel();
 
 // Get notification count
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0");
@@ -26,9 +23,10 @@ $totalInterns = $pdo->query("SELECT COUNT(*) FROM users WHERE user_type='intern'
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Admin Dashboard</title>
+    <title><?= htmlspecialchars($panelLabel) ?> Dashboard</title>
     <link rel="stylesheet" href="../assets/css/super_index.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -36,7 +34,7 @@ $totalInterns = $pdo->query("SELECT COUNT(*) FROM users WHERE user_type='intern'
     <div class="topnav">
         <div class="logo-section">
             <img src="../assets/img/logo.png" alt="Logo">
-            <h2>Internship Portal - Super Admin</h2>
+            <h2>Internship Portal - <?= htmlspecialchars($panelLabel) ?></h2>
         </div>
 
         <div class="topnav-right">
@@ -52,16 +50,19 @@ $totalInterns = $pdo->query("SELECT COUNT(*) FROM users WHERE user_type='intern'
         <div class="sidebar">
             <ul>
                 <li><a href="index.php" class="active">Dashboard</a></li>
+                <li><a href="profile.php">Profile</a></li>
                 <li><a href="create_users.php">Create Users</a></li>
                 <li><a href="manage_users.php">Manage Users</a></li>
                 <li><a href="manage_internships.php">Manage Internships</a></li>
+                <li><a href="applications.php">All Applications</a></li>
                 <li><a href="system_logs.php">System Logs</a></li>
+                <li><a href="about.php">About</a></li>
             </ul>
         </div>
 
         <!-- MAIN CONTENT -->
         <div class="content">
-            <h1>Super Admin Dashboard</h1>
+            <h1><?= htmlspecialchars($panelLabel) ?> Dashboard</h1>
 
             <div class="cards">
                 <div class="card">
@@ -88,5 +89,6 @@ $totalInterns = $pdo->query("SELECT COUNT(*) FROM users WHERE user_type='intern'
 
     </div>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

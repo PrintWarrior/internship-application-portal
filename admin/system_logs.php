@@ -83,10 +83,12 @@ function getActionClass($action) {
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Logs - Admin</title>
     <link rel="stylesheet" href="../assets/css/system.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -240,5 +242,6 @@ function filterTable() {
     <!-- Include Logout Modal JavaScript -->
     <script src="../js/logout_modal.js"></script>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

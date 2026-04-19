@@ -1,11 +1,10 @@
 <?php
 session_start();
 require_once '../includes/db.php';
+require_once '../includes/functions.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
-    header('Location: ../index.php');
-    exit;
-}
+requireAdminAreaAccess();
+$panelLabel = getAdminAreaLabel();
 
 // Get notification count
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0");
@@ -44,7 +43,7 @@ function getStatusClass($status) {
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Applications - Admin</title>
+    <title><?= htmlspecialchars($panelLabel) ?> Applications</title>
     <link rel="stylesheet" href="../assets/css/application.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
@@ -56,7 +55,7 @@ function getStatusClass($status) {
 <div class="topnav">
     <div class="logo-section">
         <img src="../assets/img/logo.png" alt="Logo">
-        <h4>Internship Portal - Admin</h4>
+        <h2>Internship Portal - <?= htmlspecialchars($panelLabel) ?></h2>
     </div>
 
     <div class="topnav-right">
@@ -70,16 +69,16 @@ function getStatusClass($status) {
 <div class="wrapper">
     <!-- SIDEBAR -->
     <div class="sidebar">
-        <a href="index.php">Dashboard</a>
-            <a href="profile.php">Profile</a>
-            <a href="manage_interns.php">Manage Interns</a>
-            <!--<a href="manage_companies.php">Manage Companies</a>-->
-            <a href="manage_staffs.php">Manage Staffs</a>
-            <a href="manage_internships.php">Manage Internships</a>
-            <a href="applications.php">All Applications</a>
-            <!--<a href="reports.php">Reports & Analytics</a>-->
-            <a href="system_logs.php">System Logs</a>
-            <a href="about.php">About</a>
+        <ul>
+                <li><a href="index.php" class="active">Dashboard</a></li>
+                <li><a href="profile.php">Profile</a></li>
+                <li><a href="create_users.php">Create Users</a></li>
+                <li><a href="manage_users.php">Manage Users</a></li>
+                <li><a href="manage_internships.php">Manage Internships</a></li>
+                <li><a href="applications.php">All Applications</a></li>
+                <li><a href="system_logs.php">System Logs</a></li>
+                <li><a href="about.php">About</a></li>
+            </ul>
     </div>
 
     <!-- MAIN CONTENT -->

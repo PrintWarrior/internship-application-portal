@@ -24,10 +24,12 @@ $totalApplications = $pdo->query("SELECT COUNT(*) FROM applications")->fetchColu
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../assets/css/admin_index.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -97,6 +99,7 @@ $totalApplications = $pdo->query("SELECT COUNT(*) FROM applications")->fetchColu
     <!-- Include Logout Modal JavaScript -->
     <script src="../js/logout_modal.js"></script>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 
 </html>

@@ -70,10 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             switch ($user['user_type']) {
                 case 'superadmin':
-                    $_SESSION['redirect_to'] = 'superadmin/index.php';
-                    break;
                 case 'admin':
-                    $_SESSION['redirect_to'] = 'admin/index.php';
+                    $_SESSION['redirect_to'] = 'superadmin/index.php';
                     break;
                 case 'staff':
                     $_SESSION['redirect_to'] = 'company/index.php';
@@ -101,10 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         switch ($user['user_type']) {
             case 'superadmin':
-                $_SESSION['redirect_to'] = 'superadmin/index.php';
-                break;
             case 'admin':
-                $_SESSION['redirect_to'] = 'admin/index.php';
+                $_SESSION['redirect_to'] = 'superadmin/index.php';
                 break;
             case 'staff':
                 $_SESSION['redirect_to'] = 'company/index.php';

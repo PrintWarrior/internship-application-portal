@@ -47,6 +47,7 @@ $unread = $stmt->fetchColumn();
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Contracts</title>
     <link rel="stylesheet" href="../assets/css/intern_contract.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
@@ -74,6 +75,7 @@ $unread = $stmt->fetchColumn();
             font-weight: bold;
         }
     </style>
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -120,7 +122,7 @@ $unread = $stmt->fetchColumn();
                                     } elseif ($contract['hr_confirmed']) {
                                         echo '<span class="confirmed-yes">Confirmed</span>';
                                     } else {
-                                        echo '<span class="confirmed-pending">Signed – Pending HR</span>';
+                                        echo '<span class="confirmed-pending">Signed - Pending HR</span>';
                                     }
                                     ?>
                                 </td>
@@ -142,8 +144,9 @@ $unread = $stmt->fetchColumn();
                                                     View Contract
                                                 </a>
                                                 <a href="download_contract.php?id=<?= $contract['contract_id'] ?>&type=unsigned"
+                                                    target="_blank" rel="noopener"
                                                     class="btn-download">
-                                                    Download
+                                                    Download / Print
                                                 </a>
                                             <?php else: ?>
                                                 <span class="badge-warning">Contract not ready</span>
@@ -182,7 +185,7 @@ $unread = $stmt->fetchColumn();
 
                                             <!-- Status badge -->
                                             <?php if ($is_confirmed): ?>
-                                                <span class="confirmed-badge">✓ Confirmed</span>
+                                                <span class="confirmed-badge">Confirmed</span>
                                             <?php else: ?>
                                                 <span class="pending-badge">Pending HR</span>
                                             <?php endif; ?>
@@ -270,6 +273,7 @@ $unread = $stmt->fetchColumn();
 
     <!-- Include Logout Modal JavaScript -->
     <script src="../js/logout_modal.js"></script>
+    
 </body>
 
 </html>

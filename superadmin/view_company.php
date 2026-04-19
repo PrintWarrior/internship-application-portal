@@ -3,10 +3,8 @@ session_start();
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
-    header('Location: ../index.php');
-    exit;
-}
+requireAdminAreaAccess();
+$panelLabel = getAdminAreaLabel();
 
 $companyId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
@@ -52,17 +50,19 @@ if (!file_exists($profile)) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>View Company - Super Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Company - <?= htmlspecialchars($panelLabel) ?></title>
     <link rel="stylesheet" href="../assets/css/admin_company.css">
     <link rel="stylesheet" href="../assets/css/admincompany_view.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
 <div class="topnav">
     <div class="logo-section">
         <img src="../assets/img/logo.png" alt="Logo">
-        <h4>Internship Portal - Super Admin</h4>
+        <h4>Internship Portal - <?= htmlspecialchars($panelLabel) ?></h4>
     </div>
 
     <div class="topnav-right">
@@ -76,10 +76,13 @@ if (!file_exists($profile)) {
 <div class="wrapper">
     <div class="sidebar">
         <a href="index.php">Dashboard</a>
+        <a href="profile.php">Profile</a>
         <a href="manage_users.php">Manage Users</a>
         <a href="create_users.php">Create Users</a>
         <a href="manage_internships.php">Manage Internships</a>
+        <a href="applications.php">All Applications</a>
         <a href="system_logs.php">System Logs</a>
+        <a href="about.php">About</a>
     </div>
 
     <div class="main-content">
@@ -191,5 +194,6 @@ if (!file_exists($profile)) {
     </div>
 </div>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

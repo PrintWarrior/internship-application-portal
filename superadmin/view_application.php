@@ -1,11 +1,9 @@
 <?php
 session_start();
 require_once '../includes/db.php';
+require_once '../includes/functions.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
-    header('Location: ../index.php');
-    exit;
-}
+requireAdminAreaAccess();
 
 if (!isset($_GET['id'])) {
     die("Application ID missing.");

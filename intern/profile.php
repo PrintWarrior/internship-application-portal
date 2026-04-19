@@ -164,6 +164,7 @@ $unread = $stmt->fetchColumn();
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile</title>
     <link rel="stylesheet" href="../assets/css/intern_profile.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
@@ -183,6 +184,7 @@ $unread = $stmt->fetchColumn();
             border: 1px solid #ffffff;
         }
     </style>
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -401,6 +403,7 @@ $unread = $stmt->fetchColumn();
             });
         </script>
     <?php endif; ?>
+    
 </body>
 
 </html>

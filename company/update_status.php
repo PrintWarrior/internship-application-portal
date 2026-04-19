@@ -89,9 +89,11 @@ $allowed_statuses = $status_options[$current_status] ?? [];
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Application Status</title>
     <link rel="stylesheet" href="../assets/css/company_update.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -125,7 +127,7 @@ $allowed_statuses = $status_options[$current_status] ?? [];
     <div class="main-content">
         <!--<div class="page-header">
             <h2>Update Application Status</h2>
-            <a href="view_applicants.php" class="btn-back">← Back to Applicants</a>
+            <a href="view_applicants.php" class="btn-back">Ã¢â€ Â Back to Applicants</a>
         </div> -->
 
         <div class="update-card">
@@ -232,5 +234,6 @@ function getStatusClass($status) {
 </script>
 <?php endif; ?>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

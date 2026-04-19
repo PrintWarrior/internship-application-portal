@@ -49,9 +49,11 @@ for ($i = 5; $i >= 0; $i--) {
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports & Analytics - Admin</title>
     <link rel="stylesheet" href="../assets/css/reports.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -191,5 +193,6 @@ for ($i = 5; $i >= 0; $i--) {
     <!-- Include Logout Modal JavaScript -->
     <script src="../js/logout_modal.js"></script>
 
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

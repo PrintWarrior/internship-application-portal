@@ -60,6 +60,7 @@
             display: none;
         }
     </style>
+    <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 
 <body>
@@ -157,6 +158,7 @@
             }
         });
     </script>
+    <script src="js/responsive-nav.js"></script>
 </body>
 
 </html>

@@ -55,6 +55,7 @@ $unread = $stmt->fetchColumn();
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intern Dashboard</title>
     <link rel="stylesheet" href="../assets/css/intern_index.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
@@ -71,6 +72,7 @@ $unread = $stmt->fetchColumn();
     border: 1px solid #ffffff;
 }
     </style>
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 
 <body>
@@ -90,7 +92,7 @@ $unread = $stmt->fetchColumn();
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
-        <h2>Welcome, <?php echo htmlspecialchars($intern['first_name']); ?> 👋</h2>
+        <h2>Welcome, <?php echo htmlspecialchars($intern['first_name']); ?></h2>
         <p class="text-muted">Here is your profile summary</p>
 
         <div class="row mt-4">
@@ -219,6 +221,7 @@ $unread = $stmt->fetchColumn();
     <!-- Include Logout Modal JavaScript -->
     <script src="../js/logout_modal.js"></script>
 
+    
 </body>
 
 </html>

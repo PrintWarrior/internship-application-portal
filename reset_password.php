@@ -52,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Reset Password - Internship Portal</title>
     <link rel="stylesheet" href="assets/css/reset_password.css">
     <link rel="icon" href="assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 <body>
     <div class="container">
@@ -119,5 +120,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         confirmPass.addEventListener('keyup', checkPasswordMatch);
     </script>
+    <script src="js/responsive-nav.js"></script>
 </body>
 </html>

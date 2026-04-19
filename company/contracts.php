@@ -41,6 +41,7 @@ function formatDate($date) {
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contracts</title>
     <link rel="stylesheet" href="../assets/css/contract.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
@@ -75,6 +76,7 @@ function formatDate($date) {
     }
 }
 </style>
+    <link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
 
@@ -184,7 +186,7 @@ function showNotification(message, isSuccess = true) {
                         <td><?= formatDate($contract['signed_date']) ?></td>
                         <td>
                             <?php if ($contract['hr_confirmed']): ?>
-                                <span class="contract-badge contract-confirmed">✓ Confirmed</span>
+                                <span class="contract-badge contract-confirmed">Confirmed</span>
                             <?php else: ?>
                                 <span class="contract-badge contract-pending">Pending</span>
                             <?php endif; ?>
@@ -241,5 +243,6 @@ function showNotification(message, isSuccess = true) {
 
     <!-- Include Logout Modal JavaScript -->
     <script src="../js/logout_modal.js"></script>
+    <script src="../js/responsive-nav.js"></script>
 </body>
 </html>

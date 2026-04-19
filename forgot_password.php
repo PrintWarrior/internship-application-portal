@@ -95,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Forgot Password - Internship Portal</title>
     <link rel="stylesheet" href="assets/css/forgot_password.css">
     <link rel="icon" href="assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 <body>
     <div class="container">
@@ -125,5 +126,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="index.php">Back to Login</a>
         </div>
     </div>
+    <script src="js/responsive-nav.js"></script>
 </body>
 </html>
