@@ -1,4 +1,9 @@
-<?php session_start(); ?>
+<?php
+require_once 'includes/functions.php';
+
+startSecureSession();
+sendSecurityHeaders();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -76,6 +81,7 @@
         <h2>Internship Application Portal</h2>
 
         <form action="includes/login.php" method="POST">
+            <?= csrf_input() ?>
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" name="email" id="email" required placeholder="Enter email...">
@@ -86,7 +92,7 @@
             </div>
             <button type="submit">Login</button>
         </form>
-        <p>Don't have an account? <a href="html/register.html">Register</a></p>
+        <p>Don't have an account? <a href="html/register.php">Register</a></p>
         <p>Forgot your password? <a href="forgot_password.php">Reset Password</a></p>
     </div>
 

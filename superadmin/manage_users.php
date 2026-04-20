@@ -10,7 +10,8 @@ $stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND 
 $stmt->execute([$_SESSION['user_id']]);
 $unread = $stmt->fetchColumn();
 
-$stmt = $pdo->query("SELECT * FROM users ORDER BY user_id DESC");
+$stmt = $pdo->prepare("SELECT * FROM users ORDER BY user_id DESC");
+$stmt->execute();
 $users = $stmt->fetchAll();
 
 $statusLabels = [
@@ -169,11 +170,29 @@ $otherUsers = array_filter($users, function ($user) {
                                     <td>
                                         <div class="action-group">
                                             <a href="view_users.php?id=<?= $user['user_id'] ?>">View</a>
-                                            <a href="toggle_status.php?id=<?= $user['user_id'] ?>&status=active" class="<?= $user['status'] === 'active' ? 'current-status-action' : '' ?>">Activate</a>
-                                            <a href="toggle_status.php?id=<?= $user['user_id'] ?>&status=suspended" class="<?= $user['status'] === 'suspended' ? 'current-status-action' : '' ?>">Suspend</a>
-                                            <a href="toggle_status.php?id=<?= $user['user_id'] ?>&status=banned" class="<?= $user['status'] === 'banned' ? 'current-status-action' : '' ?>">Ban</a>
-                                            <a href="delete_users.php?id=<?= $user['user_id'] ?>"
-                                               onclick="return confirm('Delete user <?= htmlspecialchars($user['email']) ?>? This action cannot be undone.')">Delete</a>
+                                            <form method="POST" action="toggle_status.php" style="display:inline;">
+                                                <?= csrf_input() ?>
+                                                <input type="hidden" name="id" value="<?= (int) $user['user_id'] ?>">
+                                                <input type="hidden" name="status" value="active">
+                                                <button type="submit" class="<?= $user['status'] === 'active' ? 'current-status-action' : '' ?>">Activate</button>
+                                            </form>
+                                            <form method="POST" action="toggle_status.php" style="display:inline;">
+                                                <?= csrf_input() ?>
+                                                <input type="hidden" name="id" value="<?= (int) $user['user_id'] ?>">
+                                                <input type="hidden" name="status" value="suspended">
+                                                <button type="submit" class="<?= $user['status'] === 'suspended' ? 'current-status-action' : '' ?>">Suspend</button>
+                                            </form>
+                                            <form method="POST" action="toggle_status.php" style="display:inline;">
+                                                <?= csrf_input() ?>
+                                                <input type="hidden" name="id" value="<?= (int) $user['user_id'] ?>">
+                                                <input type="hidden" name="status" value="banned">
+                                                <button type="submit" class="<?= $user['status'] === 'banned' ? 'current-status-action' : '' ?>">Ban</button>
+                                            </form>
+                                            <form method="POST" action="delete_users.php" style="display:inline;" onsubmit="return confirm('Delete user <?= htmlspecialchars($user['email']) ?>? This action cannot be undone.')">
+                                                <?= csrf_input() ?>
+                                                <input type="hidden" name="id" value="<?= (int) $user['user_id'] ?>">
+                                                <button type="submit">Delete</button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>

@@ -14,7 +14,11 @@
         </div>
         <div class="bw-modal-footer">
             <button class="bw-modal-btn bw-modal-btn-cancel" onclick="closeDeleteModal()">CANCEL</button>
-            <button class="bw-modal-btn bw-modal-btn-delete" id="confirmDeleteBtn">DELETE</button>
+            <form method="POST" id="deleteModalForm" style="display:inline;">
+                <?= csrf_input() ?>
+                <input type="hidden" name="id" id="deleteModalId" value="">
+                <button type="submit" class="bw-modal-btn bw-modal-btn-delete" id="confirmDeleteBtn">DELETE</button>
+            </form>
         </div>
     </div>
 </div>

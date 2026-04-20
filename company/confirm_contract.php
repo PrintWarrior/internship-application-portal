@@ -8,13 +8,18 @@ requireStaffUser();
 $company = getStaffCompanyContext($_SESSION['user_id']);
 $company_id = $company['company_id'];
 
-// Get the contract ID from URL
-if (!isset($_GET['id']) || empty($_GET['id'])) {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: contracts.php');
     exit;
 }
 
-$contract_id = $_GET['id'];
+requireValidCsrfToken(['redirect' => 'contracts.php']);
+
+$contract_id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
+if ($contract_id <= 0) {
+    header('Location: contracts.php');
+    exit;
+}
 
 // First, verify that this contract belongs to this company
 $stmt = $pdo->prepare("

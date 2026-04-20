@@ -1,12 +1,25 @@
 <?php
-session_start();
 require_once 'db.php';
 require_once 'functions.php';
 
+startSecureSession();
+sendSecurityHeaders();
+
+const GENERIC_LOGIN_ERROR = 'Invalid email or password.';
+$dummyHash = '$2y$10$wM7s7bQzL6g3s1vA3Q6Yze1O6Gq8mR0Q5JwAq5Y9Y5rYh6VQhYj3K';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken(['redirect' => '../index.php']);
 
     $email = trim($_POST['email'] ?? '');
     $input = trim($_POST['password'] ?? ''); // password OR OTP
+    $normalizedEmail = strtolower($email);
+
+    if (isRateLimited('login', [getClientIp(), 'email:' . $normalizedEmail], 5, 300)) {
+        $_SESSION['error'] = GENERIC_LOGIN_ERROR;
+        header('Location: ../index.php');
+        exit;
+    }
 
     // Fetch user
     $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
@@ -14,28 +27,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
-        $_SESSION['error'] = 'Email not found.';
+        // Keep response and password verification behavior consistent to reduce
+        // account-enumeration and scanner response-difference signals.
+        password_verify($input, $dummyHash);
+        $_SESSION['error'] = GENERIC_LOGIN_ERROR;
         header('Location: ../index.php');
         exit;
     }
 
     // Check account status only after user is found
     if ($user['status'] !== 'active') {
-        if ($user['status'] === 'banned') {
-            $_SESSION['error'] = 'Your account has been banned. Please check your email for more information.';
-        } elseif ($user['status'] === 'suspended') {
-            $_SESSION['error'] = 'Your account is suspended. Please check your email for more information.';
-        } else {
-            $_SESSION['error'] = 'Your account is currently ' . $user['status'] . '.';
-        }
-
+        $_SESSION['error'] = GENERIC_LOGIN_ERROR;
         header('Location: ../index.php');
         exit;
     }
 
     // Email must be verified
     if (!$user['verified']) {
-        $_SESSION['error'] = 'Please verify your email first.';
+        $_SESSION['error'] = GENERIC_LOGIN_ERROR;
         header('Location: ../index.php');
         exit;
     }
@@ -64,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->prepare("UPDATE users SET first_login = 0 WHERE user_id = ?")
                 ->execute([$user['user_id']]);
 
+            session_regenerate_id(true);
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['user_type'] = $user['user_type'];
             $_SESSION['success'] = 'Login successful! Welcome back.';
@@ -84,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: ../index.php');
             exit;
         } else {
-            $_SESSION['error'] = 'Invalid or expired OTP.';
+            $_SESSION['error'] = GENERIC_LOGIN_ERROR;
             header('Location: ../index.php');
             exit;
         }
@@ -93,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ===== NORMAL PASSWORD LOGIN =====
     if (!empty($user['password_hash']) && password_verify($input, $user['password_hash'])) {
 
+        session_regenerate_id(true);
         $_SESSION['user_id'] = $user['user_id'];
         $_SESSION['user_type'] = $user['user_type'];
         $_SESSION['success'] = 'Login successful! Welcome back.';
@@ -114,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
 
     } else {
-        $_SESSION['error'] = 'Invalid password.';
+        $_SESSION['error'] = GENERIC_LOGIN_ERROR;
         header('Location: ../index.php');
         exit;
     }

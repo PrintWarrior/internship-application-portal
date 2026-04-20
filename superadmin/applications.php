@@ -12,7 +12,7 @@ $stmt->execute([$_SESSION['user_id']]);
 $unread = $stmt->fetchColumn();
 
 // Get all applications with details
-$stmt = $pdo->query("
+$stmt = $pdo->prepare("
     SELECT a.*, 
            i.title,
            ir.first_name, ir.last_name, u.email,
@@ -24,6 +24,7 @@ $stmt = $pdo->query("
     JOIN users u ON ir.user_id = u.user_id
     ORDER BY a.date_applied DESC
 ");
+$stmt->execute();
 $applications = $stmt->fetchAll();
 
 // Calculate stats

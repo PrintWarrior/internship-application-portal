@@ -1,5 +1,9 @@
 <?php
 require_once 'includes/db.php';
+require_once 'includes/functions.php';
+
+startSecureSession();
+sendSecurityHeaders();
 
 date_default_timezone_set('Asia/Manila');
 
@@ -10,13 +14,15 @@ $stmt->execute([$token]);
 $user = $stmt->fetch();
 
 if (!$user) {
-    die("Invalid or expired token.");
+    http_response_code(400);
+    $user = null;
 }
 
 $message = "";
 $message_type = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken();
 
     $new = $_POST['new_password'];
     $confirm = $_POST['confirm_password'];
@@ -63,10 +69,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         <h2>Reset Password</h2>
         
-        <!-- Token Info -->
-        <div class="token-info">
-            <span>Account:</span> <?= htmlspecialchars($user['email']) ?>
-        </div>
+        <?php if (!$user): ?>
+            <div class="message-container">
+                <div class="message error">
+                    This password reset link is invalid or has expired.
+                </div>
+            </div>
+        <?php else: ?>
         
         <?php if ($message): ?>
             <div class="message-container">
@@ -77,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
         
         <form method="POST">
+            <?= csrf_input() ?>
             <div class="form-group">
                 <label for="new_password">New Password</label>
                 <input type="password" name="new_password" id="new_password" placeholder="Enter new password" required>
@@ -97,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <button type="submit">Reset Password</button>
         </form>
+        <?php endif; ?>
         
         <!--<div class="back-link">
             <a href="index.php">Back to Login</a>

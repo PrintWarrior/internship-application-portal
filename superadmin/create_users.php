@@ -12,6 +12,7 @@ $unread = $stmt->fetchColumn();
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken(['redirect' => 'create_users.php']);
 
     $email = trim($_POST['email']);
     $type = $_POST['user_type'];
@@ -109,7 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <div class="form-section">
-                <form method="POST">
+            <form method="POST">
+                <?= csrf_input() ?>
                     <div class="form-group">
                         <label for="email">Email Address</label>
                         <input type="email" id="email" name="email" placeholder="Enter email address" required>

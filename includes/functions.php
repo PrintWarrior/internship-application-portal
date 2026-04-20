@@ -4,23 +4,336 @@ require_once 'phpmailer/vendor/autoload.php'; // adjust path if needed
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+$GLOBALS['last_email_error'] = null;
+
+function loadAppEnv() {
+    static $loaded = false;
+
+    if ($loaded) {
+        return;
+    }
+
+    $loaded = true;
+    $envPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . '.env';
+    if (!is_file($envPath) || !is_readable($envPath)) {
+        return;
+    }
+
+    $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    if ($lines === false) {
+        return;
+    }
+
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if ($line === '' || str_starts_with($line, '#') || strpos($line, '=') === false) {
+            continue;
+        }
+
+        [$name, $value] = explode('=', $line, 2);
+        $name = trim($name);
+        $value = trim($value);
+
+        if ($name === '') {
+            continue;
+        }
+
+        if (
+            (str_starts_with($value, '"') && str_ends_with($value, '"')) ||
+            (str_starts_with($value, "'") && str_ends_with($value, "'"))
+        ) {
+            $value = substr($value, 1, -1);
+        }
+
+        if (getenv($name) === false) {
+            putenv($name . '=' . $value);
+            $_ENV[$name] = $value;
+            $_SERVER[$name] = $value;
+        }
+    }
+}
+
+function appEnv($key, $default = null) {
+    loadAppEnv();
+
+    $value = getenv($key);
+    if ($value !== false) {
+        return $value;
+    }
+
+    if (array_key_exists($key, $_ENV)) {
+        return $_ENV[$key];
+    }
+
+    if (array_key_exists($key, $_SERVER)) {
+        return $_SERVER[$key];
+    }
+
+    return $default;
+}
+
+function appUrl($path = '') {
+    $baseUrl = rtrim((string) appEnv('APP_BASE_URL', ''), '/');
+    if ($baseUrl === '') {
+        $isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+        $scheme = $isHttps ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $baseUrl = $scheme . '://' . $host;
+    }
+
+    if ($path === '') {
+        return $baseUrl;
+    }
+
+    return $baseUrl . '/' . ltrim($path, '/');
+}
+
+function sendSecurityHeaders() {
+    static $sent = false;
+
+    if ($sent || headers_sent()) {
+        return;
+    }
+
+    $sent = true;
+    header('X-Frame-Options: SAMEORIGIN');
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header("Permissions-Policy: geolocation=(), microphone=(), camera=()");
+    header("Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'");
+}
+
+function startSecureSession() {
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        return;
+    }
+
+    $isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+    session_set_cookie_params([
+        'httponly' => true,
+        'secure' => $isHttps,
+        'samesite' => 'Lax',
+        'path' => '/',
+    ]);
+
+    session_start();
+}
+
+function getCsrfToken() {
+    startSecureSession();
+
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    return $_SESSION['csrf_token'];
+}
+
+function csrf_input() {
+    return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars(getCsrfToken(), ENT_QUOTES, 'UTF-8') . '">';
+}
+
+function validateCsrfToken($token = null) {
+    startSecureSession();
+
+    $sessionToken = $_SESSION['csrf_token'] ?? '';
+    $submittedToken = $token ?? ($_POST['csrf_token'] ?? '');
+
+    return is_string($submittedToken)
+        && $sessionToken !== ''
+        && hash_equals($sessionToken, $submittedToken);
+}
+
+function requireValidCsrfToken($options = []) {
+    $redirect = $options['redirect'] ?? null;
+    $json = (bool) ($options['json'] ?? false);
+    $message = $options['message'] ?? 'Invalid request.';
+
+    if (validateCsrfToken()) {
+        return true;
+    }
+
+    http_response_code(403);
+
+    if ($json) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'error' => $message]);
+        exit;
+    }
+
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        $_SESSION['error'] = $message;
+    }
+
+    if ($redirect) {
+        header('Location: ' . $redirect);
+        exit;
+    }
+
+    exit($message);
+}
+
+function safeStoredFilename($filename) {
+    $filename = trim((string) $filename);
+    if ($filename === '' || basename($filename) !== $filename) {
+        return null;
+    }
+
+    if (!preg_match('/^[A-Za-z0-9._ -]+$/', $filename)) {
+        return null;
+    }
+
+    return $filename;
+}
+
+function managedDirectoryPath($directory) {
+    $path = realpath($directory);
+    if ($path !== false) {
+        return $path;
+    }
+
+    if (!is_dir($directory) && !mkdir($directory, 0775, true) && !is_dir($directory)) {
+        return null;
+    }
+
+    return realpath($directory) ?: null;
+}
+
+function managedFilePath($directory, $filename) {
+    $safeFilename = safeStoredFilename($filename);
+    $basePath = managedDirectoryPath($directory);
+
+    if ($safeFilename === null || $basePath === null) {
+        return null;
+    }
+
+    return $basePath . DIRECTORY_SEPARATOR . $safeFilename;
+}
+
+function deleteManagedFile($directory, $filename) {
+    $filePath = managedFilePath($directory, $filename);
+    if ($filePath === null || !is_file($filePath)) {
+        return false;
+    }
+
+    return unlink($filePath);
+}
+
+function storeUploadedFile(array $file, array $allowedMimeMap, $prefix, $directory, $maxBytes) {
+    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+        return null;
+    }
+
+    if (($file['size'] ?? 0) <= 0 || $file['size'] > $maxBytes) {
+        return null;
+    }
+
+    $tmpName = $file['tmp_name'] ?? '';
+    if ($tmpName === '' || !is_uploaded_file($tmpName)) {
+        return null;
+    }
+
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = $finfo ? finfo_file($finfo, $tmpName) : false;
+    if ($finfo) {
+        finfo_close($finfo);
+    }
+
+    if (!is_string($mimeType) || !isset($allowedMimeMap[$mimeType])) {
+        return null;
+    }
+
+    $extension = $allowedMimeMap[$mimeType];
+    $basePath = managedDirectoryPath($directory);
+    if ($basePath === null) {
+        return null;
+    }
+
+    $filename = $prefix . '_' . bin2hex(random_bytes(8)) . '.' . $extension;
+    $destination = $basePath . DIRECTORY_SEPARATOR . $filename;
+
+    if (!move_uploaded_file($tmpName, $destination)) {
+        return null;
+    }
+
+    return $filename;
+}
+
+function storeUploadedImage(array $file, $prefix, $directory, $maxBytes = 2097152) {
+    return storeUploadedFile($file, [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+    ], $prefix, $directory, $maxBytes);
+}
+
+function storeUploadedPdf(array $file, $prefix, $directory, $maxBytes = 5242880) {
+    return storeUploadedFile($file, [
+        'application/pdf' => 'pdf',
+    ], $prefix, $directory, $maxBytes);
+}
+
+function configureMailer(PHPMailer $mail) {
+    $host = appEnv('SMTP_HOST', '');
+    $username = appEnv('SMTP_USERNAME', '');
+    $password = appEnv('SMTP_PASSWORD', '');
+    $port = (int) appEnv('SMTP_PORT', 587);
+    $secure = appEnv('SMTP_SECURE', 'tls');
+    $fromAddress = appEnv('SMTP_FROM_EMAIL', $username);
+    $fromName = appEnv('SMTP_FROM_NAME', 'Intern Portal');
+
+    $missing = [];
+    if ($host === '') {
+        $missing[] = 'SMTP_HOST';
+    }
+    if ($username === '') {
+        $missing[] = 'SMTP_USERNAME';
+    }
+    if ($password === '') {
+        $missing[] = 'SMTP_PASSWORD';
+    }
+    if ($fromAddress === '') {
+        $missing[] = 'SMTP_FROM_EMAIL';
+    }
+
+    if ($missing !== []) {
+        throw new Exception('SMTP configuration is incomplete: ' . implode(', ', $missing));
+    }
+
+    $mail->isSMTP();
+    $mail->Host = $host;
+    $mail->SMTPAuth = true;
+    $mail->Username = $username;
+    $mail->Password = $password;
+    $mail->SMTPSecure = $secure;
+    $mail->Port = $port;
+    $mail->setFrom($fromAddress, $fromName);
+}
+
+function setLastEmailError($message) {
+    $GLOBALS['last_email_error'] = $message;
+}
+
+function getLastEmailError() {
+    return $GLOBALS['last_email_error'] ?? null;
+}
+
 function sendEmail($to, $subject, $body) {
     $mail = new PHPMailer(true);
-    $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com';
-    $mail->SMTPAuth = true;
-    $mail->Username = 'internshipapplicationportal@gmail.com';
-    $mail->Password = 'fqwzszpjofuhlqzf';
-    $mail->SMTPSecure = 'tls';
-    $mail->Port = 587;
+    setLastEmailError(null);
 
-    $mail->setFrom('internshipapplicationportal@gmail.com', 'Intern Portal');
-    $mail->addAddress($to);
-    $mail->isHTML(true);
-    $mail->Subject = $subject;
-    $mail->Body = $body;
+    try {
+        configureMailer($mail);
+        $mail->addAddress($to);
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body = $body;
 
-    return $mail->send();
+        return $mail->send();
+    } catch (Exception $e) {
+        setLastEmailError($e->getMessage());
+        error_log('Email send failed for ' . $to . ': ' . $e->getMessage());
+        return false;
+    }
 }
 
 function generateToken($length = 32) {
@@ -29,6 +342,77 @@ function generateToken($length = 32) {
 
 function generateOTP($length = 6) {
     return str_pad(random_int(0, pow(10, $length)-1), $length, '0', STR_PAD_LEFT);
+}
+
+function getClientIp() {
+    $candidates = [
+        $_SERVER['HTTP_CF_CONNECTING_IP'] ?? null,
+        $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null,
+        $_SERVER['REMOTE_ADDR'] ?? null,
+    ];
+
+    foreach ($candidates as $candidate) {
+        if (!$candidate) {
+            continue;
+        }
+
+        $ip = trim(explode(',', $candidate)[0]);
+        if (filter_var($ip, FILTER_VALIDATE_IP)) {
+            return $ip;
+        }
+    }
+
+    return 'unknown';
+}
+
+function ensureRateLimitDirectory() {
+    $directory = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'rate_limits';
+    if (!is_dir($directory)) {
+        mkdir($directory, 0775, true);
+    }
+
+    return $directory;
+}
+
+function rateLimitFilePath($action, $scope) {
+    $safeAction = preg_replace('/[^a-zA-Z0-9_-]/', '_', $action);
+    return ensureRateLimitDirectory() . DIRECTORY_SEPARATOR . $safeAction . '_' . hash('sha256', $scope) . '.json';
+}
+
+function rateLimitExceeded($action, $scope, $maxAttempts, $windowSeconds) {
+    $file = rateLimitFilePath($action, $scope);
+    $now = time();
+    $attempts = [];
+
+    if (is_file($file)) {
+        $existing = json_decode((string) file_get_contents($file), true);
+        if (is_array($existing)) {
+            $attempts = array_filter($existing, static fn ($timestamp) => is_int($timestamp) && ($timestamp > ($now - $windowSeconds)));
+        }
+    }
+
+    if (count($attempts) >= $maxAttempts) {
+        file_put_contents($file, json_encode(array_values($attempts)), LOCK_EX);
+        return true;
+    }
+
+    $attempts[] = $now;
+    file_put_contents($file, json_encode(array_values($attempts)), LOCK_EX);
+    return false;
+}
+
+function isRateLimited($action, array $scopes, $maxAttempts, $windowSeconds) {
+    foreach ($scopes as $scope) {
+        if ($scope === null || $scope === '') {
+            continue;
+        }
+
+        if (rateLimitExceeded($action, (string) $scope, $maxAttempts, $windowSeconds)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 function getAdminNotificationRecipients($preferredUserId = null) {
@@ -50,11 +434,12 @@ function getAdminNotificationRecipients($preferredUserId = null) {
         }
     }
 
-    $stmt = $pdo->query("
+    $stmt = $pdo->prepare("
         SELECT user_id
         FROM users
         WHERE user_type IN ('admin', 'superadmin') AND status = 'active'
     ");
+    $stmt->execute();
 
     $recipientIds = array_merge($recipientIds, array_map('intval', $stmt->fetchAll(PDO::FETCH_COLUMN)));
 

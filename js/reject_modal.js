@@ -3,7 +3,7 @@
 // ===== REJECT INTERNSHIP MODAL =====
 function openRejectInternshipModal(id, title) {
     document.getElementById('rejectInternshipTitle').textContent = title;
-    document.getElementById('confirmRejectInternshipBtn').href = 'reject_internship.php?id=' + id;
+    document.getElementById('rejectInternshipId').value = id;
     document.getElementById('rejectInternshipModal').classList.add('active');
 }
 

@@ -245,9 +245,24 @@ if (isset($_SESSION['feedback_message'])) {
                                 </div>
                                 <?php if (!empty($notif['action_url'])): ?>
                                     <div class="notification-actions">
-                                        <a href="<?= htmlspecialchars($notif['action_url']) ?>" class="btn btn-primary btn-small">
-                                            <?= htmlspecialchars($notif['action_label'] ?? 'View') ?>
-                                        </a>
+                                        <?php
+                                        $actionUrl = (string) $notif['action_url'];
+                                        $path = parse_url($actionUrl, PHP_URL_PATH) ?: '';
+                                        parse_str((string) parse_url($actionUrl, PHP_URL_QUERY), $actionParams);
+                                        ?>
+                                        <?php if (in_array($path, ['send_otp.php', 'send_verification.php'], true) && !empty($actionParams['user_id'])): ?>
+                                            <form method="POST" action="<?= htmlspecialchars($path) ?>" style="display:inline;">
+                                                <?= csrf_input() ?>
+                                                <input type="hidden" name="user_id" value="<?= (int) $actionParams['user_id'] ?>">
+                                                <button type="submit" class="btn btn-primary btn-small">
+                                                    <?= htmlspecialchars($notif['action_label'] ?? 'Submit') ?>
+                                                </button>
+                                            </form>
+                                        <?php else: ?>
+                                            <a href="<?= htmlspecialchars($actionUrl) ?>" class="btn btn-primary btn-small">
+                                                <?= htmlspecialchars($notif['action_label'] ?? 'View') ?>
+                                            </a>
+                                        <?php endif; ?>
                                     </div>
                                 <?php endif; ?>
                             </div>

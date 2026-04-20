@@ -227,10 +227,10 @@ CREATE TABLE `notifications` (
 --
 
 INSERT INTO `notifications` (`notification_id`, `user_id`, `message`, `action_url`, `action_label`, `related_user_id`, `is_read`, `created_at`, `link`) VALUES
-(1, 2, 'New intern registered: xavierazcona0422@gmail.com', 'send_verification.php?user_id=59', 'Send Verification Link', 59, 1, '2026-04-10 16:41:53', ''),
-(2, 2, 'User xavierazcona0422@gmail.com has verified their email.', 'send_otp.php?user_id=59', 'Send Temopory Password', 59, 1, '2026-04-10 16:44:41', ''),
-(3, 2, 'New staff registered: gamingxac@gmail.com', 'send_verification.php?user_id=60', 'Send Verification Link', 60, 1, '2026-04-10 16:47:16', ''),
-(4, 2, 'User gamingxac@gmail.com has verified their email.', 'send_otp.php?user_id=60', 'Send Temopory Password', 60, 1, '2026-04-10 16:49:19', ''),
+(1, 2, 'New intern registered: intern@example.com', 'send_verification.php?user_id=59', 'Send Verification Link', 59, 1, '2026-04-10 16:41:53', ''),
+(2, 2, 'User intern@example.com has verified their email.', 'send_otp.php?user_id=59', 'Send Temopory Password', 59, 1, '2026-04-10 16:44:41', ''),
+(3, 2, 'New staff registered: staff@example.com', 'send_verification.php?user_id=60', 'Send Verification Link', 60, 1, '2026-04-10 16:47:16', ''),
+(4, 2, 'User staff@example.com has verified their email.', 'send_otp.php?user_id=60', 'Send Temopory Password', 60, 1, '2026-04-10 16:49:19', ''),
 (5, 2, 'Company \'None\' has posted a new internship: Test', NULL, NULL, NULL, 1, '2026-04-12 14:07:17', '../admin/view_internship.php?id=21'),
 (6, 60, 'Your internship has been approved by the admin.', NULL, NULL, NULL, 1, '2026-04-12 14:08:12', ''),
 (7, 60, 'A new intern applied for your internship: Test', 'applications.php', 'View Application', NULL, 1, '2026-04-12 14:09:00', ''),
@@ -264,7 +264,7 @@ CREATE TABLE `staffs` (
 --
 
 INSERT INTO `staffs` (`staff_id`, `user_id`, `company_id`, `first_name`, `last_name`, `email`, `contact_no`, `position`, `profile_image`, `created_at`) VALUES
-(9, 60, 16, 'Xavier', 'Ace Clark Jucel Azcona', 'chicj@gmail.com', '09263636477', 'Contact Person', 'default.png', '2026-04-10 16:47:16');
+(9, 60, 16, 'Sample', 'Staff', 'staff.contact@example.com', '09000000000', 'Contact Person', 'default.png', '2026-04-10 16:47:16');
 
 -- --------------------------------------------------------
 
@@ -287,7 +287,7 @@ CREATE TABLE `system_logs` (
 INSERT INTO `system_logs` (`log_id`, `user_id`, `action`, `description`, `created_at`) VALUES
 (1, 60, 'Create internship', 'Created new internship: Test (ID: 21)', '2026-04-12 14:07:17'),
 (2, 2, 'Approve Internship', 'Approved internship \'Test\' (ID 21)', '2026-04-12 14:08:12'),
-(3, 60, 'Update application status', 'Changed application #14 for Xavier Ace Clark Jucel Azcona from Pending to Offered', '2026-04-12 14:09:36');
+(3, 60, 'Update application status', 'Changed application #14 for Sample Intern from Pending to Offered', '2026-04-12 14:09:36');
 
 -- --------------------------------------------------------
 
@@ -314,10 +314,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `email`, `password_hash`, `user_type`, `verified`, `created_at`, `updated_at`, `first_login`, `reset_token`, `token_expiry`, `status`) VALUES
-(1, 'superadmin@gmail.com', '$2y$10$oIGKeUK8PO0.sxiKA/ZcKOp28LFZV8y20mCvdnQLH2NcDrJblKkCi', 'superadmin', 1, '2026-04-01 14:42:54', '2026-04-03 11:31:29', 0, NULL, NULL, 'active'),
-(2, 'admin@gmail.com', '$2y$10$tR3NJ0CkGP903/yCN1SwBePZW/jSLK4Se4LCu6crziPPEdkp3/fXi', 'admin', 1, '2026-04-01 14:43:48', '2026-04-01 14:43:48', 0, NULL, NULL, 'active'),
-(59, 'xavierazcona0422@gmail.com', '$2y$10$J8R8WcbV0/n6xOcFmbBPxu7ipGqmZThWAZljqXFdIbtn2/YK1ZSsq', 'intern', 1, '2026-04-10 16:41:53', '2026-04-10 16:46:12', 0, NULL, NULL, 'active'),
-(60, 'gamingxac@gmail.com', '$2y$10$b1LYJLk2TGIUq8mmm74GaugQwFhcWvTXkeq5H.COCEn3yOanaWMx6', 'staff', 1, '2026-04-10 16:47:16', '2026-04-10 16:50:23', 0, NULL, NULL, 'active');
+(1, 'superadmin@example.com', '$2y$10$oIGKeUK8PO0.sxiKA/ZcKOp28LFZV8y20mCvdnQLH2NcDrJblKkCi', 'superadmin', 1, '2026-04-01 14:42:54', '2026-04-03 11:31:29', 0, NULL, NULL, 'active'),
+(2, 'admin@example.com', '$2y$10$tR3NJ0CkGP903/yCN1SwBePZW/jSLK4Se4LCu6crziPPEdkp3/fXi', 'admin', 1, '2026-04-01 14:43:48', '2026-04-01 14:43:48', 0, NULL, NULL, 'active'),
+(59, 'intern@example.com', '$2y$10$J8R8WcbV0/n6xOcFmbBPxu7ipGqmZThWAZljqXFdIbtn2/YK1ZSsq', 'intern', 1, '2026-04-10 16:41:53', '2026-04-10 16:46:12', 0, NULL, NULL, 'active'),
+(60, 'staff@example.com', '$2y$10$b1LYJLk2TGIUq8mmm74GaugQwFhcWvTXkeq5H.COCEn3yOanaWMx6', 'staff', 1, '2026-04-10 16:47:16', '2026-04-10 16:50:23', 0, NULL, NULL, 'active');
 
 -- --------------------------------------------------------
 

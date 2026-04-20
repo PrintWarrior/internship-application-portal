@@ -12,11 +12,11 @@ $stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND 
 $stmt->execute([$user_id]);
 $unread = $stmt->fetchColumn();
 
-$developerName = 'Xavier Ace Clark S. Azcona';
-$developerRole = 'Developer';
-$developerEmail = 'internshipapplicationportal@gmail.com';
-$developerLocation = 'Oroquieta City, Misamis Occidental, Philippines';
-$developerAbout = 'I am Xavier Ace Clark S. Azcona, a student of Northwestern Mindanao State College of Science and Technology, currently taking up Bachelor of Science in Information Technology.';
+$developerName = 'Portal Development Team';
+$developerRole = 'Development Team';
+$developerEmail = 'support@example.com';
+$developerLocation = 'Philippines';
+$developerAbout = 'This portal is maintained by the Internship Portal development team.';
 $profileImage = '../assets/img/profile/developer.png';
 ?>
 
@@ -71,22 +71,22 @@ $profileImage = '../assets/img/profile/developer.png';
                     </div>
 
                     <div class="profile-info">
-                        <h2><?= htmlspecialchars($developerName) ?></h2>
-                        <p><?= htmlspecialchars($developerRole) ?></p>
+                        <h2>Xavier Ace Clark S. Azcona</h2>
+                        <p>Developer</p>
 
                         <div class="info-details">
                             <div class="detail-item">
                                 <span class="detail-label">Email:</span>
-                                <p><?= htmlspecialchars($developerEmail) ?></p>
+                                <p>internshipapplicationportal@gmail.com</p>
                             </div>
 
                             <div class="detail-item">
                                 <span class="detail-label">Location:</span>
-                                <p><?= htmlspecialchars($developerLocation) ?></p>
+                                <p>Oroquieta City, Misamis Occidental, Philippines</p>
                             </div>
 
                             <h3>About The Developer</h3>
-                            <p><?= htmlspecialchars($developerAbout) ?></p>
+                            <p>I am Xavier Ace Clark S. Azcona, a student of Northwestern Mindanao State College of Science and Technology, currently taking up Bachelor of Science in Information Technology.</p>
                         </div>
                     </div>
                 </div>

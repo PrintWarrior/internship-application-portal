@@ -24,6 +24,7 @@ if (!file_exists($upload_dir)) {
 UPDATE PROFILE INFO
 -----------------------*/
 if (isset($_POST['update_profile'])) {
+    requireValidCsrfToken(['redirect' => 'profile.php']);
 
     $pdo->beginTransaction();
 
@@ -122,19 +123,13 @@ $delete_success = false;
 UPLOAD PROFILE IMAGE
 -----------------------*/
 if (isset($_POST['upload_image']) && isset($_FILES['profile_image'])) {
+    requireValidCsrfToken(['redirect' => 'profile.php']);
 
     $file = $_FILES['profile_image'];
 
     if ($file['error'] === 0) {
-
-        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $allowed = ['jpg', 'jpeg', 'png'];
-
-        if (in_array($ext, $allowed)) {
-
-            $newName = "company_" . $company['company_id'] . "_" . time() . "." . $ext;
-            move_uploaded_file($file['tmp_name'], $upload_dir . $newName);
-
+        $newName = storeUploadedImage($file, 'company_' . $company['company_id'], $upload_dir);
+        if ($newName !== null) {
             $stmt = $pdo->prepare("UPDATE companies SET profile_image=? WHERE company_id=?");
             $stmt->execute([$newName, $company['company_id']]);
 
@@ -153,14 +148,10 @@ if (isset($_POST['upload_image']) && isset($_FILES['profile_image'])) {
 DELETE PROFILE IMAGE
 -----------------------*/
 if (isset($_POST['delete_image'])) {
+    requireValidCsrfToken(['redirect' => 'profile.php']);
 
     if ($company['profile_image'] !== $default_image) {
-
-        $file = $upload_dir . $company['profile_image'];
-
-        if (file_exists($file)) {
-            unlink($file);
-        }
+        deleteManagedFile($upload_dir, $company['profile_image']);
 
         $stmt = $pdo->prepare("UPDATE companies SET profile_image=? WHERE company_id=?");
         $stmt->execute([$default_image, $company['company_id']]);
@@ -186,6 +177,7 @@ if (isset($_GET['upload_success'])) {
 CHANGE PASSWORD
 -----------------------*/
 if (isset($_POST['change_password'])) {
+    requireValidCsrfToken(['redirect' => 'profile.php']);
 
     $current = $_POST['current_password'];
     $new = $_POST['new_password'];
@@ -254,6 +246,7 @@ if (isset($_POST['change_password'])) {
             <a href="post_internship.php">Post Internship</a>
             <a href="manage_internships.php">My Internships</a>
             <a href="view_applicants.php">View Applicants</a>
+            <a href="generate_application_report.php">Reports</a>
             <a href="contracts.php">Contracts</a>
         </div>
 
@@ -273,12 +266,14 @@ if (isset($_POST['change_password'])) {
                     style="max-width: 200px; border: 2px solid #000000;">
 
                 <div class="image-actions">
-                    <form method="POST" enctype="multipart/form-data">
+                <form method="POST" enctype="multipart/form-data">
+                    <?= csrf_input() ?>
                         <input type="file" name="profile_image" required>
                         <button type="submit" name="upload_image">Upload Image</button>
                     </form>
 
-                    <form method="POST">
+                <form method="POST">
+                    <?= csrf_input() ?>
                         <button type="submit" name="delete_image">Delete Image</button>
                     </form>
                 </div>
@@ -289,7 +284,8 @@ if (isset($_POST['change_password'])) {
             <!-- PROFILE DETAILS FORM -->
             <h3>Company Information</h3>
 
-            <form method="POST">
+                <form method="POST">
+                    <?= csrf_input() ?>
                 <div class="form-group">
                     <label>Company Name *</label>
                     <input type="text" name="company_name" value="<?= htmlspecialchars($company['company_name']) ?>"
@@ -356,7 +352,8 @@ if (isset($_POST['change_password'])) {
             <!-- CHANGE PASSWORD -->
             <h3>Change Password</h3>
 
-            <form method="POST" class="password-form">
+                <form method="POST" class="password-form">
+                    <?= csrf_input() ?>
                 <div class="form-group">
                     <label>Current Password</label>
                     <input type="password" name="current_password" required>

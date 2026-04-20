@@ -4,6 +4,7 @@
     <title>Company Registration</title>
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/register_company.css">
+    <meta http-equiv="refresh" content="0;url=register_company.php">
     <style>
         /* Add this for the notification style */
         .notification {
@@ -39,106 +40,17 @@
     </style>
 </head>
 <body>
-
-<!-- Add notification container -->
-<div id="notification" class="notification" style="display: none;"></div>
-
 <div class="container">
-    <!-- Logo at top left -->
     <div class="logo-container">
         <img src="../assets/img/logo.png" alt="Company Logo" class="logo">
     </div>
 
-    <h2>Company Registration</h2>
-
-    <div class="form-container">
-        <form action="../register/process_registration.php?type=company" method="POST" enctype="multipart/form-data">
-
-            <div class="form-group">
-                <label>Company Name *</label>
-                <input type="text" name="company_name" required>
-            </div>
-
-            <div class="form-group">
-                <label>Company Email *</label>
-                <input type="email" name="email" required>
-            </div>
-
-            <div class="form-group">
-                <label>Assigned Person *</label>
-                <input type="text" name="contact_person" placeholder="Staff/Representative" required>
-            </div>
-
-            <div class="form-group">
-                <label>Contact Phone *</label>
-                <input type="text" name="contact_phone" required>
-            </div>
-
-            <div class="form-group">
-                <label>Industry *</label>
-                <input type="text" name="industry" placeholder="e.g. IT, Manufacturing, Finance" required>
-            </div>
-
-            <div class="form-group">
-                <label>Company Website</label>
-                <input type="url" name="website" placeholder="https://example.com">
-            </div>
-
-            <div class="form-group">
-                <label>Street Address *</label>
-                <textarea name="address" rows="3" required></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Company Description</label>
-                <textarea name="description" rows="4" placeholder="Brief description about the company"></textarea>
-            </div>
-
-            <button type="submit">Register Company</button>
-
-        </form>
-    </div>
-
-    <p><a href="register.html">Back</a></p>
+    <h2>Redirecting...</h2>
+    <p><a href="register_company.php">Continue to the secure company registration page</a></p>
 </div>
 
 <script>
-    // Function to show notification
-    function showNotification(message, type) {
-        const notification = document.getElementById('notification');
-        notification.textContent = message;
-        notification.className = 'notification ' + type;
-        notification.style.display = 'block';
-        
-        // Auto hide after 5 seconds
-        setTimeout(() => {
-            notification.style.display = 'none';
-        }, 5000);
-        
-        // Clear URL parameters after showing notification
-        const url = new URL(window.location.href);
-        url.searchParams.delete('success');
-        url.searchParams.delete('error');
-        url.searchParams.delete('message');
-        window.history.replaceState({}, document.title, url.pathname);
-    }
-
-    // Check URL parameters on page load
-    window.addEventListener('load', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        // Debug: Log all URL parameters (optional - remove in production)
-        console.log('URL Parameters:');
-        for (let [key, value] of urlParams.entries()) {
-            console.log(key + ': ' + value);
-        }
-        
-        if (urlParams.has('success')) {
-            showNotification(urlParams.get('message') || 'Registration successful! Admin will verify your email.', 'success');
-        } else if (urlParams.has('error')) {
-            showNotification(urlParams.get('message') || 'Registration failed! Please try again.', 'error');
-        }
-    });
+    window.location.replace('register_company.php');
 </script>
 
 </body>

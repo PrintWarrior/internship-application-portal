@@ -72,13 +72,14 @@ function getStatusClass($status)
 
     <div class="wrapper">
         <!-- SIDEBAR -->
-        <div class="sidebar">
+       <div class="sidebar">
             <a href="index.php">Dashboard</a>
             <a href="profile.php">Company Profile</a>
             <a href="staff_profile.php">Staff Profile</a>
             <a href="post_internship.php">Post Internship</a>
             <a href="manage_internships.php">My Internships</a>
             <a href="view_applicants.php">View Applicants</a>
+            <a href="generate_application_report.php">Reports</a>
             <a href="contracts.php">Contracts</a>
         </div>
 

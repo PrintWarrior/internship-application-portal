@@ -36,6 +36,7 @@ if (!$application) {
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken(['redirect' => 'update_status.php?id=' . $application_id]);
     $new_status = $_POST['status'];
     $old_status = $application['status'];
     
@@ -158,7 +159,8 @@ $allowed_statuses = $status_options[$current_status] ?? [];
                         <p>This application has been rejected. No further updates are allowed.</p>
                     </div>
                 <?php else: ?>
-                    <form method="POST" class="update-form">
+<form method="POST" class="update-form">
+    <?= csrf_input() ?>
                         <div class="form-group">
                             <label for="status">Select New Status:</label>
                             <select name="status" id="status" required>

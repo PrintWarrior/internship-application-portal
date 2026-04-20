@@ -29,6 +29,7 @@ if (!$internship) {
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken(['redirect' => 'edit_internship.php?id=' . $internship_id]);
     $start_date = !empty($_POST['start_date']) ? $_POST['start_date'] : null;
     $end_date = !empty($_POST['end_date']) ? $_POST['end_date'] : null;
 
@@ -110,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="form-container">
             <form method="POST">
+                <?= csrf_input() ?>
                 <?php if (!empty($error)): ?>
                     <div class="error-message"
                         style="border: 2px solid #ff0000; padding: 10px; margin-bottom: 20px; color: #ff0000; font-weight: bold;">

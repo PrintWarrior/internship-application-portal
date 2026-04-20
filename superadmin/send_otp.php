@@ -7,7 +7,14 @@ date_default_timezone_set('Asia/Manila');
 
 requireAdminAreaAccess();
 
-$user_id = $_GET['user_id'] ?? 0;
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: notifications.php');
+    exit;
+}
+
+requireValidCsrfToken(['redirect' => 'notifications.php']);
+
+$user_id = isset($_POST['user_id']) ? (int) $_POST['user_id'] : 0;
 
 // Check user exists and verified
 $stmt = $pdo->prepare("SELECT email, verified FROM users WHERE user_id = ?");
@@ -27,6 +34,8 @@ if ($user && $user['verified']) {
         VALUES (?, ?, ?, 'otp')
     ")->execute([$user_id, $otp, $expiry]);
 
+    $loginUrl = appUrl('/index.php');
+
     // Send email
 $body = "
 <div style='background:#f2f4f6;padding:40px;font-family:Arial,sans-serif'>
@@ -45,7 +54,7 @@ $body = "
         </div>
 
         <!-- LOGIN BUTTON -->
-        <a href='http://localhost/intern%20app%20portal%20v3/index.php'
+        <a href='$loginUrl'
            style='display:inline-block;
                   margin-top:20px;
                   padding:12px 25px;

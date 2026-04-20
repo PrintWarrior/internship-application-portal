@@ -5,6 +5,7 @@ require_once '../includes/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     requireStaffUser();
+    requireValidCsrfToken(['redirect' => 'staff_profile.php']);
 
     $company = getStaffCompanyContext($_SESSION['user_id']);
 
@@ -16,10 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $image = $stmt->fetchColumn();
 
     if ($image && $image !== 'default.png') {
-        $file = '../assets/img/profile/' . $image;
-        if (file_exists($file)) {
-            unlink($file);
-        }
+        deleteManagedFile('../assets/img/profile/', $image);
     }
 
     $stmt = $pdo->prepare("UPDATE staffs SET profile_image='default.png' WHERE staff_id=? AND company_id=?");

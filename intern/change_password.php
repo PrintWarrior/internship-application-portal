@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../includes/db.php';
+require_once '../includes/functions.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'intern') {
     header('Location: ../index.php');
@@ -10,6 +11,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'intern') {
 $user_id = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken(['redirect' => 'profile.php']);
     $current = $_POST['current_password'];
     $new = $_POST['new_password'];
     

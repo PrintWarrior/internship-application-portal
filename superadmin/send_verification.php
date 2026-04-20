@@ -5,7 +5,14 @@ require_once '../includes/functions.php';
 
 requireAdminAreaAccess();
 
-$user_id = $_GET['user_id'] ?? 0;
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: notifications.php');
+    exit;
+}
+
+requireValidCsrfToken(['redirect' => 'notifications.php']);
+
+$user_id = isset($_POST['user_id']) ? (int) $_POST['user_id'] : 0;
 
 // Check user exists and not verified
 $stmt = $pdo->prepare("SELECT email, verified FROM users WHERE user_id = ?");
@@ -22,7 +29,7 @@ if ($user && !$user['verified']) {
         ->execute([$user_id, $token, $expiry]);
 
     // Send email
-    $link = "http://localhost/intern%20app%20portal%20v3/includes/verify_email.php?token=$token";
+    $link = appUrl('/includes/verify_email.php?token=' . urlencode($token));
 
 $body = "
 <div style='background:#f2f4f6;padding:40px;font-family:Arial,sans-serif'>
@@ -59,7 +66,12 @@ $body = "
         $_SESSION['feedback_message'] = 'Verification email successfully sent!';
         $_SESSION['feedback_type'] = 'success';
     } else {
-        $_SESSION['feedback_message'] = 'Failed to send verification email. Please try again.';
+        $lastEmailError = (string) getLastEmailError();
+        if (stripos($lastEmailError, 'SMTP configuration is incomplete') !== false) {
+            $_SESSION['feedback_message'] = 'Email service is not configured. Add your SMTP settings to the project .env file, then try again.';
+        } else {
+            $_SESSION['feedback_message'] = 'Failed to send verification email. Check the SMTP settings or app password and try again.';
+        }
         $_SESSION['feedback_type'] = 'error';
     }
 } else {

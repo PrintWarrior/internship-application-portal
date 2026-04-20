@@ -3,7 +3,7 @@
 // ===== APPROVE INTERNSHIP MODAL =====
 function openApproveInternshipModal(id, title) {
     document.getElementById('approveInternshipTitle').textContent = title;
-    document.getElementById('confirmApproveInternshipBtn').href = 'approve_internship.php?id=' + id;
+    document.getElementById('approveInternshipId').value = id;
     document.getElementById('approveInternshipModal').classList.add('active');
 }
 

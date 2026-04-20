@@ -4,6 +4,7 @@
     <title>Intern Registration</title>
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/register_intern.css">
+<meta http-equiv="refresh" content="0;url=register_intern.php">
 <style>
         /* Add this for the notification style */
         .notification {
@@ -39,180 +40,16 @@
     </style>
 </head>
 <body>
-    <!-- Add notification container -->
-    <div id="notification" class="notification" style="display: none;"></div>
-    
     <div class="container">
-        <!-- Logo image container - top left -->
         <div class="logo-container">
             <img src="../assets/img/logo.png" alt="Logo" class="logo">
         </div>
-        
-        <h2>Intern Registration</h2>
-        <form action="../register/process_registration.php?type=intern" method="POST">
-    
-            <h3>Personal Information</h3>
 
-            <div class="form-group">
-                <label>First Name*</label>
-                <input type="text" name="first_name" required placeholder="Enter first name...">
-            </div>
-
-            <div class="form-group">
-                <label>Middle Name</label>
-                <input type="text" name="middle_name" placeholder="Enter middle name...">
-            </div>
-
-            <div class="form-group">
-                <label>Last Name*</label>
-                <input type="text" name="last_name" required placeholder="Enter last name...">
-            </div>
-
-            <div class="form-group">
-                <label>Suffix</label>
-                <input type="text" name="suffix" placeholder="Enter suffix...">
-            </div>
-
-            <div class="form-group">
-                <label>Gender</label>
-                <select name="gender">
-                    <option value="">Select</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Birthdate</label>
-                <input type="date" name="birthdate" id="birthdate">
-            </div>
-
-            <div class="form-group">
-                <label>Age</label>
-                <input type="number" name="age" id="age" required placeholder="Enter age...">
-            </div>
-
-            <div class="form-group">
-                <label>Contact Number*</label>
-                <input type="text" name="contact_no" required placeholder="Enter contact number...">
-            </div>
-
-            <div class="form-group">
-                <label>Email*</label>
-                <input type="email" name="email" required placeholder="Enter email...">
-            </div>
-
-            <h3>Address Information</h3>
-
-            <div class="form-group">
-                <label>Street Address</label>
-                <input type="text" name="address" required placeholder="Enter address...">
-            </div>
-
-            <div class="form-group">
-                <label>City</label>
-                <input type="text" name="city" placeholder="Enter city...">
-            </div>
-
-            <div class="form-group">
-                <label>Province</label>
-                <input type="text" name="province" placeholder="Enter province...">
-            </div>
-
-            <div class="form-group">
-                <label>Postal Code</label>
-                <input type="text" name="postal_code" placeholder="Enter postal code...">
-            </div>
-
-            <h3>Academic Information</h3>
-
-            <div class="form-group">
-                <label>University*</label>
-                <input type="text" name="university" required placeholder="Enter university...">
-            </div>
-
-            <div class="form-group">
-                <label>Course*</label>
-                <input type="text" name="course" required placeholder="Enter course...">
-            </div>
-
-            <div class="form-group">
-                <label>Year Level</label>
-                <input type="text" name="year_level" placeholder="Enter year level...">
-            </div>
-
-            <button type="submit">Register</button>
-        </form>
-        <p><a href="../html/register.html">Back</a></p>
+        <h2>Redirecting...</h2>
+        <p><a href="../html/register_intern.php">Continue to the secure intern registration page</a></p>
     </div>
        <script>
-        // Function to show notification
-        function showNotification(message, type) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = 'notification ' + type;
-            notification.style.display = 'block';
-            
-            // Auto hide after 5 seconds
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 5000);
-            
-            // Clear URL parameters after showing notification
-            const url = new URL(window.location.href);
-            url.searchParams.delete('success');
-            url.searchParams.delete('error');
-            url.searchParams.delete('message');
-            window.history.replaceState({}, document.title, url.pathname);
-        }
-
-        function calculateAge(birthdateValue) {
-            if (!birthdateValue) {
-                return '';
-            }
-
-            const today = new Date();
-            const birthdate = new Date(birthdateValue);
-
-            if (Number.isNaN(birthdate.getTime()) || birthdate > today) {
-                return '';
-            }
-
-            let age = today.getFullYear() - birthdate.getFullYear();
-            const monthDifference = today.getMonth() - birthdate.getMonth();
-
-            if (
-                monthDifference < 0 ||
-                (monthDifference === 0 && today.getDate() < birthdate.getDate())
-            ) {
-                age--;
-            }
-
-            return age >= 0 ? age : '';
-        }
-
-        function syncAgeWithBirthdate() {
-            const birthdateInput = document.getElementById('birthdate');
-            const ageInput = document.getElementById('age');
-
-            ageInput.value = calculateAge(birthdateInput.value);
-        }
-
-        // Check URL parameters on page load
-        window.addEventListener('load', function() {
-            const birthdateInput = document.getElementById('birthdate');
-            const urlParams = new URLSearchParams(window.location.search);
-
-            birthdateInput.addEventListener('change', syncAgeWithBirthdate);
-            birthdateInput.addEventListener('input', syncAgeWithBirthdate);
-            syncAgeWithBirthdate();
-            
-            if (urlParams.has('success')) {
-                showNotification(urlParams.get('message') || 'Registration successful!', 'success');
-            } else if (urlParams.has('error')) {
-                showNotification(urlParams.get('message') || 'Registration failed!', 'error');
-            }
-        });
+        window.location.replace('../html/register_intern.php');
     </script>
 </body>
 </html>

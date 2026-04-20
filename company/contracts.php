@@ -132,14 +132,15 @@ function showNotification(message, isSuccess = true) {
 <div class="wrapper">
     <!-- SIDEBAR -->
     <div class="sidebar">
-        <a href="index.php">Dashboard</a>
-        <a href="profile.php">Company Profile</a>
-        <a href="staff_profile.php">Staff Profile</a>
-        <a href="post_internship.php">Post Internship</a>
-        <a href="manage_internships.php">My Internships</a>
-        <a href="view_applicants.php">View Applicants</a>
-        <a href="contracts.php">Contracts</a>
-    </div>
+            <a href="index.php">Dashboard</a>
+            <a href="profile.php">Company Profile</a>
+            <a href="staff_profile.php">Staff Profile</a>
+            <a href="post_internship.php">Post Internship</a>
+            <a href="manage_internships.php">My Internships</a>
+            <a href="view_applicants.php">View Applicants</a>
+            <a href="generate_application_report.php">Reports</a>
+            <a href="contracts.php">Contracts</a>
+        </div>
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
@@ -196,7 +197,11 @@ function showNotification(message, isSuccess = true) {
                                 <a href="view_contract.php?id=<?= $contract['contract_id'] ?>" class="btn-action btn-view">View</a>
                               <!--  <a href="download_contract.php?id=<?= $contract['contract_id'] ?>" class="btn-action btn-download">Download</a> -->
                                 <?php if (!$contract['hr_confirmed']): ?>
-                                <a href="confirm_contract.php?id=<?= $contract['contract_id'] ?>" class="btn-action btn-sign">Confirm</a>
+                                <form method="POST" action="confirm_contract.php" style="display:inline;">
+                                    <?= csrf_input() ?>
+                                    <input type="hidden" name="id" value="<?= (int) $contract['contract_id'] ?>">
+                                    <button type="submit" class="btn-action btn-sign">Confirm</button>
+                                </form>
                                 <?php endif; ?>
                             </div>
                         </td>

@@ -11,15 +11,22 @@ $company = getStaffCompanyContext($user_id);
 // Handle AJAX update request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax_update'])) {
     header('Content-Type: application/json');
+    requireValidCsrfToken(['json' => true]);
     
     $staff_id = intval($_POST['staff_id']);
     $field = $_POST['field'];
     $value = trim($_POST['value']);
     
     // Allowed fields to update from the staff profile page
-    $allowed_fields = ['first_name', 'last_name', 'email', 'contact_no', 'position'];
+    $allowed_fields = [
+        'first_name' => 'first_name',
+        'last_name' => 'last_name',
+        'email' => 'email',
+        'contact_no' => 'contact_no',
+        'position' => 'position',
+    ];
     
-    if (!in_array($field, $allowed_fields)) {
+    if (!array_key_exists($field, $allowed_fields)) {
         echo json_encode(['success' => false, 'message' => 'Field cannot be updated']);
         exit;
     }
@@ -38,7 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax_update'])) {
     }
     
     // Update the field
-    $updateStmt = $pdo->prepare("UPDATE staffs SET $field = ? WHERE staff_id = ?");
+    $column = $allowed_fields[$field];
+    $updateStmt = $pdo->prepare("UPDATE staffs SET {$column} = ? WHERE staff_id = ?");
     $updateStmt->execute([$value, $staff_id]);
     
     echo json_encode(['success' => true, 'message' => 'Updated successfully']);
@@ -106,14 +114,15 @@ function formatStaffDate(?string $date): string
 
     <!-- SIDEBAR -->
     <div class="sidebar">
-        <a href="index.php">Dashboard</a>
-        <a href="profile.php">Company Profile</a>
-        <a href="staff_profile.php" class="active">Staff Profile</a>
-        <a href="post_internship.php">Post Internship</a>
-        <a href="manage_internships.php">My Internships</a>
-        <a href="view_applicants.php">View Applicants</a>
-        <a href="contracts.php">Contracts</a>
-    </div>
+            <a href="index.php">Dashboard</a>
+            <a href="profile.php">Company Profile</a>
+            <a href="staff_profile.php">Staff Profile</a>
+            <a href="post_internship.php">Post Internship</a>
+            <a href="manage_internships.php">My Internships</a>
+            <a href="view_applicants.php">View Applicants</a>
+            <a href="generate_application_report.php">Reports</a>
+            <a href="contracts.php">Contracts</a>
+        </div>
 
     <!-- MAIN CONTENT -->
     <div class="content">
@@ -165,6 +174,7 @@ function formatStaffDate(?string $date): string
                                 <form method="POST" enctype="multipart/form-data" 
                                       action="upload_staff_image.php"
                                       class="image-upload-form">
+                                    <?= csrf_input() ?>
                                     <input type="hidden" name="staff_id" value="<?= $staff['staff_id'] ?>">
                                     <input type="file" name="profile_image" accept="image/*" required>
                                     <button type="submit">Upload Photo</button>
@@ -172,6 +182,7 @@ function formatStaffDate(?string $date): string
                                 
                                 <form method="POST" action="delete_staff_image.php"
                                       class="image-upload-form">
+                                    <?= csrf_input() ?>
                                     <input type="hidden" name="staff_id" value="<?= $staff['staff_id'] ?>">
                                     <button type="submit" class="btn-delete-image">Delete Photo</button>
                                 </form>
@@ -287,6 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     formData.append('staff_id', staffId);
                     formData.append('field', fieldName);
                     formData.append('value', newValue);
+                    formData.append('csrf_token', '<?= getCsrfToken() ?>');
                     
                     fetch(window.location.href, {
                         method: 'POST',

@@ -1,10 +1,14 @@
+<?php
+require_once '../includes/functions.php';
+startSecureSession();
+sendSecurityHeaders();
+?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Register</title>
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/register.css">
-    <meta http-equiv="refresh" content="0;url=register.php">
 </head>
 <body>
     <div class="container">
@@ -12,11 +16,10 @@
             <img src="../assets/img/logo.png" alt="Logo" class="logo">
         </div>
 
-        <h2>Redirecting...</h2>
-        <p><a href="register.php">Continue to the secure registration page</a></p>
+        <h2>Choose Registration Type</h2>
+        <a href="register_company.php" class="btn">Register as Company (Staff)</a>
+        <a href="register_intern.php" class="btn">Register as Intern</a>
+        <p>Already have an account? <a href="../index.php">Login</a></p>
     </div>
-    <script>
-        window.location.replace('register.php');
-    </script>
 </body>
 </html>

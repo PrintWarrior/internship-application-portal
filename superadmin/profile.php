@@ -18,6 +18,7 @@ if (!file_exists($upload_dir)) {
 HANDLE PROFILE INFO UPDATE
 ======================== */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile_info'])) {
+    requireValidCsrfToken(['redirect' => 'profile.php']);
 
     $stmt = $pdo->prepare("
         UPDATE admin_profiles SET
@@ -39,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile_info']
 HANDLE PROFILE IMAGE UPLOAD
 ======================== */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile_image'])) {
+    requireValidCsrfToken(['redirect' => 'profile.php']);
 
     $stmt = $pdo->prepare("SELECT profile_image FROM admin_profiles WHERE user_id=?");
     $stmt->execute([$user_id]);
@@ -46,25 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile_image'
 
     if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === 0) {
 
-        $allowedTypes = ['image/jpeg', 'image/png'];
-
-        if (
-            in_array($_FILES['profile_image']['type'], $allowedTypes)
-            && $_FILES['profile_image']['size'] <= 2 * 1024 * 1024
-        ) {
-
-            $ext = pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION);
-            $newName = uniqid('admin_', true) . '.' . $ext;
-            $uploadPath = $upload_dir . $newName;
-
-            if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $uploadPath)) {
+        $newName = storeUploadedImage($_FILES['profile_image'], 'admin', $upload_dir);
+        if ($newName !== null) {
 
                 // delete old image
                 if ($currentImage && $currentImage !== $default_image) {
-                    $oldPath = $upload_dir . $currentImage;
-                    if (file_exists($oldPath)) {
-                        unlink($oldPath);
-                    }
+                    deleteManagedFile($upload_dir, $currentImage);
                 }
 
                 // update db
@@ -73,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile_image'
 
                 header("Location: profile.php?upload_success=1");
                 exit;
-            }
         }
     }
 
@@ -85,16 +73,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile_image'
 HANDLE IMAGE DELETE
 ======================== */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_image'])) {
+    requireValidCsrfToken(['redirect' => 'profile.php']);
 
     $stmt = $pdo->prepare("SELECT profile_image FROM admin_profiles WHERE user_id=?");
     $stmt->execute([$user_id]);
     $current = $stmt->fetchColumn();
 
     if ($current && $current !== $default_image) {
-        $filePath = $upload_dir . $current;
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
+        deleteManagedFile($upload_dir, $current);
     }
 
     $stmt = $pdo->prepare("UPDATE admin_profiles SET profile_image=? WHERE user_id=?");
@@ -108,6 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_image'])) {
 HANDLE PASSWORD CHANGE
 ======================== */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
+    requireValidCsrfToken(['redirect' => 'profile.php']);
 
     $current_password = $_POST['current_password'];
     $new_password = $_POST['new_password'];
@@ -259,7 +246,8 @@ $unread = $stmt->fetchColumn();
                     </div>
 
                     <!-- Upload Image Form -->
-                    <form method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data">
+                <?= csrf_input() ?>
                         <div class="form-group">
                             <label>Change Profile Picture</label>
                             <input type="file" name="profile_image" accept="image/jpeg,image/png" required>
@@ -300,7 +288,8 @@ $unread = $stmt->fetchColumn();
                 <!-- Edit Profile Information -->
                 <div class="form-section">
                     <h3>Profile Information</h3>
-                    <form method="POST">
+            <form method="POST">
+                <?= csrf_input() ?>
                         <div class="form-group">
                             <label for="admin_fname">First Name</label>
                             <input type="text" id="admin_fname" name="admin_fname" value="<?= htmlspecialchars($admin['admin_fname'] ?? '') ?>" required>
@@ -318,7 +307,8 @@ $unread = $stmt->fetchColumn();
                 <!-- Change Password -->
                 <div class="form-section">
                     <h3>Change Password</h3>
-                    <form method="POST">
+            <form method="POST">
+                <?= csrf_input() ?>
                         <div class="form-group">
                             <label for="current_password">Current Password</label>
                             <input type="password" id="current_password" name="current_password" required>

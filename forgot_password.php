@@ -1,6 +1,9 @@
 <?php
 require_once 'includes/db.php';
 require_once 'includes/phpmailer/vendor/autoload.php';
+require_once 'includes/functions.php';
+startSecureSession();
+sendSecurityHeaders();
 date_default_timezone_set('Asia/Manila');
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -10,45 +13,32 @@ $message = "";
 $message_type = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken();
 
-    $email = $_POST['email'];
+    $email = trim($_POST['email'] ?? '');
+    $message = "If the email exists in our system, a reset link will be sent.";
+    $message_type = "success";
+    $normalizedEmail = strtolower($email);
 
-    // Check if email exists
-    $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email=?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch();
+    if (!isRateLimited('forgot_password', [getClientIp(), 'email:' . $normalizedEmail], 3, 900)) {
+        // Use the same query path for every request to reduce response-difference signals.
+        $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch();
 
-    if ($user) {
+        if ($user) {
 
-        $token = bin2hex(random_bytes(32));
-        $expiry = date("Y-m-d H:i:s", strtotime("+1 hour"));
+            $token = bin2hex(random_bytes(32));
+            $expiry = date("Y-m-d H:i:s", strtotime("+1 hour"));
 
-        // Save token
-        $stmt = $pdo->prepare("UPDATE users SET reset_token=?, token_expiry=? WHERE email=?");
-        $stmt->execute([$token, $expiry, $email]);
+            // Save token
+            $stmt = $pdo->prepare("UPDATE users SET reset_token=?, token_expiry=? WHERE email=?");
+            $stmt->execute([$token, $expiry, $email]);
 
-        // Reset link
-        $link = "http://localhost/intern%20app%20portal%20v3/reset_password.php?token=" . $token;
+            // Reset link
+            $link = appUrl('/reset_password.php?token=' . urlencode($token));
 
-        $mail = new PHPMailer(true);
-
-        try {
-            // SMTP config
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'internshipapplicationportal@gmail.com';
-            $mail->Password = 'fqwzszpjofuhlqzf';
-            $mail->SMTPSecure = 'tls';
-            $mail->Port = 587;
-
-            $mail->setFrom('internshipapplicationportal@gmail.com', 'Internship Portal');
-            $mail->addAddress($email);
-
-            $mail->isHTML(true);
-            $mail->Subject = 'Password Reset Request';
-
-            $mail->Body = "
+            $body = "
                 <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 2px solid #000000; padding: 20px;'>
                     <div style='text-align: center; border-bottom: 2px solid #000000; padding-bottom: 15px; margin-bottom: 20px;'>
                         <h2 style='margin: 0; text-transform: uppercase;'>Password Reset</h2>
@@ -68,22 +58,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             ";
 
-            $mail->AltBody = "Password Reset Request\n\nClick this link to reset your password: $link\n\nIf you did not request this, ignore this email.";
+            $altBody = "Password Reset Request\n\nClick this link to reset your password: $link\n\nIf you did not request this, ignore this email.";
 
-            $mail->send();
-
-            $message = "Reset link sent to your email. Please check your inbox.";
-            $message_type = "success";
-
-        } catch (Exception $e) {
-            $message = "Mailer Error: " . $mail->ErrorInfo;
-            $message_type = "error";
+            try {
+                $mail = new PHPMailer(true);
+                configureMailer($mail);
+                $mail->addAddress($email);
+                $mail->isHTML(true);
+                $mail->Subject = 'Password Reset Request';
+                $mail->Body = $body;
+                $mail->AltBody = $altBody;
+                $mail->send();
+            } catch (Exception $e) {
+                error_log("Password reset email failed for {$email}: " . $e->getMessage());
+            }
         }
-
-    } else {
-        $message = "Email not found. Please check your email address.";
-        $message_type = "error";
     }
+
+    usleep(500000);
 }
 ?>
 
@@ -115,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
         
         <form method="POST">
+            <?= csrf_input() ?>
             <div class="form-group">
                 <label for="email">Email Address</label>
                 <input type="email" name="email" id="email" placeholder="Enter your registered email" required>

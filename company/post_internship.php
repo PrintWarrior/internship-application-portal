@@ -19,6 +19,7 @@ $company_name = $company['company_name'];
 $formData = $_POST;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken(['redirect' => 'post_internship.php']);
     $start_date = !empty($_POST['start_date']) ? $_POST['start_date'] : null;
     $end_date = !empty($_POST['end_date']) ? $_POST['end_date'] : null;
 
@@ -105,6 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="post_internship.php">Post Internship</a>
             <a href="manage_internships.php">My Internships</a>
             <a href="view_applicants.php">View Applicants</a>
+            <a href="generate_application_report.php">Reports</a>
             <a href="contracts.php">Contracts</a>
         </div>
 
@@ -122,7 +124,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <div class="form-container">
-                <form method="POST">
+            <form method="POST">
+                <?= csrf_input() ?>
                     <div class="form-group">
                         <label for="title">Internship Title *</label>
                         <input type="text" id="title" name="title" placeholder="e.g. Web Developer Intern"

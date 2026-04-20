@@ -156,6 +156,7 @@ $unread = $stmt->fetchColumn();
                                             <!-- Upload form for signed contract -->
                                             <form action="sign_contract.php" method="POST" enctype="multipart/form-data"
                                                 class="sign-form" style="display: inline;">
+                                                <?= csrf_input() ?>
                                                 <input type="hidden" name="contract_id" value="<?= $contract['contract_id'] ?>">
 
                                                 <!-- File input - hidden but accessible -->

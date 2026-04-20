@@ -62,6 +62,7 @@ if (!$application) {
 
 // Handle status update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    requireValidCsrfToken(['redirect' => 'view_applications.php?id=' . $application_id]);
     $new_status = $_POST['action'];
     $old_status = $application['status'];
     
@@ -287,6 +288,7 @@ function getStatusClass($status)
                         <h4>Update Application Status</h4>
 
                         <form method="POST" class="status-update-form">
+                            <?= csrf_input() ?>
                             <div class="status-actions">
                                 <button type="submit" name="action" value="Pending" 
                                     class="btn-status btn-status-pending" 

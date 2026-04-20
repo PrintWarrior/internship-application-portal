@@ -88,6 +88,7 @@ $unread = $stmt->fetchColumn();
             <a href="post_internship.php">Post Internship</a>
             <a href="manage_internships.php">My Internships</a>
             <a href="view_applicants.php">View Applicants</a>
+            <a href="generate_application_report.php">Reports</a>
             <a href="contracts.php">Contracts</a>
         </div>
 
@@ -190,7 +191,7 @@ $unread = $stmt->fetchColumn();
                         errorDiv.textContent = 'Network error. Please check your connection.';
                     };
 
-                    xhr.send('password=' + encodeURIComponent(newPass));
+                    xhr.send('password=' + encodeURIComponent(newPass) + '&csrf_token=' + encodeURIComponent('<?= getCsrfToken() ?>'));
                 });
 
                 // Allow Enter key to submit

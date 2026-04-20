@@ -2,6 +2,9 @@
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
+startSecureSession();
+sendSecurityHeaders();
+
 $token = $_GET['token'] ?? '';
 
 // Find token
@@ -22,7 +25,7 @@ if ($tokenData) {
     $user = $stmt->fetch();
 
     // Notify admin
-    $message = "User {$user['email']} has verified their email.";
+    $message = "A user has verified their email.";
     $action_url = "send_otp.php?user_id={$tokenData['user_id']}";
     $action_label = "Send Temopory Password";
     createNotification(1, $message, $action_url, $action_label, $tokenData['user_id']);
@@ -73,6 +76,49 @@ if ($tokenData) {
 </html>
 HTML;
 } else {
-    echo "Invalid or expired verification link.";
+    http_response_code(400);
+    echo <<<HTML
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Link</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            max-width: 420px;
+        }
+
+        .card h2 {
+            color: #2c3e50;
+        }
+
+        .card p {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Verification Link Unavailable</h2>
+        <p>This verification link is no longer available.</p>
+        <p>If you still need access, please request a new verification email from the administrator.</p>
+    </div>
+</body>
+</html>
+HTML;
 }
 ?>

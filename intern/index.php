@@ -209,7 +209,7 @@ $unread = $stmt->fetchColumn();
                             errorDiv.textContent = 'Server error. Please try again.';
                         }
                     };
-                    xhr.send('password=' + encodeURIComponent(newPass));
+                    xhr.send('password=' + encodeURIComponent(newPass) + '&csrf_token=' + encodeURIComponent('<?= getCsrfToken() ?>'));
                 });
             });
         </script>

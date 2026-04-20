@@ -1,0 +1,139 @@
+<?php
+require_once '../includes/functions.php';
+startSecureSession();
+sendSecurityHeaders();
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Company Registration</title>
+    <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/register_company.css">
+    <style>
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            font-weight: bold;
+            z-index: 1000;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .notification.success {
+            background-color: white;
+            color: black;
+        }
+
+        .notification.error {
+            background-color: black;
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="notification" class="notification" style="display: none;"></div>
+
+<div class="container">
+    <div class="logo-container">
+        <img src="../assets/img/logo.png" alt="Company Logo" class="logo">
+    </div>
+
+    <h2>Company Registration</h2>
+
+    <div class="form-container">
+        <form action="../register/process_registration.php?type=company" method="POST" enctype="multipart/form-data">
+            <?= csrf_input() ?>
+
+            <div class="form-group">
+                <label>Company Name *</label>
+                <input type="text" name="company_name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Company Email *</label>
+                <input type="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Assigned Person *</label>
+                <input type="text" name="contact_person" placeholder="Staff/Representative" required>
+            </div>
+
+            <div class="form-group">
+                <label>Contact Phone *</label>
+                <input type="text" name="contact_phone" required>
+            </div>
+
+            <div class="form-group">
+                <label>Industry *</label>
+                <input type="text" name="industry" placeholder="e.g. IT, Manufacturing, Finance" required>
+            </div>
+
+            <div class="form-group">
+                <label>Company Website</label>
+                <input type="url" name="website" placeholder="https://example.com">
+            </div>
+
+            <div class="form-group">
+                <label>Street Address *</label>
+                <textarea name="address" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Company Description</label>
+                <textarea name="description" rows="4" placeholder="Brief description about the company"></textarea>
+            </div>
+
+            <button type="submit">Register Company</button>
+
+        </form>
+    </div>
+
+    <p><a href="register.php">Back</a></p>
+</div>
+
+<script>
+    function showNotification(message, type) {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.className = 'notification ' + type;
+        notification.style.display = 'block';
+
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 5000);
+
+        const url = new URL(window.location.href);
+        url.searchParams.delete('success');
+        url.searchParams.delete('error');
+        url.searchParams.delete('message');
+        window.history.replaceState({}, document.title, url.pathname);
+    }
+
+    window.addEventListener('load', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.has('success')) {
+            showNotification(urlParams.get('message') || 'Registration successful! Admin will verify your email.', 'success');
+        } else if (urlParams.has('error')) {
+            showNotification(urlParams.get('message') || 'Registration failed! Please try again.', 'error');
+        }
+    });
+</script>
+
+</body>
+</html>

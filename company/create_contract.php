@@ -49,6 +49,7 @@ if (!$application) {
 
 // Handle contract creation
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken(['redirect' => 'create_contract.php?application_id=' . $application_id]);
     $contract_text = $_POST['contract_text'] ?? '';
 
     if (empty(trim($contract_text))) {
@@ -250,7 +251,8 @@ function formatDate($date) {
                     Insert Contract Template
                 </button>
                 
-                <form method="POST">
+                    <form method="POST">
+                        <?= csrf_input() ?>
                     <div class="form-group">
                         <label for="contract_text"><strong>Contract Text:</strong></label>
                         <textarea name="contract_text" id="contract_text" rows="20" style="width: 100%; padding: 10px; border: 2px solid #000000; font-family: monospace;"><?= isset($_POST['contract_text']) ? htmlspecialchars($_POST['contract_text']) : '' ?></textarea>

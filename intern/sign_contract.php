@@ -15,6 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+requireValidCsrfToken(['redirect' => 'contracts.php']);
+
 $contract_id = (int)$_POST['contract_id'];
 
 // Verify contract belongs to this intern - FIXED: using correct column name 'title'
@@ -44,61 +46,39 @@ if ($contract['signed_file']) {
 // Handle file upload
 if (isset($_FILES['signed_file']) && $_FILES['signed_file']['error'] === UPLOAD_ERR_OK) {
     $upload_dir = '../uploads/contracts/';
-    
-    // Create directory if it doesn't exist
-    if (!file_exists($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
-    }
-    
-    $file_extension = strtolower(pathinfo($_FILES['signed_file']['name'], PATHINFO_EXTENSION));
-    $allowed = ['pdf'];
-    
-    if (!in_array($file_extension, $allowed)) {
-        $_SESSION['error'] = "Invalid file type. Only PDF files are allowed.";
-        header('Location: contracts.php');
-        exit;
-    }
-    
-    // Check file size (max 5MB)
-    if ($_FILES['signed_file']['size'] > 5 * 1024 * 1024) {
-        $_SESSION['error'] = "File too large. Maximum size is 5MB.";
-        header('Location: contracts.php');
-        exit;
-    }
-    
-    // Generate unique filename
-    $filename = 'signed_contract_' . $contract_id . '_' . time() . '.pdf';
-    $filepath = $upload_dir . $filename;
-    
-    if (move_uploaded_file($_FILES['signed_file']['tmp_name'], $filepath)) {
-        // Update database
-        $updateStmt = $pdo->prepare("
-            UPDATE contracts 
-            SET signed_file = ?, signed_date = NOW() 
-            WHERE contract_id = ?
-        ");
-        $updateStmt->execute([$filename, $contract_id]);
-        
-        // Get company for notification
-        $companyStmt = $pdo->prepare("
-            SELECT i.company_id, i.title as internship_title
-            FROM contracts ct
-            JOIN applications a ON ct.application_id = a.application_id
-            JOIN internships i ON a.internship_id = i.internship_id
-            WHERE ct.contract_id = ?
-        ");
-        $companyStmt->execute([$contract_id]);
-        $companyData = $companyStmt->fetch();
+    $filename = storeUploadedPdf($_FILES['signed_file'], 'signed_contract_' . $contract_id, $upload_dir);
 
-        if ($companyData) {
-            $message = "An intern has signed a contract for '" . $companyData['internship_title'] . "'. Please review and confirm.";
-            notifyCompanyStaff($companyData['company_id'], $message, null, null, 'company/contracts.php');
-        }
-        
-        $_SESSION['success'] = "Contract signed and submitted successfully!";
-    } else {
-        $_SESSION['error'] = "Error uploading file. Please try again.";
+    if ($filename === null) {
+        $_SESSION['error'] = "Invalid file. Only PDF uploads up to 5MB are allowed.";
+        header('Location: contracts.php');
+        exit;
     }
+
+    // Update database
+    $updateStmt = $pdo->prepare("
+        UPDATE contracts 
+        SET signed_file = ?, signed_date = NOW() 
+        WHERE contract_id = ?
+    ");
+    $updateStmt->execute([$filename, $contract_id]);
+
+    // Get company for notification
+    $companyStmt = $pdo->prepare("
+        SELECT i.company_id, i.title as internship_title
+        FROM contracts ct
+        JOIN applications a ON ct.application_id = a.application_id
+        JOIN internships i ON a.internship_id = i.internship_id
+        WHERE ct.contract_id = ?
+    ");
+    $companyStmt->execute([$contract_id]);
+    $companyData = $companyStmt->fetch();
+
+    if ($companyData) {
+        $message = "An intern has signed a contract for '" . $companyData['internship_title'] . "'. Please review and confirm.";
+        notifyCompanyStaff($companyData['company_id'], $message, null, null, 'company/contracts.php');
+    }
+
+    $_SESSION['success'] = "Contract signed and submitted successfully!";
 } else {
     $upload_errors = [
         UPLOAD_ERR_INI_SIZE => "File exceeds upload_max_filesize directive.",

@@ -17,7 +17,11 @@
         </div>
         <div class="modal-footer">
             <button class="modal-btn modal-btn-cancel" onclick="closeRejectInternshipModal()">Cancel</button>
-            <a href="#" id="confirmRejectInternshipBtn" class="modal-btn modal-btn-delete">Reject</a>
+            <form method="POST" action="reject_internship.php" style="display:inline;">
+                <?= csrf_input() ?>
+                <input type="hidden" name="id" id="rejectInternshipId" value="">
+                <button type="submit" id="confirmRejectInternshipBtn" class="modal-btn modal-btn-delete">Reject</button>
+            </form>
         </div>
     </div>
 </div>

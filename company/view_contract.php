@@ -53,6 +53,7 @@ if (!$contract) {
 
 // Handle contract confirmation
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_contract'])) {
+    requireValidCsrfToken(['redirect' => 'view_contract.php?id=' . $contract_id]);
     $updateStmt = $pdo->prepare("UPDATE contracts SET hr_confirmed = 1, signed_date = NOW() WHERE contract_id = ?");
     $updateStmt->execute([$contract_id]);
 

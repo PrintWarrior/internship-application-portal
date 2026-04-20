@@ -74,25 +74,25 @@ function closeDeleteModal() {
 document.addEventListener('DOMContentLoaded', function() {
 
     const confirmBtn = document.getElementById('confirmDeleteBtn');
+    const deleteForm = document.getElementById('deleteModalForm');
+    const deleteInput = document.getElementById('deleteModalId');
 
     if (confirmBtn) {
-
         confirmBtn.addEventListener('click', function() {
-
-            if (currentInternId) {
-
-                window.location.href = 'delete_intern.php?id=' + currentInternId;
-
-            } else if (currentCompanyId) {
-
-                window.location.href = 'delete_company.php?id=' + currentCompanyId;
-
-            } else if (currentInternshipId) {
-
-                window.location.href = 'delete_internship.php?id=' + currentInternshipId;
-
+            if (!deleteForm || !deleteInput) {
+                return;
             }
 
+            if (currentInternId) {
+                deleteForm.action = 'delete_intern.php';
+                deleteInput.value = currentInternId;
+            } else if (currentCompanyId) {
+                deleteForm.action = 'delete_company.php';
+                deleteInput.value = currentCompanyId;
+            } else if (currentInternshipId) {
+                deleteForm.action = 'delete_internship.php';
+                deleteInput.value = currentInternshipId;
+            }
         });
     }
 

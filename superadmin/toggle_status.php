@@ -4,6 +4,13 @@ require_once '../includes/functions.php';
 
 requireAdminAreaAccess();
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: manage_users.php");
+    exit;
+}
+
+requireValidCsrfToken(['redirect' => 'manage_users.php']);
+
 function buildStatusEmailBody($status, $email)
 {
     $statusHeadings = [
@@ -34,8 +41,8 @@ function buildStatusEmailBody($status, $email)
     ";
 }
 
-$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-$requestedStatus = isset($_GET['status']) ? strtolower(trim($_GET['status'])) : '';
+$id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
+$requestedStatus = isset($_POST['status']) ? strtolower(trim($_POST['status'])) : '';
 $allowedStatuses = ['active', 'suspended', 'banned'];
 
 if ($id <= 0 || !in_array($requestedStatus, $allowedStatuses, true)) {

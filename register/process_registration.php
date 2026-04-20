@@ -1,12 +1,16 @@
 <?php
-session_start();
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
+startSecureSession();
+sendSecurityHeaders();
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_GET['type'])) {
-    header('Location: ../html/register.html');
+    header('Location: ../html/register.php');
     exit;
 }
+
+requireValidCsrfToken(['redirect' => '../html/register.php']);
 
 $type = $_GET['type'];
 $email = $_POST['email'] ?? '';
@@ -16,7 +20,7 @@ $dbType = $type === 'company' ? 'staff' : $type;
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     // Fix: Use urlencode for the message
     $message = urlencode('Invalid email format.');
-    header("Location: ../html/register_{$type}.html?error=1&message={$message}");
+    header("Location: ../html/register_{$type}.php?error=1&message={$message}");
     exit;
 }
 
@@ -26,12 +30,12 @@ try {
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
         $message = urlencode('Email already registered.');
-        header("Location: ../html/register_{$type}.html?error=1&message={$message}");
+        header("Location: ../html/register_{$type}.php?error=1&message={$message}");
         exit;
     }
 } catch (Exception $e) {
     $message = urlencode('Database error. Please try again.');
-    header("Location: ../html/register_{$type}.html?error=1&message={$message}");
+    header("Location: ../html/register_{$type}.php?error=1&message={$message}");
     exit;
 }
 
@@ -157,31 +161,33 @@ try {
     $action_label = "Send Verification Link";
     createNotification(1, $message, $action_url, $action_label, $user_id);
 
-    // Send verification email to the new user
-    $subject = 'Verify Your Email - Intern Application Portal';
+    $pdo->commit();
+
+    $subject = 'Registration Received - Intern Application Portal';
     $body = "
-        <html>
-            <body>
-                <h2>Welcome to Intern Application Portal!</h2>
-                <p>Thank you for registering. Please wait a few moments for your verification email to arrive.</p>
-                <br>
-                <p>Best regards,<br>Intern Application Portal Team</p>
-            </body>
-        </html>
+        <div style='background:#f2f4f6;padding:40px;font-family:Arial,sans-serif'>
+            <div style='max-width:600px;margin:auto;background:white;padding:30px'>
+                <h2 style='color:#2c3e50;text-align:center'>Registration Received</h2>
+                <p>Hello,</p>
+                <p>Your registration for the Internship Application Portal has been received successfully.</p>
+                <p>Your account is currently pending administrator approval. After approval, you will receive a separate verification email with the link needed to activate your account.</p>
+                <p style='margin-top:25px;font-size:14px;color:#666'>
+                    If you did not submit this registration, you can ignore this email.
+                </p>
+                <hr style='margin:30px 0'>
+                <p style='font-size:12px;color:#888'>Internship Application Portal</p>
+            </div>
+        </div>
     ";
-    
-    try {
-        sendEmail($email, $subject, $body);
-    } catch (Exception $e) {
-        // Log error but don't fail registration
-        error_log("Failed to send verification email to $email: " . $e->getMessage());
+
+    $mailSent = sendEmail($email, $subject, $body);
+    if ($mailSent) {
+        $success_message = urlencode('Registration successful! A confirmation email has been sent. Your account is pending administrator approval, and a verification email will be sent after approval.');
+    } else {
+        $success_message = urlencode('Registration successful! Your account is pending administrator approval. We could not send the registration confirmation email right now, but the account was created.');
     }
 
-    $pdo->commit();
-    
-    // Success redirect with parameters - Updated message to include "check your mail"
-    $success_message = urlencode('Registration successful! Please check your mail for verification instructions.');
-    header("Location: ../html/register_{$type}.html?success=1&message={$success_message}");
+    header("Location: ../html/register_{$type}.php?success=1&message={$success_message}");
     exit;
     
 } catch (Exception $e) {
@@ -189,7 +195,7 @@ try {
     
     // Error redirect with parameters
     $error_message = urlencode($e->getMessage() ?: 'Registration failed. Please try again.');
-    header("Location: ../html/register_{$type}.html?error=1&message={$error_message}");
+    header("Location: ../html/register_{$type}.php?error=1&message={$error_message}");
     exit;
 }
 ?>

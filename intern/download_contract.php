@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../includes/db.php';
+require_once '../includes/functions.php';
 require_once '../includes/fpdf186/fpdf.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'intern') {
@@ -41,9 +42,9 @@ if (!$contract) {
 
 // Check if signed version exists and user wants signed version
 if ($type === 'signed' && $contract['signed_file']) {
-    $signed_file_path = '../uploads/contracts/' . $contract['signed_file'];
+    $signed_file_path = managedFilePath('../uploads/contracts/', $contract['signed_file']);
     
-    if (file_exists($signed_file_path)) {
+    if ($signed_file_path && is_file($signed_file_path)) {
         // Serve the existing signed PDF
         header('Content-Description: File Transfer');
         header('Content-Type: application/pdf');

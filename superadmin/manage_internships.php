@@ -12,7 +12,7 @@ $stmt->execute([$_SESSION['user_id']]);
 $unread = $stmt->fetchColumn();
 
 // Get all internships with company info
-$stmt = $pdo->query("
+$stmt = $pdo->prepare("
     SELECT i.*, c.company_name, c.industry, u.email
     FROM internships i
     JOIN companies c ON i.company_id = c.company_id
@@ -21,6 +21,7 @@ $stmt = $pdo->query("
     GROUP BY i.internship_id
     ORDER BY i.internship_id DESC
 ");
+$stmt->execute();
 $internships = $stmt->fetchAll();
 
 // Calculate stats

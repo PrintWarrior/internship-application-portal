@@ -16,6 +16,7 @@ $intern_id = $stmt->fetchColumn();
 
 // Apply logic
 if (isset($_POST['apply'])) {
+    requireValidCsrfToken(['redirect' => 'browse_internships.php']);
 
     $internship_id = $_POST['internship_id'];
 
@@ -59,13 +60,14 @@ if (isset($_POST['apply'])) {
 }
 
 
-$stmt = $pdo->query("
+$stmt = $pdo->prepare("
     SELECT i.*, c.company_name 
     FROM internships i
     JOIN companies c ON i.company_id = c.company_id
     WHERE i.status = 'approved'
     ORDER BY i.deadline ASC
 ");
+$stmt->execute();
 $internships = $stmt->fetchAll();
 
 /* Count unread */
@@ -143,6 +145,7 @@ $unread = $stmt->fetchColumn();
                                 <td>PHP <?= number_format($job['allowance'], 2) ?></td>
                                 <td>
                                     <form method="POST">
+                                        <?= csrf_input() ?>
                                         <input type="hidden" name="internship_id" value="<?= $job['internship_id'] ?>">
                                         <button type="submit" name="apply">Apply</button>
                                     </form>

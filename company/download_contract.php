@@ -50,9 +50,9 @@ if (!$contract) {
 
 // Check if signed version exists and user wants signed version
 if ($type === 'signed' && $contract['signed_file']) {
-    $signed_file_path = '../uploads/contracts/' . $contract['signed_file'];
+    $signed_file_path = managedFilePath('../uploads/contracts/', $contract['signed_file']);
     
-    if (file_exists($signed_file_path)) {
+    if ($signed_file_path && is_file($signed_file_path)) {
         // Serve the existing signed PDF
         header('Content-Description: File Transfer');
         header('Content-Type: application/pdf');

@@ -10,6 +10,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'intern') {
     exit;
 }
 
+requireValidCsrfToken(['json' => true]);
+
 $password = $_POST['password'] ?? '';
 
 if (strlen($password) < 6) {

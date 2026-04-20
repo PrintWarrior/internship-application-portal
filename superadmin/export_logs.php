@@ -6,12 +6,13 @@ require_once '../includes/fpdf186/fpdf.php';
 
 requireAdminAreaAccess();
 
-$stmt = $pdo->query("
+$stmt = $pdo->prepare("
     SELECT l.*, u.email
     FROM system_logs l
     LEFT JOIN users u ON l.user_id = u.user_id
     ORDER BY l.created_at DESC
 ");
+$stmt->execute();
 $logs = $stmt->fetchAll();
 
 $pdf = new FPDF();

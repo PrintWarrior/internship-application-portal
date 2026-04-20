@@ -16,17 +16,21 @@ $page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
 $limit = 50;
 $offset = ($page - 1) * $limit;
 
-$stmt = $pdo->query("
+$stmt = $pdo->prepare("
     SELECT l.*, u.email
     FROM system_logs l
     LEFT JOIN users u ON l.user_id = u.user_id
     ORDER BY l.created_at DESC
-    LIMIT $limit OFFSET $offset
+    LIMIT ? OFFSET ?
 ");
+$stmt->bindValue(1, $limit, PDO::PARAM_INT);
+$stmt->bindValue(2, $offset, PDO::PARAM_INT);
+$stmt->execute();
 $logs = $stmt->fetchAll();
 
 // Get total count for pagination
-$totalStmt = $pdo->query("SELECT COUNT(*) FROM system_logs");
+$totalStmt = $pdo->prepare("SELECT COUNT(*) FROM system_logs");
+$totalStmt->execute();
 $totalLogs = $totalStmt->fetchColumn();
 $totalPages = ceil($totalLogs / $limit);
 
@@ -36,11 +40,13 @@ $todayStmt = $pdo->prepare("SELECT COUNT(*) FROM system_logs WHERE DATE(created_
 $todayStmt->execute([$today]);
 $todayCount = $todayStmt->fetchColumn();
 
-$uniqueUsersStmt = $pdo->query("SELECT COUNT(DISTINCT user_id) FROM system_logs WHERE user_id IS NOT NULL");
+$uniqueUsersStmt = $pdo->prepare("SELECT COUNT(DISTINCT user_id) FROM system_logs WHERE user_id IS NOT NULL");
+$uniqueUsersStmt->execute();
 $uniqueUsers = $uniqueUsersStmt->fetchColumn();
 
 // Get unique action types for filter
-$actionTypesStmt = $pdo->query("SELECT DISTINCT action FROM system_logs ORDER BY action");
+$actionTypesStmt = $pdo->prepare("SELECT DISTINCT action FROM system_logs ORDER BY action");
+$actionTypesStmt->execute();
 $actionTypes = $actionTypesStmt->fetchAll(PDO::FETCH_COLUMN);
 
 function getActionClass($action)

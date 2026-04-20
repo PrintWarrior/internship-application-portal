@@ -25,6 +25,7 @@
 
     // Handle offer response (accept/decline)
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['offer_action'])) {
+        requireValidCsrfToken(['redirect' => 'offers.php']);
 
         $application_id = $_POST['application_id'];
         $action = $_POST['offer_action'];
@@ -159,11 +160,13 @@
                                     <td>
                                         <div class="offer-actions">
                                             <form method="POST" style="display: inline;">
+                                                <?= csrf_input() ?>
                                                 <input type="hidden" name="application_id" value="<?= $offer['application_id'] ?>">
                                                 <input type="hidden" name="offer_action" value="accept">
                                                 <button type="submit" class="btn-offer btn-accept">Accept</button>
                                             </form>
                                             <form method="POST" style="display: inline;">
+                                                <?= csrf_input() ?>
                                                 <input type="hidden" name="application_id" value="<?= $offer['application_id'] ?>">
                                                 <input type="hidden" name="offer_action" value="decline">
                                                 <button type="submit" class="btn-offer btn-decline">Decline</button>

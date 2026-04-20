@@ -12,10 +12,17 @@ $stmt->execute([$_SESSION['user_id']]);
 $unread = $stmt->fetchColumn();
 
 // Counts
-$totalUsers = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
-$totalAdmins = $pdo->query("SELECT COUNT(*) FROM users WHERE user_type='admin'")->fetchColumn();
-$totalCompanies = $pdo->query("SELECT COUNT(*) FROM users WHERE user_type='staff'")->fetchColumn();
-$totalInterns = $pdo->query("SELECT COUNT(*) FROM users WHERE user_type='intern'")->fetchColumn();
+$countStmt = $pdo->prepare("SELECT COUNT(*) FROM users");
+$countStmt->execute();
+$totalUsers = $countStmt->fetchColumn();
+
+$countByTypeStmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE user_type = ?");
+$countByTypeStmt->execute(['admin']);
+$totalAdmins = $countByTypeStmt->fetchColumn();
+$countByTypeStmt->execute(['staff']);
+$totalCompanies = $countByTypeStmt->fetchColumn();
+$countByTypeStmt->execute(['intern']);
+$totalInterns = $countByTypeStmt->fetchColumn();
 ?>
 
 <!DOCTYPE html>
