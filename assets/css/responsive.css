@@ -8,6 +8,7 @@ body {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
+    --mobile-nav-offset: 0px;
 }
 
 body.nav-open {
@@ -137,8 +138,8 @@ button {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 44px;
-        height: 44px;
+        width: 40px;
+        height: 40px;
         padding: 0;
         margin: 0;
         border: 2px solid #ffffff;
@@ -146,12 +147,13 @@ button {
         color: #ffffff;
         cursor: pointer;
         flex-shrink: 0;
-        z-index: 1060;
+        z-index: 1061;
+        position: relative;
     }
 
     .hamburger-toggle span {
         display: block;
-        width: 18px;
+        width: 16px;
         height: 2px;
         background: currentColor;
         position: relative;
@@ -192,29 +194,51 @@ button {
     .topnav {
         position: sticky;
         top: 0;
-        z-index: 1030;
+        z-index: 1060;
     }
 
     .topnav.has-hamburger {
         flex-direction: row !important;
         justify-content: space-between;
         align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
+        gap: 8px;
+        position: relative;
+        flex-wrap: nowrap;
+        padding: 8px 15px !important;
     }
 
     .topnav.has-hamburger .logo-section {
         flex: 1;
         min-width: 0;
+        gap: 8px;
+    }
+
+    .topnav.has-hamburger .logo-section img {
+        max-width: 32px;
+    }
+
+    .topnav.has-hamburger .logo-section h2,
+    .topnav.has-hamburger .logo-section h4 {
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .topnav.has-hamburger .topnav-right {
-        display: none !important;
-        width: 100%;
-        flex-direction: column;
-        align-items: stretch;
+        display: flex !important;
+        flex-direction: row;
         gap: 8px;
-        padding-top: 8px;
+        padding: 0;
+        margin: 0;
+        background-color: transparent;
+        border-bottom: none;
+        z-index: 1061;
+        pointer-events: auto;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: flex-end;
+        min-width: 0;
     }
 
     body.nav-open .topnav.has-hamburger .topnav-right {
@@ -222,9 +246,24 @@ button {
     }
 
     .topnav.has-hamburger .topnav-right a {
-        display: block;
-        width: 100%;
+        display: inline-block;
+        width: auto;
         text-align: center;
+        padding: 4px 6px;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 11px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .topnav.has-hamburger .topnav-right a:hover {
+        border: 2px solid #ffffff;
     }
 
     .wrapper {
@@ -233,25 +272,27 @@ button {
 
     .sidebar {
         position: fixed;
-        top: 0;
+        top: var(--mobile-nav-offset, 0px);
         left: 0;
         bottom: 0;
         width: min(82vw, 320px) !important;
         min-width: 0;
         max-width: 320px;
-        height: 100vh;
-        max-height: 100vh;
+        height: calc(100vh - var(--mobile-nav-offset, 0px));
+        max-height: calc(100vh - var(--mobile-nav-offset, 0px));
         overflow-x: hidden;
         overflow-y: auto;
         transform: translateX(-100%);
         transition: transform 0.25s ease;
         z-index: 1050;
-        padding-top: 20px;
+        padding-top: 16px;
         box-shadow: 8px 0 24px rgba(0, 0, 0, 0.25);
+        pointer-events: auto;
     }
 
     body.nav-open .sidebar {
         transform: translateX(0);
+        pointer-events: auto;
     }
 
     .sidebar ul {
@@ -268,6 +309,23 @@ button {
     .sidebar a {
         white-space: normal;
         word-break: break-word;
+        pointer-events: auto;
+    }
+
+    body.nav-open .sidebar a {
+        pointer-events: auto;
+        cursor: pointer;
+    }
+
+    .badge {
+        padding: 2px 4px;
+        font-size: 9px;
+    }
+
+    .topnav.has-hamburger .badge {
+        padding: 1px 3px;
+        font-size: 8px;
+        margin-left: 2px;
     }
 
     .content,
@@ -280,7 +338,7 @@ button {
         display: flex;
         position: sticky;
         top: 0;
-        z-index: 1030;
+        z-index: 1060;
         align-items: center;
         justify-content: space-between;
         gap: 12px;
@@ -305,7 +363,7 @@ button {
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.25s ease;
-        z-index: 1040;
+        z-index: 1000;
     }
 
     body.nav-open .nav-overlay {

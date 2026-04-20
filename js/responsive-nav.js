@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var sidebar = document.querySelector(".sidebar");
     var topnav = document.querySelector(".topnav");
     var topnavRight = document.querySelector(".topnav-right");
+    var mobileBar = null;
 
     if (!sidebar && !topnavRight) {
         return;
@@ -24,11 +25,26 @@ document.addEventListener("DOMContentLoaded", function () {
         return button;
     }
 
+    function syncNavOffset() {
+        var offset = 0;
+
+        if (window.innerWidth <= 768) {
+            if (topnav) {
+                offset = topnav.offsetHeight;
+            } else if (mobileBar) {
+                offset = mobileBar.offsetHeight;
+            }
+        }
+
+        body.style.setProperty("--mobile-nav-offset", offset + "px");
+    }
+
     function setOpenState(isOpen) {
         body.classList.toggle("nav-open", isOpen);
         toggles.forEach(function (toggle) {
             toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
         });
+        window.requestAnimationFrame(syncNavOffset);
     }
 
     function toggleMenu() {
@@ -43,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
         topnav.appendChild(topButton);
         toggles.push(topButton);
     } else if (sidebar) {
-        var mobileBar = document.createElement("div");
+        mobileBar = document.createElement("div");
         mobileBar.className = "mobile-nav-bar";
 
         var title = document.createElement("div");
@@ -76,6 +92,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    if (topnavRight) {
+        topnavRight.querySelectorAll("a").forEach(function (link) {
+            link.addEventListener("click", function () {
+                if (window.innerWidth <= 768) {
+                    setOpenState(false);
+                }
+            });
+        });
+    }
+
     document.addEventListener("keydown", function (event) {
         if (event.key === "Escape") {
             setOpenState(false);
@@ -85,6 +111,10 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("resize", function () {
         if (window.innerWidth > 768) {
             setOpenState(false);
+        } else {
+            syncNavOffset();
         }
     });
+
+    syncNavOffset();
 });

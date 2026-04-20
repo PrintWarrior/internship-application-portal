@@ -221,7 +221,7 @@ $unread = $stmt->fetchColumn();
     <!-- Include Logout Modal JavaScript -->
     <script src="../js/logout_modal.js"></script>
 
-    
+    <script src="../js/responsive-nav.js"></script>
 </body>
 
 </html>

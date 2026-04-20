@@ -109,7 +109,7 @@ $unread = $stmt->fetchColumn();
 <!-- Logout Modal -->
 <?php include '../html/logout_modal.html'; ?>
 <script src="../js/logout_modal.js"></script>
-
+<script src="../js/responsive-nav.js"></script>
   
 </body>
 </html>

@@ -223,6 +223,7 @@
             });
         </script>
         <?php endif; ?>
+        <script src="../js/responsive-nav.js"></script>
         
         
 </body>
