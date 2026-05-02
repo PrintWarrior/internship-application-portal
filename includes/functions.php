@@ -379,7 +379,7 @@ function rateLimitFilePath($action, $scope) {
     return ensureRateLimitDirectory() . DIRECTORY_SEPARATOR . $safeAction . '_' . hash('sha256', $scope) . '.json';
 }
 
-function rateLimitExceeded($action, $scope, $maxAttempts, $windowSeconds) {
+function getRateLimitAttempts($action, $scope, $windowSeconds) {
     $file = rateLimitFilePath($action, $scope);
     $now = time();
     $attempts = [];
@@ -391,14 +391,25 @@ function rateLimitExceeded($action, $scope, $maxAttempts, $windowSeconds) {
         }
     }
 
+    return [$file, $attempts];
+}
+
+function isRateLimitExceeded($action, $scope, $maxAttempts, $windowSeconds) {
+    [$file, $attempts] = getRateLimitAttempts($action, $scope, $windowSeconds);
+
     if (count($attempts) >= $maxAttempts) {
         file_put_contents($file, json_encode(array_values($attempts)), LOCK_EX);
         return true;
     }
 
+    return false;
+}
+
+function recordRateLimitAttempt($action, $scope, $windowSeconds) {
+    [$file, $attempts] = getRateLimitAttempts($action, $scope, $windowSeconds);
+    $now = time();
     $attempts[] = $now;
     file_put_contents($file, json_encode(array_values($attempts)), LOCK_EX);
-    return false;
 }
 
 function isRateLimited($action, array $scopes, $maxAttempts, $windowSeconds) {
@@ -407,9 +418,11 @@ function isRateLimited($action, array $scopes, $maxAttempts, $windowSeconds) {
             continue;
         }
 
-        if (rateLimitExceeded($action, (string) $scope, $maxAttempts, $windowSeconds)) {
+        if (isRateLimitExceeded($action, (string) $scope, $maxAttempts, $windowSeconds)) {
             return true;
         }
+
+        recordRateLimitAttempt($action, (string) $scope, $windowSeconds);
     }
 
     return false;

@@ -8,118 +8,41 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'intern') {
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
+$userId = (int) $_SESSION['user_id'];
+$uploadDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'profile';
+$uploadUrl = '../assets/img/profile/';
+$defaultImage = 'default.png';
 
-/* ========================
-HANDLE PROFILE INFO UPDATE
-======================== */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile_info'])) {
-    requireValidCsrfToken(['redirect' => 'profile.php']);
+if (!is_dir($uploadDir)) {
+    mkdir($uploadDir, 0775, true);
+}
 
+function setProfileFlash(string $type, string $message): void
+{
+    $_SESSION['profile_flash'] = [
+        'type' => $type,
+        'message' => $message,
+    ];
+}
+
+function redirectProfile(array $params = []): void
+{
+    $query = $params ? ('?' . http_build_query($params)) : '';
+    header('Location: profile.php' . $query);
+    exit;
+}
+
+function fetchInternProfile(PDO $pdo, int $userId)
+{
     $stmt = $pdo->prepare("
-            UPDATE interns SET
-                first_name = ?, middle_name = ?, last_name = ?,
-                contact_no = ?,
-                university = ?, course = ?, year_level = ?
-            WHERE user_id = ?
-        ");
-
-    $stmt->execute([
-        $_POST['first_name'],
-        $_POST['middle_name'],
-        $_POST['last_name'],
-        $_POST['contact_no'],
-        $_POST['university'],
-        $_POST['course'],
-        $_POST['year_level'],
-        $user_id
-    ]);
-
-    $internStmt = $pdo->prepare("SELECT intern_id FROM interns WHERE user_id = ?");
-    $internStmt->execute([$user_id]);
-    $internId = $internStmt->fetchColumn();
-
-    if ($internId) {
-        upsertEntityAddress((int) $internId, 'intern', [
-            'address_line' => $_POST['address'] ?? null,
-            'city' => $_POST['city'] ?? null,
-            'province' => $_POST['province'] ?? null,
-            'postal_code' => $_POST['postal_code'] ?? null,
-            'country' => $_POST['country'] ?? 'Philippines'
-        ]);
-    }
-
-    header("Location: profile.php?profile_success=1");
-    exit;
-}
-
-
-/* ========================
-HANDLE PROFILE IMAGE UPLOAD
-======================== */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile_image'])) {
-    requireValidCsrfToken(['redirect' => 'profile.php']);
-
-    $stmt = $pdo->prepare("SELECT profile_image FROM interns WHERE user_id=?");
-    $stmt->execute([$user_id]);
-    $currentImage = $stmt->fetchColumn();
-
-    if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === 0) {
-
-        $newName = storeUploadedImage($_FILES['profile_image'], 'intern', '../assets/img/profile/');
-        if ($newName !== null) {
-
-                // delete old image
-                if ($currentImage && $currentImage !== 'default.png') {
-                    deleteManagedFile('../assets/img/profile/', $currentImage);
-                }
-
-                // update db
-                $stmt = $pdo->prepare("UPDATE interns SET profile_image=? WHERE user_id=?");
-                $stmt->execute([$newName, $user_id]);
-
-                header("Location: profile.php?upload_success=1");
-                exit;
-        }
-    }
-
-    header("Location: profile.php?upload_error=1");
-    exit;
-}
-
-
-/* ========================
-HANDLE IMAGE DELETE
-======================== */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_image'])) {
-    requireValidCsrfToken(['redirect' => 'profile.php']);
-
-    $stmt = $pdo->prepare("SELECT profile_image FROM interns WHERE user_id=?");
-    $stmt->execute([$user_id]);
-    $current = $stmt->fetchColumn();
-
-    if ($current && $current !== 'default.png') {
-        deleteManagedFile('../assets/img/profile/', $current);
-    }
-
-    $stmt = $pdo->prepare("UPDATE interns SET profile_image='default.png' WHERE user_id=?");
-    $stmt->execute([$user_id]);
-
-    header("Location: profile.php");
-    exit;
-}
-
-/* ========================
-FETCH PROFILE
-======================== */
-
-$stmt = $pdo->prepare("
-        SELECT i.*, u.email,
-               addr.address_line AS address,
-               addr.city,
-               addr.province,
-               addr.postal_code,
-               addr.country
+        SELECT
+            i.*,
+            u.email,
+            addr.address_line AS address,
+            addr.city,
+            addr.province,
+            addr.postal_code,
+            addr.country
         FROM interns i
         JOIN users u ON i.user_id = u.user_id
         LEFT JOIN addresses addr
@@ -127,23 +50,186 @@ $stmt = $pdo->prepare("
             AND addr.entity_type = 'intern'
             AND addr.is_primary = 1
         WHERE i.user_id = ?
+        LIMIT 1
     ");
-$stmt->execute([$user_id]);
-$intern = $stmt->fetch();
-
-$imagePath = "../assets/img/profile/" . ($intern['profile_image'] ?? 'default.png');
-if (!file_exists($imagePath)) {
-    $imagePath = "../assets/img/profile/default.png";
+    $stmt->execute([$userId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-/* Count unread */
-$stmt = $pdo->prepare("
-        SELECT COUNT(*) 
-        FROM notifications 
-        WHERE user_id=? AND is_read=0
-    ");
-$stmt->execute([$user_id]);
-$unread = $stmt->fetchColumn();
+function buildImageUrl(array $intern, string $uploadDir, string $uploadUrl, string $defaultImage): string
+{
+    $imageName = trim((string) ($intern['profile_image'] ?? ''));
+    if ($imageName === '') {
+        $imageName = $defaultImage;
+    }
+
+    $imagePath = $uploadDir . DIRECTORY_SEPARATOR . $imageName;
+    if (!is_file($imagePath)) {
+        $imageName = $defaultImage;
+    }
+
+    return $uploadUrl . rawurlencode($imageName);
+}
+
+function handleInternImageUpload(PDO $pdo, array $intern, int $userId, string $uploadDir, string $defaultImage): void
+{
+    if (!isset($_FILES['profile_image'])) {
+        setProfileFlash('error', 'No file was selected.');
+        redirectProfile();
+    }
+
+    $file = $_FILES['profile_image'];
+    $errorCode = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
+
+    if ($errorCode !== UPLOAD_ERR_OK) {
+        setProfileFlash('error', 'Upload failed. Please choose a JPG or PNG image under 2MB.');
+        redirectProfile();
+    }
+
+    if (($file['size'] ?? 0) <= 0 || ($file['size'] ?? 0) > 2097152) {
+        setProfileFlash('error', 'Upload failed. Please choose a JPG or PNG image under 2MB.');
+        redirectProfile();
+    }
+
+    $tmpName = (string) ($file['tmp_name'] ?? '');
+    if ($tmpName === '' || !is_uploaded_file($tmpName)) {
+        setProfileFlash('error', 'Upload failed. The uploaded file could not be verified.');
+        redirectProfile();
+    }
+
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = $finfo ? finfo_file($finfo, $tmpName) : false;
+    if ($finfo) {
+        finfo_close($finfo);
+    }
+
+    $allowedMimeMap = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+    ];
+
+    if (!is_string($mimeType) || !isset($allowedMimeMap[$mimeType])) {
+        setProfileFlash('error', 'Only JPG and PNG images are allowed.');
+        redirectProfile();
+    }
+
+    if (!is_dir($uploadDir) && !mkdir($uploadDir, 0775, true) && !is_dir($uploadDir)) {
+        setProfileFlash('error', 'Upload failed. Profile image folder is unavailable.');
+        redirectProfile();
+    }
+
+    if (!is_writable($uploadDir)) {
+        setProfileFlash('error', 'Upload failed. Profile image folder is not writable.');
+        error_log('Intern profile upload failed: upload directory not writable: ' . $uploadDir);
+        redirectProfile();
+    }
+
+    $newFilename = 'intern_' . $intern['intern_id'] . '_' . time() . '.' . $allowedMimeMap[$mimeType];
+    $destination = $uploadDir . DIRECTORY_SEPARATOR . $newFilename;
+
+    if (!move_uploaded_file($tmpName, $destination)) {
+        setProfileFlash('error', 'Upload failed while saving the image.');
+        error_log('Intern profile upload failed: move_uploaded_file returned false for user_id=' . $userId . ' destination=' . $destination);
+        redirectProfile();
+    }
+
+    $update = $pdo->prepare("UPDATE interns SET profile_image = ? WHERE intern_id = ?");
+    $update->execute([$newFilename, $intern['intern_id']]);
+
+    $saved = fetchInternProfile($pdo, $userId);
+    $savedFilename = $saved['profile_image'] ?? '';
+
+    if ($savedFilename !== $newFilename) {
+        @unlink($destination);
+        setProfileFlash('error', 'Upload failed while saving the profile record.');
+        error_log('Intern profile upload failed: database did not persist filename for user_id=' . $userId . ' expected=' . $newFilename . ' actual=' . $savedFilename);
+        redirectProfile();
+    }
+
+    $previousImage = trim((string) ($intern['profile_image'] ?? ''));
+    if ($previousImage !== '' && $previousImage !== $defaultImage) {
+        deleteManagedFile($uploadDir, $previousImage);
+    }
+
+    setProfileFlash('success', 'Profile picture uploaded successfully.');
+    redirectProfile();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken(['redirect' => 'profile.php']);
+
+    $intern = fetchInternProfile($pdo, $userId);
+    if (!$intern) {
+        setProfileFlash('error', 'Intern profile record was not found.');
+        redirectProfile();
+    }
+
+    if (isset($_POST['update_profile_info'])) {
+        $stmt = $pdo->prepare("
+            UPDATE interns
+            SET first_name = ?, middle_name = ?, last_name = ?, contact_no = ?, university = ?, course = ?, year_level = ?
+            WHERE intern_id = ?
+        ");
+
+        $stmt->execute([
+            trim((string) ($_POST['first_name'] ?? '')),
+            trim((string) ($_POST['middle_name'] ?? '')),
+            trim((string) ($_POST['last_name'] ?? '')),
+            trim((string) ($_POST['contact_no'] ?? '')),
+            trim((string) ($_POST['university'] ?? '')),
+            trim((string) ($_POST['course'] ?? '')),
+            trim((string) ($_POST['year_level'] ?? '')),
+            $intern['intern_id'],
+        ]);
+
+        upsertEntityAddress((int) $intern['intern_id'], 'intern', [
+            'address_line' => trim((string) ($_POST['address'] ?? '')),
+            'city' => trim((string) ($_POST['city'] ?? '')),
+            'province' => trim((string) ($_POST['province'] ?? '')),
+            'postal_code' => trim((string) ($_POST['postal_code'] ?? '')),
+            'country' => trim((string) ($_POST['country'] ?? '')) ?: 'Philippines',
+        ]);
+
+        setProfileFlash('success', 'Profile updated successfully.');
+        redirectProfile();
+    }
+
+    if (isset($_POST['update_profile_image'])) {
+        handleInternImageUpload($pdo, $intern, $userId, $uploadDir, $defaultImage);
+    }
+
+    if (isset($_POST['delete_image'])) {
+        $currentImage = trim((string) ($intern['profile_image'] ?? ''));
+
+        if ($currentImage !== '' && $currentImage !== $defaultImage) {
+            deleteManagedFile($uploadDir, $currentImage);
+        }
+
+        $stmt = $pdo->prepare("UPDATE interns SET profile_image = ? WHERE intern_id = ?");
+        $stmt->execute([$defaultImage, $intern['intern_id']]);
+
+        setProfileFlash('success', 'Profile picture deleted successfully.');
+        redirectProfile();
+    }
+}
+
+$intern = fetchInternProfile($pdo, $userId);
+if (!$intern) {
+    exit('Intern profile not found.');
+}
+
+$imageUrl = buildImageUrl($intern, $uploadDir, $uploadUrl, $defaultImage);
+
+$flash = $_SESSION['profile_flash'] ?? null;
+unset($_SESSION['profile_flash']);
+
+$notificationStmt = $pdo->prepare("
+    SELECT COUNT(*)
+    FROM notifications
+    WHERE user_id = ? AND is_read = 0
+");
+$notificationStmt->execute([$userId]);
+$unread = (int) $notificationStmt->fetchColumn();
 ?>
 
 <!DOCTYPE html>
@@ -159,7 +245,6 @@ $unread = $stmt->fetchColumn();
     <link rel="stylesheet" href="../assets/css/internpassword_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
     <style>
-        /* Notification badge in sidebar */
         .sidebar .badge {
             background-color: #ffffff;
             color: #000000;
@@ -175,7 +260,6 @@ $unread = $stmt->fetchColumn();
 
 <body>
 
-    <!-- SIDEBAR -->
     <div class="sidebar">
         <h4>Intern Panel</h4>
         <a href="index.php">Dashboard</a>
@@ -188,28 +272,23 @@ $unread = $stmt->fetchColumn();
         <a href="#" onclick="openLogoutModal()">Logout</a>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div class="main-content">
         <h2>My Profile</h2>
 
         <div class="row">
-            <!-- Left Column - Profile Form -->
             <div class="col-md-6">
-
                 <div class="profile-image-container">
-                    <img src="<?php echo $imagePath; ?>" alt="Profile Image" id="currentProfileImage">
+                    <img src="<?= htmlspecialchars($imageUrl) ?>" alt="Profile Image" id="currentProfileImage">
 
-                    <!-- Upload Image Form -->
                     <form method="POST" enctype="multipart/form-data">
                         <?= csrf_input() ?>
                         <div class="form-group">
                             <label>Change Profile Picture</label>
-                            <input type="file" name="profile_image" accept="image/*" required>
+                            <input type="file" name="profile_image" accept="image/jpeg,image/png" required>
                         </div>
-                        <button type="submit" name="update_profile_image">Select Image</button>
+                        <button type="submit" name="update_profile_image">Upload Picture</button>
                     </form>
 
-                    <!-- Delete Image Form -->
                     <form method="POST" style="margin-top:10px;">
                         <?= csrf_input() ?>
                         <button type="submit" name="delete_image">Delete Image</button>
@@ -217,72 +296,62 @@ $unread = $stmt->fetchColumn();
                 </div>
 
                 <div class="form-container">
-                    <form method="POST" enctype="multipart/form-data">
+                    <form method="POST">
                         <?= csrf_input() ?>
 
                         <div class="form-group">
                             <label>First Name</label>
-                            <input type="text" name="first_name"
-                                value="<?php echo htmlspecialchars($intern['first_name']); ?>" required>
+                            <input type="text" name="first_name" value="<?= htmlspecialchars((string) ($intern['first_name'] ?? '')) ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label>Middle Name</label>
-                            <input type="text" name="middle_name"
-                                value="<?php echo htmlspecialchars($intern['middle_name']); ?>">
+                            <input type="text" name="middle_name" value="<?= htmlspecialchars((string) ($intern['middle_name'] ?? '')) ?>">
                         </div>
 
                         <div class="form-group">
                             <label>Last Name</label>
-                            <input type="text" name="last_name"
-                                value="<?php echo htmlspecialchars($intern['last_name']); ?>" required>
+                            <input type="text" name="last_name" value="<?= htmlspecialchars((string) ($intern['last_name'] ?? '')) ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label>Contact No</label>
-                            <input type="text" name="contact_no"
-                                value="<?php echo htmlspecialchars($intern['contact_no']); ?>" required>
+                            <input type="text" name="contact_no" value="<?= htmlspecialchars((string) ($intern['contact_no'] ?? '')) ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label>Address</label>
-                            <input type="text" name="address"
-                                value="<?php echo htmlspecialchars($intern['address']); ?>">
+                            <input type="text" name="address" value="<?= htmlspecialchars((string) ($intern['address'] ?? '')) ?>">
                         </div>
 
                         <div class="form-group">
                             <label>City</label>
-                            <input type="text" name="city" value="<?php echo htmlspecialchars($intern['city']); ?>">
+                            <input type="text" name="city" value="<?= htmlspecialchars((string) ($intern['city'] ?? '')) ?>">
                         </div>
 
                         <div class="form-group">
                             <label>Province</label>
-                            <input type="text" name="province"
-                                value="<?php echo htmlspecialchars($intern['province']); ?>">
+                            <input type="text" name="province" value="<?= htmlspecialchars((string) ($intern['province'] ?? '')) ?>">
                         </div>
 
                         <div class="form-group">
                             <label>Postal Code</label>
-                            <input type="text" name="postal_code"
-                                value="<?php echo htmlspecialchars($intern['postal_code']); ?>">
+                            <input type="text" name="postal_code" value="<?= htmlspecialchars((string) ($intern['postal_code'] ?? '')) ?>">
                         </div>
 
                         <div class="form-group">
                             <label>University</label>
-                            <input type="text" name="university"
-                                value="<?php echo htmlspecialchars($intern['university']); ?>" required>
+                            <input type="text" name="university" value="<?= htmlspecialchars((string) ($intern['university'] ?? '')) ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label>Course</label>
-                            <input type="text" name="course" value="<?php echo htmlspecialchars($intern['course']); ?>"
-                                required>
+                            <input type="text" name="course" value="<?= htmlspecialchars((string) ($intern['course'] ?? '')) ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label>Year Level</label>
-                            <input type="text" name="year_level"
-                                value="<?php echo htmlspecialchars($intern['year_level']); ?>">
+                            <input type="text" name="year_level" value="<?= htmlspecialchars((string) ($intern['year_level'] ?? '')) ?>">
                         </div>
 
                         <button type="submit" name="update_profile_info">Update Profile</button>
@@ -290,7 +359,6 @@ $unread = $stmt->fetchColumn();
                 </div>
             </div>
 
-            <!-- Right Column - Change Password Form -->
             <div class="col-md-6">
                 <div class="form-container">
                     <h3>Change Password</h3>
@@ -304,11 +372,7 @@ $unread = $stmt->fetchColumn();
                         <div class="form-group">
                             <label>New Password</label>
                             <input type="password" name="new_password" required minlength="6">
-                            
                         </div>
-
-                        <!-- Confirm password field removed from main form -->
-                        <!-- It's now handled in the modal -->
 
                         <button type="submit">Change Password</button>
                     </form>
@@ -316,83 +380,34 @@ $unread = $stmt->fetchColumn();
             </div>
         </div>
     </div>
-    <!-- Include Logout Modal HTML -->
-    <?php include '../html/logout_modal.html'; ?>
 
-    <!-- Include Logout Modal JavaScript -->
+    <?php include '../html/logout_modal.html'; ?>
     <script src="../js/logout_modal.js"></script>
 
-    <!-- Include Logout Modal HTML -->
     <?php include '../html/internprofile_modal.html'; ?>
-
-    <!-- Include Logout Modal JavaScript -->
     <script src="../js/internprofile_modal.js"></script>
 
-    <!-- Include Logout Modal HTML -->
     <?php include '../html/internupdate_modal.html'; ?>
-
-    <!-- Include Logout Modal JavaScript -->
     <script src="../js/internupdate_modal.js"></script>
 
-    <!-- Include Logout Modal HTML -->
     <?php include '../html/internpassword_modal.html'; ?>
-
-    <!-- Include Logout Modal JavaScript -->
     <script src="../js/internpassword_modal.js"></script>
 
-
-    <!-- Check for success messages -->
-    <?php if (isset($_GET['profile_success'])): ?>
+    <?php if ($flash): ?>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 setTimeout(function () {
                     if (typeof showNotification === 'function') {
-                        showNotification('Profile Updated Successfully');
-                    }
-                }, 100);
-            });
-        </script>
-    <?php elseif (isset($_GET['upload_success'])): ?>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                setTimeout(function () {
-                    if (typeof showNotification === 'function') {
-                        showNotification('Upload Successfully');
-                    }
-                }, 100);
-            });
-        </script>
-    <?php elseif (isset($_GET['delete_success'])): ?>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                setTimeout(function () {
-                    if (typeof showNotification === 'function') {
-                        showNotification('Delete Successfully');
-                    }
-                }, 100);
-            });
-        </script>
-    <?php elseif (isset($_GET['password_success'])): ?>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                setTimeout(function () {
-                    if (typeof showNotification === 'function') {
-                        showNotification('Password Changed Successfully');
-                    }
-                }, 100);
-            });
-        </script>
-    <?php elseif (isset($_GET['password_error'])): ?>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                setTimeout(function () {
-                    if (typeof showNotification === 'function') {
-                        showNotification('Current password is incorrect', false);
+                        showNotification(
+                            <?= json_encode((string) $flash['message']) ?>,
+                            <?= json_encode(($flash['type'] ?? 'success') !== 'error') ?>
+                        );
                     }
                 }, 100);
             });
         </script>
     <?php endif; ?>
+
     <script src="../js/responsive-nav.js"></script>
 </body>
 

@@ -160,11 +160,16 @@ function setupConfirmButtons() {
             const formData = new FormData();
             formData.append('profile_image', fileInput.files[0]);
             formData.append('upload_image', '1');
+            const uploadCsrfInput = uploadForm.querySelector('input[name="csrf_token"]');
+            if (uploadCsrfInput && uploadCsrfInput.value) {
+                formData.append('csrf_token', uploadCsrfInput.value);
+            }
             
             // Create a fetch request to submit the form
             fetch(window.location.href, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                credentials: 'same-origin'
             })
             .then(response => {
                 if (response.redirected) {
@@ -192,11 +197,16 @@ function setupConfirmButtons() {
             // Create a new FormData object
             const formData = new FormData();
             formData.append('delete_image', '1');
+            const deleteCsrfInput = deleteForm.querySelector('input[name="csrf_token"]');
+            if (deleteCsrfInput && deleteCsrfInput.value) {
+                formData.append('csrf_token', deleteCsrfInput.value);
+            }
             
             // Create a fetch request to submit the form
             fetch(window.location.href, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                credentials: 'same-origin'
             })
             .then(response => {
                 if (response.redirected) {

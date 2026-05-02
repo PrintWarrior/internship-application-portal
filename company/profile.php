@@ -13,11 +13,12 @@ if (!$company) {
     exit;
 }
 
-$upload_dir = "../assets/img/profile/";
+$upload_dir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'profile';
+$upload_url = "../assets/img/profile/";
 $default_image = "default.png";
 
-if (!file_exists($upload_dir)) {
-    mkdir($upload_dir, 0777, true);
+if (!is_dir($upload_dir)) {
+    mkdir($upload_dir, 0775, true);
 }
 
 /* -----------------------
@@ -116,9 +117,6 @@ $stmt->execute([$user_id]);
 $unread = $stmt->fetchColumn();
 
 
-$upload_success = false;
-$delete_success = false;
-
 /* -----------------------
 UPLOAD PROFILE IMAGE
 -----------------------*/
@@ -164,14 +162,6 @@ if (isset($_POST['delete_image'])) {
     header("Location: profile.php?delete_error=1");
     exit;
 }
-
-// Check for success parameters
-if (isset($_GET['upload_success'])) {
-    $upload_success = true;
-} elseif (isset($_GET['delete_success'])) {
-    $delete_success = true;
-}
-
 
 /* -----------------------
 CHANGE PASSWORD
@@ -237,6 +227,14 @@ if (isset($_POST['change_password'])) {
         </div>
     </div>
 
+    <?php
+    $companyImage = trim((string) ($company['profile_image'] ?? $default_image));
+    $companyImagePath = $upload_dir . DIRECTORY_SEPARATOR . $companyImage;
+    if ($companyImage === '' || !is_file($companyImagePath)) {
+        $companyImage = $default_image;
+    }
+    ?>
+
     <div class="wrapper">
         <!-- SIDEBAR -->
         <div class="sidebar">
@@ -262,7 +260,7 @@ if (isset($_POST['change_password'])) {
             <div class="profile-image-section">
                 <h3>Company Logo</h3>
 
-                <img src="../assets/img/profile/<?= $company['profile_image'] ?? $default_image ?>" alt="Company Logo"
+                <img src="<?= htmlspecialchars($upload_url . rawurlencode($companyImage)) ?>" alt="Company Logo"
                     style="max-width: 200px; border: 2px solid #000000;">
 
                 <div class="image-actions">

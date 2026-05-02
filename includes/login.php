@@ -14,8 +14,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $input = trim($_POST['password'] ?? ''); // password OR OTP
     $normalizedEmail = strtolower($email);
+    $loginScopes = [getClientIp(), 'email:' . $normalizedEmail];
 
-    if (isRateLimited('login', [getClientIp(), 'email:' . $normalizedEmail], 5, 300)) {
+    $recordFailedLoginAttempt = static function () use ($loginScopes): void {
+        foreach ($loginScopes as $scope) {
+            if ($scope === null || $scope === '') {
+                continue;
+            }
+
+            recordRateLimitAttempt('login', (string) $scope, 300);
+        }
+    };
+
+    foreach ($loginScopes as $scope) {
+        if ($scope === null || $scope === '') {
+            continue;
+        }
+
+        if (isRateLimitExceeded('login', (string) $scope, 5, 300)) {
+            $_SESSION['error'] = GENERIC_LOGIN_ERROR;
+            header('Location: ../index.php');
+            exit;
+        }
+    }
+
+    if ($email === '' || $input === '') {
+        $recordFailedLoginAttempt();
         $_SESSION['error'] = GENERIC_LOGIN_ERROR;
         header('Location: ../index.php');
         exit;
@@ -30,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Keep response and password verification behavior consistent to reduce
         // account-enumeration and scanner response-difference signals.
         password_verify($input, $dummyHash);
+        $recordFailedLoginAttempt();
         $_SESSION['error'] = GENERIC_LOGIN_ERROR;
         header('Location: ../index.php');
         exit;
@@ -37,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Check account status only after user is found
     if ($user['status'] !== 'active') {
+        $recordFailedLoginAttempt();
         $_SESSION['error'] = GENERIC_LOGIN_ERROR;
         header('Location: ../index.php');
         exit;
@@ -44,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Email must be verified
     if (!$user['verified']) {
+        $recordFailedLoginAttempt();
         $_SESSION['error'] = GENERIC_LOGIN_ERROR;
         header('Location: ../index.php');
         exit;
@@ -94,6 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: ../index.php');
             exit;
         } else {
+            $recordFailedLoginAttempt();
             $_SESSION['error'] = GENERIC_LOGIN_ERROR;
             header('Location: ../index.php');
             exit;
@@ -125,6 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
 
     } else {
+        $recordFailedLoginAttempt();
         $_SESSION['error'] = GENERIC_LOGIN_ERROR;
         header('Location: ../index.php');
         exit;

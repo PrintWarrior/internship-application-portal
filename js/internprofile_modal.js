@@ -151,18 +151,24 @@ function setupConfirmButtons() {
             const formData = new FormData();
             formData.append('profile_image', selectedFile);
             formData.append('update_profile_image', '1');
+            const csrfInput = uploadForm.querySelector('input[name="csrf_token"]');
+            if (csrfInput && csrfInput.value) {
+                formData.append('csrf_token', csrfInput.value);
+            }
             
             // Submit via fetch
             fetch(window.location.href, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                credentials: 'same-origin'
             })
             .then(response => {
                 if (response.redirected) {
-                    window.location.href = response.url + '?upload_success=1';
-                } else {
-                    window.location.href = window.location.href + '?upload_success=1';
+                    window.location.href = response.url;
+                    return;
                 }
+
+                window.location.reload();
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -183,18 +189,24 @@ function setupConfirmButtons() {
             // Create FormData
             const formData = new FormData();
             formData.append('delete_image', '1');
+            const csrfInput = deleteForm.querySelector('input[name="csrf_token"]');
+            if (csrfInput && csrfInput.value) {
+                formData.append('csrf_token', csrfInput.value);
+            }
             
             // Submit via fetch
             fetch(window.location.href, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                credentials: 'same-origin'
             })
             .then(response => {
                 if (response.redirected) {
-                    window.location.href = response.url + '?delete_success=1';
-                } else {
-                    window.location.href = window.location.href + '?delete_success=1';
+                    window.location.href = response.url;
+                    return;
                 }
+
+                window.location.reload();
             })
             .catch(error => {
                 console.error('Error:', error);
