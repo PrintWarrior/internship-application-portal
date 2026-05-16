@@ -67,8 +67,8 @@ $unread = $stmt->fetchColumn();
     <a href="profile.php">My Profile</a>
     <a href="browse_internships.php">Browse Internships</a>
     <a href="my_applications.php">My Applications</a>
-    <a href="offers.php">Offers</a>
-    <a href="contracts.php">Contracts</a>
+    <a href="offers.php">Internship Offers</a>
+    <a href="contracts.php">Internship Contracts</a>
     <a href="notifications.php">Notifications <span class="badge"><?= $unread ?></span></a>
     <a href="#" onclick="openLogoutModal()">Logout</a>
 </div>

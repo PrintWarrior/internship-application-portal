@@ -44,7 +44,7 @@ function getStatusClass($status) {
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Application - Admin</title>
+    <title>Application Details - Admin</title>
     <link rel="stylesheet" href="../assets/css/adminapplication_view.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/responsive.css">

@@ -3,6 +3,7 @@ session_start();
 require_once '../includes/functions.php';
 
 requireAdminAreaAccess();
+ensureAccountAppealSchema($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: manage_users.php");
@@ -11,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 requireValidCsrfToken(['redirect' => 'manage_users.php']);
 
-function buildStatusEmailBody($status, $email)
+function buildStatusEmailBody($status, $email, $reason, $appealAllowed)
 {
     $statusHeadings = [
         'active' => 'Your account has been activated',
@@ -27,6 +28,16 @@ function buildStatusEmailBody($status, $email)
 
     $heading = $statusHeadings[$status] ?? 'Your account status has changed';
     $message = $statusMessages[$status] ?? 'An administrator has updated your account status.';
+    $safeReason = trim((string) $reason) !== '' ? nl2br(htmlspecialchars((string) $reason, ENT_QUOTES, 'UTF-8')) : 'No specific reason was provided.';
+    $appealMessage = '';
+
+    if ($status === 'suspended' || $status === 'banned') {
+        if ($appealAllowed) {
+            $appealMessage = "<p style='font-size:15px;color:#222222;line-height:1.6'>If you sign in to the portal with this account, you will be redirected to the account status page where you can submit an appeal.</p>";
+        } else {
+            $appealMessage = "<p style='font-size:15px;color:#222222;line-height:1.6'>This action is marked as final and does not allow appeal through the portal.</p>";
+        }
+    }
 
     return "
     <div style='background:#f5f5f5;padding:40px;font-family:Arial,sans-serif'>
@@ -35,6 +46,11 @@ function buildStatusEmailBody($status, $email)
             <p style='font-size:18px;color:#000000;font-weight:bold'>$heading</p>
             <p style='font-size:15px;color:#222222;line-height:1.6'>$message</p>
             <p style='font-size:15px;color:#222222;line-height:1.6'>Account email: $email</p>
+            <div style='margin-top:18px;padding:14px;border:1px solid #000000'>
+                <p style='margin:0 0 8px;font-size:13px;color:#000000;font-weight:bold'>Administrator Reason</p>
+                <p style='margin:0;font-size:15px;color:#222222;line-height:1.6'>$safeReason</p>
+            </div>
+            $appealMessage
             <p style='font-size:13px;color:#555555;line-height:1.6;margin-top:24px'>If you need help, please contact the portal administrator.</p>
         </div>
     </div>
@@ -43,11 +59,25 @@ function buildStatusEmailBody($status, $email)
 
 $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 $requestedStatus = isset($_POST['status']) ? strtolower(trim($_POST['status'])) : '';
+$statusReason = trim((string) ($_POST['status_reason'] ?? ''));
+$appealAllowed = isset($_POST['appeal_allowed']) ? (int) $_POST['appeal_allowed'] : 1;
 $allowedStatuses = ['active', 'suspended', 'banned'];
 
 if ($id <= 0 || !in_array($requestedStatus, $allowedStatuses, true)) {
     header("Location: manage_users.php");
     exit;
+}
+
+if ($requestedStatus === 'active') {
+    $statusReason = null;
+    $appealAllowed = 1;
+} else {
+    if ($statusReason === '') {
+        $statusReason = $requestedStatus === 'banned'
+            ? 'Your account was banned by an administrator after a policy review.'
+            : 'Your account was suspended by an administrator pending review.';
+    }
+    $appealAllowed = $appealAllowed === 1 ? 1 : 0;
 }
 
 $stmt = $pdo->prepare("SELECT email, user_type, status FROM users WHERE user_id = ?");
@@ -59,8 +89,8 @@ if (!$user || $user['user_type'] === 'superadmin') {
     exit;
 }
 
-$stmt = $pdo->prepare("UPDATE users SET status = ? WHERE user_id = ?");
-$stmt->execute([$requestedStatus, $id]);
+$stmt = $pdo->prepare("UPDATE users SET status = ?, status_reason = ?, appeal_allowed = ? WHERE user_id = ?");
+$stmt->execute([$requestedStatus, $statusReason, $appealAllowed, $id]);
 
 $subjects = [
     'active' => 'Your account has been activated',
@@ -71,7 +101,12 @@ $subjects = [
 $emailSent = sendEmail(
     $user['email'],
     $subjects[$requestedStatus] ?? 'Your account status has changed',
-    buildStatusEmailBody($requestedStatus, htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'))
+    buildStatusEmailBody(
+        $requestedStatus,
+        htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'),
+        $statusReason,
+        $appealAllowed === 1
+    )
 );
 
 if ($emailSent) {

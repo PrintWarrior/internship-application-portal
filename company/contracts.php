@@ -42,7 +42,7 @@ function formatDate($date) {
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contracts</title>
+    <title>Internship Contracts</title>
     <link rel="stylesheet" href="../assets/css/contract.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
@@ -137,14 +137,14 @@ function showNotification(message, isSuccess = true) {
             <a href="staff_profile.php">Staff Profile</a>
             <a href="post_internship.php">Post Internship</a>
             <a href="manage_internships.php">My Internships</a>
-            <a href="view_applicants.php">View Applicants</a>
-            <a href="generate_application_report.php">Reports</a>
-            <a href="contracts.php">Contracts</a>
+            <a href="view_applicants.php">Applicants</a>
+            <a href="generate_application_report.php">Application Reports</a>
+            <a href="contracts.php">Internship Contracts</a>
         </div>
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
-        <h2>Employment Contracts</h2>
+        <h2>Internship Contracts</h2>
 
         <!-- Stats Cards -->
         <div class="stats-cards">
@@ -212,7 +212,7 @@ function showNotification(message, isSuccess = true) {
             <?php else: ?>
             <div class="no-results">
                 No contracts available yet.<br>
-                <a href="view_applicants.php">View Applicants to Create Contracts</a>
+                <a href="view_applicants.php">Go to Applicants to Create Contracts</a>
             </div>
             <?php endif; ?>
         </div>

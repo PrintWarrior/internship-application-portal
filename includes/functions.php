@@ -272,6 +272,70 @@ function storeUploadedPdf(array $file, $prefix, $directory, $maxBytes = 5242880)
     ], $prefix, $directory, $maxBytes);
 }
 
+function tableColumnExists(PDO $pdo, $tableName, $columnName) {
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*)
+        FROM information_schema.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?
+    ");
+    $stmt->execute([$tableName, $columnName]);
+    return (int) $stmt->fetchColumn() > 0;
+}
+
+function ensureInternResumeSchema(PDO $pdo) {
+    static $checked = false;
+
+    if ($checked) {
+        return;
+    }
+
+    $checked = true;
+
+    if (!tableColumnExists($pdo, 'interns', 'skills')) {
+        $pdo->exec("ALTER TABLE interns ADD COLUMN skills TEXT DEFAULT NULL AFTER year_level");
+    }
+
+    if (!tableColumnExists($pdo, 'applications', 'skills_snapshot')) {
+        $pdo->exec("ALTER TABLE applications ADD COLUMN skills_snapshot TEXT DEFAULT NULL AFTER status");
+    }
+}
+
+function ensureAccountAppealSchema(PDO $pdo) {
+    static $checked = false;
+
+    if ($checked) {
+        return;
+    }
+
+    $checked = true;
+
+    if (!tableColumnExists($pdo, 'users', 'status_reason')) {
+        $pdo->exec("ALTER TABLE users ADD COLUMN status_reason TEXT DEFAULT NULL AFTER status");
+    }
+
+    if (!tableColumnExists($pdo, 'users', 'appeal_allowed')) {
+        $pdo->exec("ALTER TABLE users ADD COLUMN appeal_allowed TINYINT(1) NOT NULL DEFAULT 1 AFTER status_reason");
+    }
+
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS account_appeals (
+            appeal_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            user_id INT(11) NOT NULL,
+            submitted_status ENUM('suspended','banned') NOT NULL,
+            reason_snapshot TEXT DEFAULT NULL,
+            appeal_message TEXT NOT NULL,
+            status ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+            admin_notes TEXT DEFAULT NULL,
+            resolved_by INT(11) DEFAULT NULL,
+            resolved_at DATETIME DEFAULT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_account_appeals_user (user_id),
+            INDEX idx_account_appeals_status (status)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+    ");
+}
+
 function configureMailer(PHPMailer $mail) {
     $host = appEnv('SMTP_HOST', '');
     $username = appEnv('SMTP_USERNAME', '');
@@ -563,6 +627,9 @@ function getStaffCompanyContext($userId) {
 function upsertEntityAddress($entityId, $entityType, array $addressData, $addressType = 'primary') {
     global $pdo;
 
+    $internId = $entityType === 'intern' ? $entityId : null;
+    $companyId = $entityType === 'company' ? $entityId : null;
+
     $stmt = $pdo->prepare("
         SELECT address_id
         FROM addresses
@@ -584,18 +651,18 @@ function upsertEntityAddress($entityId, $entityType, array $addressData, $addres
     if ($addressId) {
         $update = $pdo->prepare("
             UPDATE addresses
-            SET address_type = ?, address_line = ?, city = ?, province = ?, postal_code = ?, country = ?
+            SET intern_id = ?, company_id = ?, address_type = ?, address_line = ?, city = ?, province = ?, postal_code = ?, country = ?
             WHERE address_id = ?
         ");
-        $update->execute([...$payload, $addressId]);
+        $update->execute([$internId, $companyId, ...$payload, $addressId]);
         return (int) $addressId;
     }
 
     $insert = $pdo->prepare("
-        INSERT INTO addresses (entity_id, entity_type, address_type, address_line, city, province, postal_code, country, is_primary)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)
+        INSERT INTO addresses (entity_id, entity_type, intern_id, company_id, address_type, address_line, city, province, postal_code, country, is_primary)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
     ");
-    $insert->execute([$entityId, $entityType, ...$payload]);
+    $insert->execute([$entityId, $entityType, $internId, $companyId, ...$payload]);
 
     return (int) $pdo->lastInsertId();
 }

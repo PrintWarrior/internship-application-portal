@@ -11,7 +11,34 @@ $stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND 
 $stmt->execute([$_SESSION['user_id']]);
 $unread = $stmt->fetchColumn();
 
-// Get all applications with details
+$itemsPerPage = 9;
+$currentPage = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT, [
+    'options' => ['min_range' => 1],
+]) ?: 1;
+
+$statsStmt = $pdo->prepare("
+    SELECT
+        COUNT(*) AS total,
+        SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END) AS pending,
+        SUM(CASE WHEN status = 'Accepted' THEN 1 ELSE 0 END) AS accepted,
+        SUM(CASE WHEN status = 'Declined' THEN 1 ELSE 0 END) AS declined,
+        SUM(CASE WHEN status = 'Offered' THEN 1 ELSE 0 END) AS offered
+    FROM applications
+");
+$statsStmt->execute();
+$stats = $statsStmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+$total = (int) ($stats['total'] ?? 0);
+$pending = (int) ($stats['pending'] ?? 0);
+$accepted = (int) ($stats['accepted'] ?? 0);
+$declined = (int) ($stats['declined'] ?? 0);
+$offered = (int) ($stats['offered'] ?? 0);
+
+$totalPages = max(1, (int) ceil($total / $itemsPerPage));
+$currentPage = min($currentPage, $totalPages);
+$offset = ($currentPage - 1) * $itemsPerPage;
+
+// Get paginated applications with details
 $stmt = $pdo->prepare("
     SELECT a.*, 
            i.title,
@@ -23,17 +50,16 @@ $stmt = $pdo->prepare("
     JOIN companies c ON i.company_id = c.company_id
     JOIN users u ON ir.user_id = u.user_id
     ORDER BY a.date_applied DESC
+    LIMIT :limit OFFSET :offset
 ");
+$stmt->bindValue(':limit', $itemsPerPage, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $applications = $stmt->fetchAll();
 
-// Calculate stats
-$total = count($applications);
-$pending = count(array_filter($applications, fn($a) => $a['status'] === 'Pending'));
-$accepted = count(array_filter($applications, fn($a) => $a['status'] === 'Accepted'));
-$declined = count(array_filter($applications, fn($a) => $a['status'] === 'Declined'));
-$offered = count(array_filter($applications, fn($a) => $a['status'] === 'Offered'));
-//$hired = count(array_filter($applications, fn($a) => $a['status'] === 'Hired'));
+$pageWindow = 2;
+$startPage = max(1, $currentPage - $pageWindow);
+$endPage = min($totalPages, $currentPage + $pageWindow);
 
 // Function to get status class
 function getStatusClass($status) {
@@ -72,11 +98,12 @@ function getStatusClass($status) {
     <div class="sidebar">
         <ul>
                 <li><a href="index.php" class="active">Dashboard</a></li>
-                <li><a href="profile.php">Profile</a></li>
+                <li><a href="profile.php">My Profile</a></li>
                 <li><a href="create_users.php">Create Users</a></li>
                 <li><a href="manage_users.php">Manage Users</a></li>
                 <li><a href="manage_internships.php">Manage Internships</a></li>
                 <li><a href="applications.php">All Applications</a></li>
+                <li><a href="appeals.php">Appeals</a></li>
                 <li><a href="system_logs.php">System Logs</a></li>
                 <li><a href="about.php">About</a></li>
             </ul>
@@ -171,6 +198,26 @@ function getStatusClass($status) {
             </div>
             <?php endif; ?>
         </div>
+
+        <?php if ($totalPages > 1): ?>
+        <nav class="pagination" aria-label="Applications pagination">
+            <?php if ($currentPage > 1): ?>
+            <a class="pagination-btn" href="?page=<?= $currentPage - 1 ?>">Previous</a>
+            <?php endif; ?>
+
+            <div class="pagination-numbers">
+                <?php for ($page = $startPage; $page <= $endPage; $page++): ?>
+                <a class="pagination-number <?= $page === $currentPage ? 'active' : '' ?>" href="?page=<?= $page ?>" <?= $page === $currentPage ? 'aria-current="page"' : '' ?>>
+                    <?= $page ?>
+                </a>
+                <?php endfor; ?>
+            </div>
+
+            <?php if ($currentPage < $totalPages): ?>
+            <a class="pagination-btn" href="?page=<?= $currentPage + 1 ?>">Next</a>
+            <?php endif; ?>
+        </nav>
+        <?php endif; ?>
     </div>
 </div>
 

@@ -11,28 +11,34 @@ $stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND 
 $stmt->execute([$_SESSION['user_id']]);
 $unread = $stmt->fetchColumn();
 
-// Get system logs with pagination
-$page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
-$limit = 50;
-$offset = ($page - 1) * $limit;
+$itemsPerPage = 9;
+$currentPage = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT, [
+    'options' => ['min_range' => 1],
+]) ?: 1;
+
+// Get total count for pagination
+$totalStmt = $pdo->prepare("SELECT COUNT(*) FROM system_logs");
+$totalStmt->execute();
+$totalLogs = (int) $totalStmt->fetchColumn();
+$totalPages = max(1, (int) ceil($totalLogs / $itemsPerPage));
+$currentPage = min($currentPage, $totalPages);
+$offset = ($currentPage - 1) * $itemsPerPage;
 
 $stmt = $pdo->prepare("
     SELECT l.*, u.email
     FROM system_logs l
     LEFT JOIN users u ON l.user_id = u.user_id
     ORDER BY l.created_at DESC
-    LIMIT ? OFFSET ?
+    LIMIT :limit OFFSET :offset
 ");
-$stmt->bindValue(1, $limit, PDO::PARAM_INT);
-$stmt->bindValue(2, $offset, PDO::PARAM_INT);
+$stmt->bindValue(':limit', $itemsPerPage, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $logs = $stmt->fetchAll();
 
-// Get total count for pagination
-$totalStmt = $pdo->prepare("SELECT COUNT(*) FROM system_logs");
-$totalStmt->execute();
-$totalLogs = $totalStmt->fetchColumn();
-$totalPages = ceil($totalLogs / $limit);
+$pageWindow = 2;
+$startPage = max(1, $currentPage - $pageWindow);
+$endPage = min($totalPages, $currentPage + $pageWindow);
 
 // Get stats
 $today = date('Y-m-d');
@@ -99,11 +105,12 @@ function getActionClass($action)
 <div class="wrapper">
     <div class="sidebar">
         <a href="index.php">Dashboard</a>
-        <a href="profile.php">Profile</a>
+        <a href="profile.php">My Profile</a>
         <a href="create_users.php">Create Users</a>
         <a href="manage_users.php">Manage Users</a>
         <a href="manage_internships.php">Manage Internships</a>
         <a href="applications.php">All Applications</a>
+        <li><a href="appeals.php">Appeals</a></li>
         <a href="system_logs.php" class="active">System Logs</a>
         <a href="about.php">About</a>
     </div>
@@ -181,11 +188,21 @@ function getActionClass($action)
         </div>
 
         <?php if ($totalPages > 1): ?>
-        <div class="pagination">
-            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-            <a href="?page=<?= $i ?>" class="pagination-item <?= $i === $page ? 'active' : '' ?>"><?= $i ?></a>
-            <?php endfor; ?>
-        </div>
+        <nav class="pagination" aria-label="System logs pagination">
+            <?php if ($currentPage > 1): ?>
+            <a href="?page=<?= $currentPage - 1 ?>" class="pagination-btn">Previous</a>
+            <?php endif; ?>
+
+            <div class="pagination-numbers">
+                <?php for ($page = $startPage; $page <= $endPage; $page++): ?>
+                <a href="?page=<?= $page ?>" class="pagination-number <?= $page === $currentPage ? 'active' : '' ?>" <?= $page === $currentPage ? 'aria-current="page"' : '' ?>><?= $page ?></a>
+                <?php endfor; ?>
+            </div>
+
+            <?php if ($currentPage < $totalPages): ?>
+            <a href="?page=<?= $currentPage + 1 ?>" class="pagination-btn">Next</a>
+            <?php endif; ?>
+        </nav>
         <?php endif; ?>
     </div>
 </div>

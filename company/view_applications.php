@@ -3,6 +3,8 @@ session_start();
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
+ensureInternResumeSchema($pdo);
+
 requireStaffUser();
 
 $user_id = $_SESSION['user_id'];
@@ -39,6 +41,7 @@ $stmt = $pdo->prepare("
            ir.university,
            ir.course,
            ir.year_level,
+           COALESCE(NULLIF(a.skills_snapshot, ''), ir.skills) AS application_skills,
            ir.profile_image,
            u.email
     FROM applications a
@@ -135,8 +138,8 @@ function getStatusClass($status)
             <a href="profile.php">Company Profile</a>
             <a href="post_internship.php">Post Internship</a>
             <a href="manage_internships.php">My Internships</a>
-            <a href="view_applicants.php">View Applicants</a>
-            <a href="contracts.php">Contracts</a>
+            <a href="view_applicants.php">Applicants</a>
+            <a href="contracts.php">Internship Contracts</a>
         </div>
 
         <!-- MAIN CONTENT -->
@@ -247,6 +250,13 @@ function getStatusClass($status)
                         <div class="detail-row">
                             <span class="detail-label">Year Level:</span>
                             <span class="detail-value"><?= htmlspecialchars($application['year_level'] ?? 'Not specified') ?></span>
+                        </div>
+                    </div>
+
+                    <div class="details-section">
+                        <h4>Skills</h4>
+                        <div class="description-box">
+                            <?= nl2br(htmlspecialchars($application['application_skills'] ?: 'No skills provided.')) ?>
                         </div>
                     </div>
                 </div>

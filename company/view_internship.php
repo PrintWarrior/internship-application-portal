@@ -41,7 +41,7 @@ $applicant_count = $stmt->fetchColumn();
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Internship - <?= htmlspecialchars($internship['title']) ?></title>
+    <title>Internship Details - <?= htmlspecialchars($internship['title']) ?></title>
     <link rel="stylesheet" href="../assets/css/company_view_internship.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="stylesheet" href="../assets/css/companyinternship_view.css">
@@ -72,8 +72,8 @@ $applicant_count = $stmt->fetchColumn();
         <a href="profile.php">Company Profile</a>
         <a href="post_internship.php">Post Internship</a>
         <a href="manage_internships.php">My Internships</a>
-        <a href="view_applicants.php">View Applicants</a>
-        <a href="contracts.php">Contracts</a>
+        <a href="view_applicants.php">Applicants</a>
+        <a href="contracts.php">Internship Contracts</a>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -126,7 +126,7 @@ $applicant_count = $stmt->fetchColumn();
 
             <!--<div class="detail-actions">
                 <a href="edit_internship.php?id=<?= $internship['internship_id'] ?>" class="btn-edit">Edit Internship</a>
-                <a href="view_applicants.php?internship_id=<?= $internship['internship_id'] ?>" class="btn-applicants">View Applicants (<?= $applicant_count ?>)</a>
+                <a href="view_applicants.php?internship_id=<?= $internship['internship_id'] ?>" class="btn-applicants">Applicants (<?= $applicant_count ?>)</a>
             </div> -->
         </div>
     </div>

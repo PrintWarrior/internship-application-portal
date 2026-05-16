@@ -4,6 +4,7 @@ require_once 'functions.php';
 
 startSecureSession();
 sendSecurityHeaders();
+ensureAccountAppealSchema($pdo);
 
 const GENERIC_LOGIN_ERROR = 'Invalid email or password.';
 $dummyHash = '$2y$10$wM7s7bQzL6g3s1vA3Q6Yze1O6Gq8mR0Q5JwAq5Y9Y5rYh6VQhYj3K';
@@ -60,14 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Check account status only after user is found
-    if ($user['status'] !== 'active') {
-        $recordFailedLoginAttempt();
-        $_SESSION['error'] = GENERIC_LOGIN_ERROR;
-        header('Location: ../index.php');
-        exit;
-    }
-
     // Email must be verified
     if (!$user['verified']) {
         $recordFailedLoginAttempt();
@@ -100,6 +93,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->prepare("UPDATE users SET first_login = 0 WHERE user_id = ?")
                 ->execute([$user['user_id']]);
 
+            if ($user['status'] !== 'active') {
+                session_regenerate_id(true);
+                $_SESSION['restricted_user_id'] = $user['user_id'];
+                $_SESSION['restricted_user_type'] = $user['user_type'];
+                header('Location: ../account_status.php');
+                exit;
+            }
+
             session_regenerate_id(true);
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['user_type'] = $user['user_type'];
@@ -130,6 +131,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // ===== NORMAL PASSWORD LOGIN =====
     if (!empty($user['password_hash']) && password_verify($input, $user['password_hash'])) {
+
+        if ($user['status'] !== 'active') {
+            session_regenerate_id(true);
+            $_SESSION['restricted_user_id'] = $user['user_id'];
+            $_SESSION['restricted_user_type'] = $user['user_type'];
+            header('Location: ../account_status.php');
+            exit;
+        }
 
         session_regenerate_id(true);
         $_SESSION['user_id'] = $user['user_id'];

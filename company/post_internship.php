@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             null,
             $message,
             "view_internship.php?id=" . $internship_id,
-            "View Internship",
+            "Internship Details",
             null
         );
 
@@ -105,9 +105,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="staff_profile.php">Staff Profile</a>
             <a href="post_internship.php">Post Internship</a>
             <a href="manage_internships.php">My Internships</a>
-            <a href="view_applicants.php">View Applicants</a>
-            <a href="generate_application_report.php">Reports</a>
-            <a href="contracts.php">Contracts</a>
+            <a href="view_applicants.php">Applicants</a>
+            <a href="generate_application_report.php">Application Reports</a>
+            <a href="contracts.php">Internship Contracts</a>
         </div>
 
         <!-- MAIN CONTENT -->

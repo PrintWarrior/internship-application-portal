@@ -3,6 +3,8 @@ session_start();
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
+ensureInternResumeSchema($pdo);
+
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'intern') {
     header('Location: ../index.php');
     exit;
@@ -30,12 +32,21 @@ if (isset($_POST['apply'])) {
 
     if (!$checkStmt->fetch()) {
 
+        $profileStmt = $pdo->prepare("
+            SELECT skills
+            FROM interns
+            WHERE intern_id = ?
+            LIMIT 1
+        ");
+        $profileStmt->execute([$intern_id]);
+        $skillsSnapshot = (string) ($profileStmt->fetchColumn() ?? '');
+
         $stmt = $pdo->prepare("
-            INSERT INTO applications (intern_id, internship_id, status, date_applied)
-            VALUES (?, ?, 'Pending', NOW())
+            INSERT INTO applications (intern_id, internship_id, status, skills_snapshot, date_applied)
+            VALUES (?, ?, 'Pending', ?, NOW())
         ");
 
-        $stmt->execute([$intern_id, $internship_id]);
+        $stmt->execute([$intern_id, $internship_id, $skillsSnapshot]);
 
         // Get company for notifications
         $stmt = $pdo->prepare("
@@ -114,8 +125,8 @@ $unread = $stmt->fetchColumn();
         <a href="profile.php">My Profile</a>
         <a href="browse_internships.php">Browse Internships</a>
         <a href="my_applications.php">My Applications</a>
-        <a href="offers.php">Offers</a>
-        <a href="contracts.php">Contracts</a>
+        <a href="offers.php">Internship Offers</a>
+        <a href="contracts.php">Internship Contracts</a>
         <a href="notifications.php">Notifications <span class="badge"><?= $unread ?></span></a>
         <a href="#" onclick="openLogoutModal()">Logout</a>
     </div>

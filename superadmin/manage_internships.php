@@ -11,7 +11,33 @@ $stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND 
 $stmt->execute([$_SESSION['user_id']]);
 $unread = $stmt->fetchColumn();
 
-// Get all internships with company info
+$itemsPerPage = 9;
+$currentPage = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT, [
+    'options' => ['min_range' => 1],
+]) ?: 1;
+
+// Get internship stats
+$statsStmt = $pdo->prepare("
+    SELECT
+        COUNT(*) AS total,
+        SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS pending,
+        SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) AS approved,
+        SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) AS rejected
+    FROM internships
+");
+$statsStmt->execute();
+$stats = $statsStmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+$total = (int) ($stats['total'] ?? 0);
+$pending = (int) ($stats['pending'] ?? 0);
+$approved = (int) ($stats['approved'] ?? 0);
+$rejected = (int) ($stats['rejected'] ?? 0);
+
+$totalPages = max(1, (int) ceil($total / $itemsPerPage));
+$currentPage = min($currentPage, $totalPages);
+$offset = ($currentPage - 1) * $itemsPerPage;
+
+// Get paginated internships with company info
 $stmt = $pdo->prepare("
     SELECT i.*, c.company_name, c.industry, u.email
     FROM internships i
@@ -20,15 +46,16 @@ $stmt = $pdo->prepare("
     LEFT JOIN users u ON s.user_id = u.user_id
     GROUP BY i.internship_id
     ORDER BY i.internship_id DESC
+    LIMIT :limit OFFSET :offset
 ");
+$stmt->bindValue(':limit', $itemsPerPage, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $internships = $stmt->fetchAll();
 
-// Calculate stats
-$total = count($internships);
-$pending = count(array_filter($internships, fn($i) => $i['status'] === 'pending'));
-$approved = count(array_filter($internships, fn($i) => $i['status'] === 'approved'));
-$rejected = count(array_filter($internships, fn($i) => $i['status'] === 'rejected'));
+$pageWindow = 2;
+$startPage = max(1, $currentPage - $pageWindow);
+$endPage = min($totalPages, $currentPage + $pageWindow);
 
 function isDeadlineExpired($deadline)
 {
@@ -68,11 +95,12 @@ function isDeadlineExpired($deadline)
     <div class="wrapper">
         <div class="sidebar">
             <li><a href="index.php" class="active">Dashboard</a></li>
-            <li><a href="profile.php">Profile</a></li>
+            <li><a href="profile.php">My Profile</a></li>
             <li><a href="create_users.php">Create Users</a></li>
             <li><a href="manage_users.php">Manage Users</a></li>
             <li><a href="manage_internships.php">Manage Internships</a></li>
             <li><a href="applications.php">All Applications</a></li>
+            <li><a href="appeals.php">Appeals</a></li>
             <li><a href="system_logs.php">System Logs</a></li>
             <li><a href="about.php">About</a></li>
         </div>
@@ -165,6 +193,26 @@ function isDeadlineExpired($deadline)
                     </div>
                 <?php endif; ?>
             </div>
+
+            <?php if ($totalPages > 1): ?>
+                <nav class="pagination" aria-label="Internships pagination">
+                    <?php if ($currentPage > 1): ?>
+                        <a class="pagination-btn" href="?page=<?= $currentPage - 1 ?>">Previous</a>
+                    <?php endif; ?>
+
+                    <div class="pagination-numbers">
+                        <?php for ($page = $startPage; $page <= $endPage; $page++): ?>
+                            <a class="pagination-number <?= $page === $currentPage ? 'active' : '' ?>" href="?page=<?= $page ?>" <?= $page === $currentPage ? 'aria-current="page"' : '' ?>>
+                                <?= $page ?>
+                            </a>
+                        <?php endfor; ?>
+                    </div>
+
+                    <?php if ($currentPage < $totalPages): ?>
+                        <a class="pagination-btn" href="?page=<?= $currentPage + 1 ?>">Next</a>
+                    <?php endif; ?>
+                </nav>
+            <?php endif; ?>
         </div>
     </div>
 

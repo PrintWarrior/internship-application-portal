@@ -119,6 +119,7 @@ function updateProfileSummary() {
     const contactNo = profileForm.querySelector('input[name="contact_no"]').value;
     const university = profileForm.querySelector('input[name="university"]').value;
     const course = profileForm.querySelector('input[name="course"]').value;
+    const skills = profileForm.querySelector('textarea[name="skills"]')?.value ?? '';
     
     const fullName = `${firstName} ${middleName ? middleName + ' ' : ''}${lastName}`;
     
@@ -126,11 +127,13 @@ function updateProfileSummary() {
     const summaryContact = document.getElementById('summaryContact');
     const summaryUniversity = document.getElementById('summaryUniversity');
     const summaryCourse = document.getElementById('summaryCourse');
+    const summarySkills = document.getElementById('summarySkills');
     
     if (summaryName) summaryName.textContent = fullName;
     if (summaryContact) summaryContact.textContent = contactNo;
     if (summaryUniversity) summaryUniversity.textContent = university;
     if (summaryCourse) summaryCourse.textContent = course;
+    if (summarySkills) summarySkills.textContent = skills.trim() || 'No skills provided';
 }
 
 // Modal Functions

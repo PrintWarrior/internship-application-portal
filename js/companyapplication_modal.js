@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmBtn.addEventListener('click', function() {
             console.log('Confirm button clicked for status:', selectedStatus);
             
-            if (!selectedStatus || !selectedButton) {
+            if (!selectedStatus || !selectedButton || !form) {
                 console.log('No status selected');
                 return;
             }
@@ -81,22 +81,19 @@ document.addEventListener('DOMContentLoaded', function() {
             // Show loading state
             confirmBtn.textContent = 'Processing...';
             confirmBtn.disabled = true;
-            
-            // Create a hidden form to submit
-            const hiddenForm = document.createElement('form');
-            hiddenForm.method = 'POST';
-            hiddenForm.style.display = 'none';
-            
-            const actionInput = document.createElement('input');
-            actionInput.type = 'hidden';
-            actionInput.name = 'action';
+
+            let actionInput = form.querySelector('input[name="action"]');
+            if (!actionInput) {
+                actionInput = document.createElement('input');
+                actionInput.type = 'hidden';
+                actionInput.name = 'action';
+                form.appendChild(actionInput);
+            }
+
             actionInput.value = selectedStatus;
-            
-            hiddenForm.appendChild(actionInput);
-            document.body.appendChild(hiddenForm);
-            
-            // Submit the form
-            hiddenForm.submit();
+
+            // Submit the existing form so CSRF token is included
+            form.submit();
             
             // Close modal
             closeApplicationModal();

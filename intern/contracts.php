@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../includes/db.php';
+require_once '../includes/functions.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'intern') {
     header('Location: ../index.php');
@@ -48,7 +49,7 @@ $unread = $stmt->fetchColumn();
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Contracts</title>
+    <title>Internship Contracts</title>
     <link rel="stylesheet" href="../assets/css/intern_contract.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
@@ -87,15 +88,15 @@ $unread = $stmt->fetchColumn();
         <a href="profile.php">My Profile</a>
         <a href="browse_internships.php">Browse Internships</a>
         <a href="my_applications.php">My Applications</a>
-        <a href="offers.php">Offers</a>
-        <a href="contracts.php">Contracts</a>
+        <a href="offers.php">Internship Offers</a>
+        <a href="contracts.php">Internship Contracts</a>
         <a href="notifications.php">Notifications <span class="badge"><?= $unread ?></span></a>
         <a href="#" onclick="openLogoutModal()">Logout</a>
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
-        <h2>Employment Contracts</h2>
+        <h2>Internship Contracts</h2>
 
         <div class="table-container">
             <?php if (count($contracts) > 0): ?>

@@ -138,10 +138,10 @@ function generateApplicationPDF($applications, $filters, $company) {
     $pdf->SetFont('Arial', 'B', 11);
     $pdf->Cell(0, 5, 'Filters Applied:', 0, 1);
     $pdf->SetFont('Arial', '', 9);
-    if ($filters['status'] !== 'all') $pdf->Cell(0, 4, '• Status: ' . $filters['status'], 0, 1);
-    if ($filters['internship_id'] !== 'all') $pdf->Cell(0, 4, '• Internship: ' . getInternshipTitle($filters['internship_id']), 0, 1);
-    if ($filters['start_date']) $pdf->Cell(0, 4, '• From: ' . date('M d, Y', strtotime($filters['start_date'])), 0, 1);
-    if ($filters['end_date']) $pdf->Cell(0, 4, '• To: ' . date('M d, Y', strtotime($filters['end_date'])), 0, 1);
+    if ($filters['status'] !== 'all') $pdf->Cell(0, 4, 'ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ Status: ' . $filters['status'], 0, 1);
+    if ($filters['internship_id'] !== 'all') $pdf->Cell(0, 4, 'ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ Internship: ' . getInternshipTitle($filters['internship_id']), 0, 1);
+    if ($filters['start_date']) $pdf->Cell(0, 4, 'ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ From: ' . date('M d, Y', strtotime($filters['start_date'])), 0, 1);
+    if ($filters['end_date']) $pdf->Cell(0, 4, 'ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ To: ' . date('M d, Y', strtotime($filters['end_date'])), 0, 1);
     $pdf->Ln(3);
 
     // Statistics
@@ -273,8 +273,9 @@ function generatePrintView($applications, $filters, $company, $user_id) {
             
             body {
                 font-family: Arial, sans-serif;
-                color: #333;
+                color: #000;
                 line-height: 1.6;
+                background: #fff;
             }
             
             .print-container {
@@ -282,38 +283,38 @@ function generatePrintView($applications, $filters, $company, $user_id) {
                 margin: 20px auto;
                 padding: 30px;
                 background: white;
+                border: 2px solid #000;
             }
             
             .report-header {
                 text-align: center;
                 margin-bottom: 30px;
-                border-bottom: 3px solid #333;
+                border-bottom: 3px solid #000;
                 padding-bottom: 15px;
             }
             
             .report-header h1 {
                 font-size: 28px;
                 margin-bottom: 5px;
-                color: #2c3e50;
+                color: #000;
             }
             
             .report-header p {
                 font-size: 12px;
-                color: #666;
+                color: #222;
                 margin: 3px 0;
             }
             
             .company-info {
-                background: #f5f5f5;
+                background: #fff;
                 padding: 15px;
-                border-left: 4px solid #4CAF50;
+                border: 2px solid #000;
                 margin-bottom: 20px;
-                border-radius: 3px;
             }
             
             .company-info h3 {
                 margin-bottom: 5px;
-                color: #2c3e50;
+                color: #000;
                 font-size: 14px;
             }
             
@@ -323,23 +324,22 @@ function generatePrintView($applications, $filters, $company, $user_id) {
             }
             
             .filters-section {
-                background: #e3f2fd;
+                background: #fff;
                 padding: 12px;
-                border-left: 4px solid #2196F3;
+                border: 2px solid #000;
                 margin-bottom: 20px;
-                border-radius: 3px;
             }
             
             .filters-section h3 {
                 margin-bottom: 8px;
-                color: #1565c0;
+                color: #000;
                 font-size: 13px;
             }
             
             .filters-section p {
                 font-size: 12px;
                 margin: 2px 0;
-                color: #444;
+                color: #000;
             }
             
             .stats-container {
@@ -351,23 +351,22 @@ function generatePrintView($applications, $filters, $company, $user_id) {
             
             .stat-box {
                 background: white;
-                border: 2px solid #e0e0e0;
+                border: 2px solid #000;
                 padding: 15px;
                 text-align: center;
-                border-radius: 5px;
                 page-break-inside: avoid;
             }
             
             .stat-box h4 {
                 font-size: 24px;
-                color: #4CAF50;
+                color: #000;
                 font-weight: bold;
                 margin-bottom: 5px;
             }
             
             .stat-box p {
                 font-size: 12px;
-                color: #666;
+                color: #000;
             }
             
             .table-section {
@@ -376,7 +375,7 @@ function generatePrintView($applications, $filters, $company, $user_id) {
             
             .table-section h3 {
                 margin-bottom: 12px;
-                color: #2c3e50;
+                color: #000;
                 font-size: 14px;
             }
             
@@ -387,7 +386,7 @@ function generatePrintView($applications, $filters, $company, $user_id) {
             }
             
             thead {
-                background: #2c3e50;
+                background: #000;
                 color: white;
             }
             
@@ -396,55 +395,55 @@ function generatePrintView($applications, $filters, $company, $user_id) {
                 text-align: left;
                 font-size: 12px;
                 font-weight: bold;
-                border-bottom: 2px solid #2c3e50;
+                border: 1px solid #000;
             }
             
             td {
                 padding: 10px 12px;
                 font-size: 11px;
-                border-bottom: 1px solid #ddd;
+                border: 1px solid #000;
             }
             
             tbody tr:nth-child(even) {
-                background: #f9f9f9;
+                background: #f3f3f3;
             }
             
             tbody tr:hover {
-                background: #f0f0f0;
+                background: #e8e8e8;
             }
             
             .status-pending {
-                background: #fff3cd;
-                color: #856404;
+                background: #fff;
+                color: #000;
+                border: 1px solid #000;
                 padding: 3px 8px;
-                border-radius: 3px;
                 font-size: 10px;
                 font-weight: bold;
             }
             
             .status-accepted {
-                background: #d4edda;
-                color: #155724;
+                background: #000;
+                color: #fff;
+                border: 1px solid #000;
                 padding: 3px 8px;
-                border-radius: 3px;
                 font-size: 10px;
                 font-weight: bold;
             }
             
             .status-offered {
-                background: #cfe2ff;
-                color: #084298;
+                background: #fff;
+                color: #000;
+                border: 1px dashed #000;
                 padding: 3px 8px;
-                border-radius: 3px;
                 font-size: 10px;
                 font-weight: bold;
             }
             
             .status-declined {
-                background: #f8d7da;
-                color: #721c24;
+                background: #d9d9d9;
+                color: #000;
+                border: 1px solid #000;
                 padding: 3px 8px;
-                border-radius: 3px;
                 font-size: 10px;
                 font-weight: bold;
             }
@@ -452,17 +451,18 @@ function generatePrintView($applications, $filters, $company, $user_id) {
             .footer {
                 margin-top: 30px;
                 padding-top: 15px;
-                border-top: 1px solid #ddd;
+                border-top: 2px solid #000;
                 font-size: 11px;
-                color: #666;
+                color: #000;
                 text-align: center;
             }
             
             .no-data {
                 text-align: center;
                 padding: 30px;
-                color: #999;
+                color: #000;
                 font-style: italic;
+                border: 2px solid #000;
             }
             
             .print-button {
@@ -473,17 +473,17 @@ function generatePrintView($applications, $filters, $company, $user_id) {
             
             .print-button button {
                 padding: 10px 30px;
-                background: #4CAF50;
-                color: white;
-                border: none;
-                border-radius: 4px;
+                background: #000;
+                color: #fff;
+                border: 2px solid #000;
                 cursor: pointer;
                 font-size: 14px;
                 font-weight: bold;
             }
             
             .print-button button:hover {
-                background: #45a049;
+                background: #fff;
+                color: #000;
             }
             
             @media print {
@@ -511,11 +511,11 @@ function generatePrintView($applications, $filters, $company, $user_id) {
     <body>
         <div class="print-container">
             <div class="print-button">
-                <button onclick="window.print()">🖨️ Print Report</button>
+                <button onclick="window.print()">Print Report</button>
             </div>
             
             <div class="report-header">
-                <h1>📊 Application Report</h1>
+                <h1>Application Report</h1>
                 <p>Generated on: <?= date('M d, Y \a\t H:i A') ?></p>
                 <p>Report ID: <?= date('Ymd_His') ?></p>
             </div>
@@ -528,7 +528,7 @@ function generatePrintView($applications, $filters, $company, $user_id) {
             </div>
             
             <div class="filters-section">
-                <h3>📋 Filters Applied</h3>
+                <h3>Filters Applied</h3>
                 <?php if ($filters['status'] !== 'all'): ?>
                     <p><strong>Status:</strong> <?= htmlspecialchars($filters['status']) ?></p>
                 <?php endif; ?>
@@ -570,7 +570,7 @@ function generatePrintView($applications, $filters, $company, $user_id) {
             </div>
             
             <div class="table-section">
-                <h3>📝 Applicants Details</h3>
+                <h3>Applicants Details</h3>
                 <?php if (count($applications) > 0): ?>
                     <table>
                         <thead>
@@ -623,18 +623,19 @@ function generatePrintView($applications, $filters, $company, $user_id) {
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Application Report</title>
+    <title>Application Reports</title>
     <link rel="stylesheet" href="../assets/css/company_applicant.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/responsive.css">
     <style>
         .report-form {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
+            background: #fff;
+            padding: 24px;
+            border: 2px solid #000;
             margin-bottom: 20px;
-            max-width: 600px;
+            max-width: 720px;
+            box-shadow: 8px 8px 0 #000;
         }
 
         .form-group {
@@ -645,15 +646,18 @@ function generatePrintView($applications, $filters, $company, $user_id) {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            color: #333;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 12px;
+            border: 2px solid #000;
+            background: #fff;
+            color: #000;
             font-size: 14px;
             box-sizing: border-box;
         }
@@ -661,79 +665,101 @@ function generatePrintView($applications, $filters, $company, $user_id) {
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+            border-color: #000;
+            box-shadow: none;
         }
 
         .export-buttons {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
             margin-top: 20px;
         }
 
         .btn-export {
             flex: 1;
+            min-width: 180px;
             padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
+            border: 2px solid #000;
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
-            transition: background 0.3s;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
         }
 
         .btn-export-pdf {
-            background: #dc3545;
-            color: white;
+            background: #000;
+            color: #fff;
         }
 
         .btn-export-pdf:hover {
-            background: #c82333;
+            background: #fff;
+            color: #000;
         }
 
         .btn-export-csv {
-            background: #28a745;
-            color: white;
+            background: #fff;
+            color: #000;
         }
 
         .btn-export-csv:hover {
-            background: #218838;
+            background: #000;
+            color: #fff;
         }
 
         .btn-export-print {
-            background: #007bff;
-            color: white;
+            background: #000;
+            color: #fff;
         }
 
         .btn-export-print:hover {
-            background: #0056b3;
+            background: #fff;
+            color: #000;
         }
 
         .error-message {
-            background: #f8d7da;
-            color: #721c24;
+            background: #fff;
+            color: #000;
             padding: 12px;
-            border-radius: 4px;
             margin-bottom: 20px;
-            border: 1px solid #f5c6cb;
+            border: 2px solid #000;
         }
 
         .success-message {
-            background: #d4edda;
-            color: #155724;
+            background: #000;
+            color: #fff;
             padding: 12px;
-            border-radius: 4px;
             margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
+            border: 2px solid #000;
         }
 
         .info-box {
-            background: #d1ecf1;
-            color: #0c5460;
+            background: #f3f3f3;
+            color: #000;
             padding: 12px;
-            border-radius: 4px;
             margin-top: 15px;
-            border: 1px solid #bee5eb;
+            border: 2px solid #000;
+        }
+
+        .main-content h2 {
+            font-size: 28px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 3px solid #000;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .report-form {
+                box-shadow: none;
+                max-width: 100%;
+            }
+
+            .btn-export {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
@@ -763,14 +789,14 @@ function generatePrintView($applications, $filters, $company, $user_id) {
             <a href="staff_profile.php">Staff Profile</a>
             <a href="post_internship.php">Post Internship</a>
             <a href="manage_internships.php">My Internships</a>
-            <a href="view_applicants.php">View Applicants</a>
-            <a href="generate_application_report.php">Reports</a>
-            <a href="contracts.php">Contracts</a>
+            <a href="view_applicants.php">Applicants</a>
+            <a href="generate_application_report.php">Application Reports</a>
+            <a href="contracts.php">Internship Contracts</a>
         </div>
 
         <!-- MAIN CONTENT -->
         <div class="main-content">
-            <h2>Generate Application Report</h2>
+            <h2>Application Reports</h2>
 
             <?php if (isset($error_msg)): ?>
                 <div class="error-message"><?= htmlspecialchars($error_msg) ?></div>
@@ -815,56 +841,26 @@ function generatePrintView($applications, $filters, $company, $user_id) {
 
                 <div class="export-buttons">
                     <button type="submit" name="export_type" value="pdf" class="btn-export btn-export-pdf">
-                        📄 Export as PDF
+                        Export as PDF
                     </button>
                     <button type="submit" name="export_type" value="csv" class="btn-export btn-export-csv">
-                        📊 Export as CSV
+                        Export as CSV
                     </button>
                     <button type="submit" name="export_type" value="print" class="btn-export btn-export-print">
-                        🖨️ Print Report
+                        Print Report
                     </button>
                 </div>
 
                 <div class="info-box">
-                    <strong>ℹ️ Info:</strong> Reports are logged with timestamps and filters for audit trails. Your staff ID will be recorded with each generated report.
+                    <strong>Info:</strong> Reports are logged with timestamps and filters for audit trails. Your staff ID will be recorded with each generated report.
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Logout Modal -->
-    <div id="logoutModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeLogoutModal()">&times;</span>
-            <h2>Confirm Logout</h2>
-            <p>Are you sure you want to logout?</p>
-            <div class="modal-buttons">
-                <button class="btn-confirm" onclick="confirmLogout()">Yes, Logout</button>
-                <button class="btn-cancel" onclick="closeLogoutModal()">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function openLogoutModal() {
-            document.getElementById('logoutModal').style.display = 'block';
-        }
-
-        function closeLogoutModal() {
-            document.getElementById('logoutModal').style.display = 'none';
-        }
-
-        function confirmLogout() {
-            window.location.href = '../logout.php';
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('logoutModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-    </script>
+    <?php include '../html/logout_modal.html'; ?>
+    <script src="../js/logout_modal.js"></script>
+    <script src="../js/responsive-nav.js"></script>
 </body>
 
 </html>

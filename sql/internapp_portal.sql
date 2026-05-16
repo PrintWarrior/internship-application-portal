@@ -69,7 +69,8 @@ CREATE TABLE `applications` (
   `internship_id` int(11) NOT NULL,
   `intern_id` int(11) NOT NULL,
   `date_applied` timestamp NOT NULL DEFAULT current_timestamp(),
-  `status` enum('Pending','Reviewed','Shortlisted','Rejected','Offered','Accepted','Declined','Contract Signed') DEFAULT 'Pending'
+  `status` enum('Pending','Reviewed','Shortlisted','Rejected','Offered','Accepted','Declined','Contract Signed') DEFAULT 'Pending',
+  `skills_snapshot` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -129,6 +130,7 @@ CREATE TABLE `interns` (
   `university` varchar(150) DEFAULT NULL,
   `course` varchar(150) DEFAULT NULL,
   `year_level` varchar(50) DEFAULT NULL,
+  `skills` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `profile_image` varchar(100) DEFAULT 'default.png'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -222,7 +224,9 @@ CREATE TABLE `users` (
   `first_login` tinyint(1) DEFAULT 1,
   `reset_token` varchar(255) DEFAULT NULL,
   `token_expiry` datetime DEFAULT NULL,
-  `status` enum('active','banned','suspended') DEFAULT 'active'
+  `status` enum('active','banned','suspended') DEFAULT 'active',
+  `status_reason` text DEFAULT NULL,
+  `appeal_allowed` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -246,6 +250,26 @@ CREATE TABLE `verification_tokens` (
   `expiry` datetime NOT NULL,
   `used` tinyint(1) DEFAULT 0,
   `type` enum('email_verify','otp') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `account_appeals`
+--
+
+CREATE TABLE `account_appeals` (
+  `appeal_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `submitted_status` enum('suspended','banned') NOT NULL,
+  `reason_snapshot` text DEFAULT NULL,
+  `appeal_message` text NOT NULL,
+  `status` enum('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+  `admin_notes` text DEFAULT NULL,
+  `resolved_by` int(11) DEFAULT NULL,
+  `resolved_at` datetime DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

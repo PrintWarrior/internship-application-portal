@@ -3,6 +3,8 @@ session_start();
 require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
+ensureInternResumeSchema($pdo);
+
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'intern') {
     header('Location: ../index.php');
     exit;
@@ -167,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_profile_info'])) {
         $stmt = $pdo->prepare("
             UPDATE interns
-            SET first_name = ?, middle_name = ?, last_name = ?, contact_no = ?, university = ?, course = ?, year_level = ?
+            SET first_name = ?, middle_name = ?, last_name = ?, contact_no = ?, university = ?, course = ?, year_level = ?, skills = ?
             WHERE intern_id = ?
         ");
 
@@ -179,6 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             trim((string) ($_POST['university'] ?? '')),
             trim((string) ($_POST['course'] ?? '')),
             trim((string) ($_POST['year_level'] ?? '')),
+            trim((string) ($_POST['skills'] ?? '')),
             $intern['intern_id'],
         ]);
 
@@ -266,8 +269,8 @@ $unread = (int) $notificationStmt->fetchColumn();
         <a href="profile.php">My Profile</a>
         <a href="browse_internships.php">Browse Internships</a>
         <a href="my_applications.php">My Applications</a>
-        <a href="offers.php">Offers</a>
-        <a href="contracts.php">Contracts</a>
+        <a href="offers.php">Internship Offers</a>
+        <a href="contracts.php">Internship Contracts</a>
         <a href="notifications.php">Notifications <span class="badge"><?= $unread ?></span></a>
         <a href="#" onclick="openLogoutModal()">Logout</a>
     </div>
@@ -352,6 +355,11 @@ $unread = (int) $notificationStmt->fetchColumn();
                         <div class="form-group">
                             <label>Year Level</label>
                             <input type="text" name="year_level" value="<?= htmlspecialchars((string) ($intern['year_level'] ?? '')) ?>">
+                        </div>
+
+                        <div class="form-group form-group-textarea">
+                            <label>Skills</label>
+                            <textarea name="skills" rows="5" placeholder="List your technical skills, tools, and strengths"><?= htmlspecialchars((string) ($intern['skills'] ?? '')) ?></textarea>
                         </div>
 
                         <button type="submit" name="update_profile_info">Update Profile</button>

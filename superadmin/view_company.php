@@ -51,7 +51,7 @@ if (!file_exists($profile)) {
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Company - <?= htmlspecialchars($panelLabel) ?></title>
+    <title>Company Details - <?= htmlspecialchars($panelLabel) ?></title>
     <link rel="stylesheet" href="../assets/css/admin_company.css">
     <link rel="stylesheet" href="../assets/css/admincompany_view.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
@@ -76,11 +76,12 @@ if (!file_exists($profile)) {
 <div class="wrapper">
     <div class="sidebar">
         <a href="index.php">Dashboard</a>
-        <a href="profile.php">Profile</a>
-        <a href="manage_users.php">Manage Users</a>
+        <a href="profile.php">My Profile</a>
         <a href="create_users.php">Create Users</a>
+        <a href="manage_users.php">Manage Users</a>
         <a href="manage_internships.php">Manage Internships</a>
         <a href="applications.php">All Applications</a>
+        <a href="appeals.php">Appeals</a>
         <a href="system_logs.php">System Logs</a>
         <a href="about.php">About</a>
     </div>

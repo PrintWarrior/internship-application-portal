@@ -120,8 +120,8 @@ $allowed_statuses = $status_options[$current_status] ?? [];
         <a href="profile.php">Company Profile</a>
         <a href="post_internship.php">Post Internship</a>
         <a href="manage_internships.php">My Internships</a>
-        <a href="view_applicants.php">View Applicants</a>
-        <a href="contracts.php">Contracts</a>
+        <a href="view_applicants.php">Applicants</a>
+        <a href="contracts.php">Internship Contracts</a>
     </div>
 
     <!-- MAIN CONTENT -->

@@ -4,6 +4,7 @@ require_once '../includes/db.php';
 require_once '../includes/functions.php';
 
 requireAdminAreaAccess();
+ensureAccountAppealSchema($pdo);
 $panelLabel = getAdminAreaLabel();
 
 $userId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
@@ -126,7 +127,7 @@ function getProfileImageName(array $user): string {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View User - <?= htmlspecialchars($panelLabel) ?></title>
+    <title>User Details - <?= htmlspecialchars($panelLabel) ?></title>
     <link rel="stylesheet" href="../assets/css/super_view.css">
     <link rel="icon" href="../assets/img/icon.png" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/responsive.css">
@@ -156,16 +157,20 @@ function getProfileImageName(array $user): string {
         <div class="sidebar">
             <ul>
                 <li><a href="index.php" class="active">Dashboard</a></li>
+                <li><a href="profile.php">My Profile</a></li>
                 <li><a href="create_users.php">Create Users</a></li>
                 <li><a href="manage_users.php">Manage Users</a></li>
                 <li><a href="manage_internships.php">Manage Internships</a></li>
+                <li><a href="applications.php">All Applications</a></li>
+                <li><a href="appeals.php">Appeals</a></li>
                 <li><a href="system_logs.php">System Logs</a></li>
+                <li><a href="about.php">About</a></li>
             </ul>
         </div>
 
         <!-- MAIN CONTENT -->
         <div class="content">
-            <h1>View User</h1>
+            <h1>User Details</h1>
 
             <?php
             $statusClass = getStatusClass($user['status']);
@@ -238,6 +243,14 @@ function getProfileImageName(array $user): string {
                     <div class="detail-item">
                         <span class="detail-label">Status</span>
                         <span class="detail-value"><?= htmlspecialchars(formatStatusLabel($user['status'])) ?></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Appeal Allowed</span>
+                        <span class="detail-value"><?= !empty($user['appeal_allowed']) ? 'Yes' : 'No' ?></span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Status Reason</span>
+                        <span class="detail-value"><?= htmlspecialchars($user['status_reason'] ?: 'Not set') ?></span>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Verified</span>

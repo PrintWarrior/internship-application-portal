@@ -257,6 +257,50 @@ body {
     color: #ffffff;
 }
 
+.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.search-input {
+    min-width: 260px;
+    flex: 1;
+    padding: 10px 12px;
+    border: 2px solid #000000;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 14px;
+}
+
+.search-btn,
+.search-reset {
+    display: inline-block;
+    padding: 10px 16px;
+    border: 2px solid #000000;
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.search-reset {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.search-btn:hover,
+.search-reset:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
 /* Table Styles */
 table {
     width: 100%;
@@ -412,6 +456,70 @@ td:last-child a:last-child:hover {
     letter-spacing: 1px;
 }
 
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 15px;
+    border-top: 2px solid #000000;
+    background-color: #f9f9f9;
+    flex-wrap: wrap;
+}
+
+.pagination-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #000000;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+    border: 2px solid #000000;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.pagination-btn:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.pagination-numbers {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.pagination-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background-color: #ffffff;
+    color: #000000;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 12px;
+    border: 2px solid #000000;
+    transition: all 0.3s ease;
+}
+
+.pagination-number:hover,
+.pagination-number.active {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.pagination-number.active {
+    cursor: default;
+}
+
 /* Responsive Design */
 @media screen and (max-width: 1024px) {
     .sidebar {
@@ -517,6 +625,22 @@ td:last-child a:last-child:hover {
     td:last-child a:last-child {
         margin-bottom: 0;
     }
+
+    .pagination {
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .pagination-btn {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+
+    .pagination-number {
+        width: 32px;
+        height: 32px;
+        font-size: 11px;
+    }
 }
 
 @media screen and (max-width: 480px) {
@@ -570,6 +694,26 @@ td:last-child a:last-child:hover {
         padding: 4px 8px;
         font-size: 10px;
         margin-right: 4px;
+    }
+
+    .pagination {
+        gap: 5px;
+        padding: 10px;
+    }
+
+    .pagination-btn {
+        padding: 5px 10px;
+        font-size: 10px;
+    }
+
+    .pagination-numbers {
+        gap: 3px;
+    }
+
+    .pagination-number {
+        width: 28px;
+        height: 28px;
+        font-size: 10px;
     }
 }
 

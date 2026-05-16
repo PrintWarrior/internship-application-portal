@@ -165,7 +165,7 @@ function formatDate($date) {
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Contract</title>
+    <title>Create Internship Contract</title>
     <link rel="stylesheet" href="../assets/css/company_contract.css">
     <link rel="stylesheet" href="../assets/css/logout_modal.css">
     <link rel="stylesheet" href="../assets/css/companycontract_modal.css">
@@ -196,14 +196,14 @@ function formatDate($date) {
         <a href="profile.php">Company Profile</a>
         <a href="post_internship.php">Post Internship</a>
         <a href="manage_internships.php">My Internships</a>
-        <a href="view_applicants.php">View Applicants</a>
-        <a href="contracts.php">Contracts</a>
+        <a href="view_applicants.php">Applicants</a>
+        <a href="contracts.php">Internship Contracts</a>
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2>Create Contract</h2>
+            <h2>Create Internship Contract</h2>
             <a href="view_applicants.php" class="btn-back" style="background-color: #000000; color: white; padding: 8px 15px; text-decoration: none;">Back to Applicants</a>
         </div>
 

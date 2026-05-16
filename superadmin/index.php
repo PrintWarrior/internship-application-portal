@@ -57,11 +57,12 @@ $totalInterns = $countByTypeStmt->fetchColumn();
         <div class="sidebar">
             <ul>
                 <li><a href="index.php" class="active">Dashboard</a></li>
-                <li><a href="profile.php">Profile</a></li>
+                <li><a href="profile.php">My Profile</a></li>
                 <li><a href="create_users.php">Create Users</a></li>
                 <li><a href="manage_users.php">Manage Users</a></li>
                 <li><a href="manage_internships.php">Manage Internships</a></li>
                 <li><a href="applications.php">All Applications</a></li>
+                <li><a href="appeals.php">Appeals</a></li>
                 <li><a href="system_logs.php">System Logs</a></li>
                 <li><a href="about.php">About</a></li>
             </ul>
@@ -83,7 +84,7 @@ $totalInterns = $countByTypeStmt->fetchColumn();
                 </div>
 
                 <div class="card">
-                    <h3>Staffs</h3>
+                    <h3>Staff</h3>
                     <p><?= $totalCompanies ?></p>
                 </div>
 
